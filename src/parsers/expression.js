@@ -36,6 +36,7 @@ var outter_parser = function(obj) {
             output = parser.arithmetic(obj);
             break;
         case 'CALL':
+        case 'CALL_METHOD':
             output = parser.call(obj);
             break;
         case 'AND':
