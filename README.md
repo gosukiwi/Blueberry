@@ -52,6 +52,29 @@ while someFunctionReturnsTrue()
 end
 ``` 
 
+For loop is also available in a very rubysh way
+
+```
+for i in (0..10)
+    echo(i)
+end
+```
+
+Ranges generate an array from start to end, so you can also do
+
+```
+myArr = (0..10)
+```
+
+You can of course call for with any collection
+
+```
+myData = array(1, 2, 3, 4)
+for i in myData
+    echo(i)
+end
+```
+
 ### Conditionals
 
 Boolean operations must be enclosed with ```()```
