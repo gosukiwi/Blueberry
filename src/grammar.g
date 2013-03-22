@@ -10,7 +10,8 @@ start = statement*
 
 /* Define atoms */
 
-newline = [\n]
+newline 
+  = s:[\n\r]+ { return s.join(''); }
 space = [ \t]
 integer = n:[0-9]+ { return { type: 'NUMBER', value: parseInt(n.join(''), 10) } }
 
@@ -70,7 +71,7 @@ statement
 Block
   = statement*
 
-Empty = val:[ \n\t]+ { return { type: 'EMPTY', value: val.join('') } }
+Empty = val:[ \n\r\t]+ { return { type: 'EMPTY', value: val.join('') } }
 
 Class_Attribute 
   = "@" id:identifier space+ "=" space+ val:And_Expression newline*
