@@ -23,6 +23,10 @@ class Human
     echo(@name)
   end
 end
+
+mike = new Human()
+mike.greet()
+echo(mike.age)
 ```
 
 ### Functions
@@ -35,10 +39,12 @@ end
 
 ### Conditionals
 
+Boolean operations must be enclosed with ```()```
+
 ```
-if age > 18 and age < 99
+if (age > 18) and (age < 99)
     doSomething()
-else if age > 99 
+else if (age > 99)
     doSomethingElse()
 else
     doNothing()
