@@ -12,6 +12,19 @@ something very similar to CoffeeScript.
 ## Syntax Examples
 These are some examples of all the things that are already working :)
 
+### Classes
+
+```
+class Human
+  @name
+  @age = 18
+
+  def greet
+    echo(@name)
+  end
+end
+```
+
 ### Functions
 
 ```

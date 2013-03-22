@@ -3,12 +3,11 @@ class Animal
   @age = 18
 
   def greet
-    echo('Rawr!')
+    echo(@name)
   end
 end
 
 human = new Animal()
 human.greet()
 
-otherVariable = someMethod(human.greet())
 

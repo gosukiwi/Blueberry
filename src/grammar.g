@@ -293,4 +293,6 @@ expression
   / real_number
   / integer
   / identifier
+  / "@" id:identifier 
+  { return { type: 'INSTANCE_IDENTIFIER', value: id.value } }
 

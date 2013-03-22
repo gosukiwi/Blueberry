@@ -49,6 +49,9 @@ var outter_parser = function(obj) {
         case 'PARENS_EXPRESSION':
             output = '(' + outter_parser(obj.expression) + ')';
             break;
+        case 'INSTANCE_IDENTIFIER':
+            output = '$this->' + parser.identifier(obj);
+            break;
         case 'IDENTIFIER':
             // When an expression is parsed, it checks for a function call
             // or an identifier, the identifier will always be a variable n_n
