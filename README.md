@@ -12,49 +12,33 @@ something very similar to CoffeeScript.
 ## Syntax Examples
 These are some examples of all the things that are already working :)
 
-### Classes
+### Conditionals
+
+Boolean operations must be enclosed with ```()```
 
 ```
-class Human
-  # name will be a public instance variable
-  @name
-  # age will also be a public instance variable with a value of 18
-  @age = 18
-
-  def __construct(name)
-    # this is the class' constructor
-    @name = name
-  end
-
-  def greet
-    echo(@name)
-  end
-end
-
-mike = new Human()
-mike.greet()
-echo(mike.age)
-```
-
-### Functions
-
-```
-def myFunctionName(name)
-  return "Hello" & name
+if (age > 18) and (age < 99)
+    doSomething()
+else if (age > 99)
+    doSomethingElse()
+else
+    doNothing()
 end
 ```
+
+TODO: unless
 
 ### Loops
+
+IcedTea has several loop flavours, ```while``` and ```for``` beeing the most
+common ones.
 
 ```
 while someFunctionReturnsTrue()
     echo('Hello, World!')
 end
-``` 
 
-For loop is also available in a very rubysh way
-
-```
+# The for is very similar to ruby's :)
 for i in (0..10)
     echo(i)
 end
@@ -75,17 +59,64 @@ for i in myData
 end
 ```
 
-### Conditionals
+### Concatenation
 
-Boolean operations must be enclosed with ```()```
+The concatenation operator is ```&```.
 
 ```
-if (age > 18) and (age < 99)
-    doSomething()
-else if (age > 99)
-    doSomethingElse()
-else
-    doNothing()
+echo('Hello ' & name)
+```
+
+### Arrays
+
+You create arrays as you do in PHP
+
+```
+arr = array(1, 2, 'string')
+echo(arr[2])
+```
+
+Arrays start from 0
+
+### Multidimensional Arrays Using JSON Sytnax
+
+TODO
+
+### Functions
+
+Functions are created using the ```def``` keyword
+
+```
+def myFunctionName(name)
+  return "Hello" & name
 end
+```
+
+### Classes
+
+Classes include the ```@``` operator from Ruby, using that operator you can
+create instance variables and later on refer to them in a very simple and
+readable way.
+
+```
+class Human
+  # name will be a public instance variable
+  @name
+  # age will also be a public instance variable with a value of 18
+  @age = 18
+
+  def __construct(name)
+    # this is the class' constructor
+    @name = name
+  end
+
+  def greet
+    echo("Hi! I'm " & @name)
+  end
+end
+
+mike = new Human()
+mike.greet()
+echo('Mike is ' & mike.age & ' years old.')
 ```
 
