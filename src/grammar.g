@@ -226,39 +226,22 @@ And_Expression
   / Or_Expression
 
 Or_Expression
-  = l:greater space+ "or" space+ r:Or_Expression
+  = l:bool_comparison space+ "or" space+ r:Or_Expression
   { return { type: 'OR', left: l, right: r } }
-  / greater
+  / bool_comparison
 
 /* Boolean Operations */
-greater
-  = l:lesser space* ">" space* r:greater
-  { return { type: 'COMPARISON', operator: '>', left: l, right: r } }
-  / lesser
+bool_operator
+  = ">"
+  / "<"
+  / ">="
+  / "<="
+  / "=="
+  / "!="
 
-lesser
-  = l:greater_or_equal space* "<" space* r:lesser
-  { return { type: 'COMPARISON', operator: '<', left: l, right: r } }
-  / greater_or_equal
-
-greater_or_equal
-  = l:lesser_or_equal space* ">=" space* r:greater_or_equal
-  { return { type: 'COMPARISON', operator: '>=', left: l, right: r } }
-  / lesser_or_equal
-
-lesser_or_equal
-  = l:equals space* "<=" space* r:lesser_or_equal
-  { return { type: 'COMPARISON', operator: '<=', left: l, right: r } }
-  / equals
-
-equals
-  = l:different space* "==" space* r:equals
-  { return { type: 'COMPARISON', operator: '==', left: l, right: r } }
-  / different
-
-different
-  = l:expression space* "!=" space* r:different
-  { return { type: 'COMPARISON', operator: '!=', left: l, right: r } }
+bool_comparison
+  = "(" l:And_Expression space* op:bool_operator space* r:And_Expression ")"
+  { return { type: 'COMPARISON', operator: op, left: l, right: r } }
   / substraction
 
 /* Arithmetic operators */
@@ -297,4 +280,5 @@ expression
   / identifier
   / "@" id:identifier 
   { return { type: 'INSTANCE_IDENTIFIER', value: id.value } }
+
 
