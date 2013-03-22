@@ -1,7 +1,7 @@
 /*
  * An if - else statement
  */
-outter_parser = function(obj) {
+var outter_parser = function(obj) {
     if(obj.type !== 'IF_ELSE' && obj.type !== 'IF') {
         throw "This is not an if-else!";
     }
@@ -28,7 +28,7 @@ outter_parser = function(obj) {
             output += statementParser(obj.else.statements[i]);
         }
 
-        output += "}\n";
+        output += "}";
     } else {
         output += outter_parser(obj.else);
     }

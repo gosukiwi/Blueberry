@@ -6,6 +6,8 @@
 module.exports = function(obj) {
     var output = '',
         parser = {
+            'empty': require('./empty.js'),
+            'comment': require('./comment.js'),
             'assign': require('./assign.js'),
             'def': require('./def.js'),
             'if': require('./if.js'),
@@ -38,8 +40,11 @@ module.exports = function(obj) {
         case 'CALL':
             output = parser.call(obj);
             break;
+        case 'COMMENT':
+            output = parser.comment(obj);
+            break;
         case 'EMPTY':
-            /* Do nothing */
+            output = parser.empty(obj);
             break;
         default:
             throw "Invalid statement type: " + obj.type;

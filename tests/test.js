@@ -22,8 +22,8 @@ module.exports = {
     assign: function (test) {
         test.equals(this.parseStatement('a = 1'), '$a = 1;\n');
         test.equals(this.parseStatement('a = 1 + 6'), '$a = 1 + 6;\n');
-        //test.equals(this.parseStatement('a = f(1 + 6)'), '$a = f(1 + 6);\n');
-        test.equals(this.parseStatement('a = age > 18'), '$a = $age > 18;\n');
+        test.equals(this.parseStatement('a = f(1 + 6)'), '$a = f(1 + 6);\n');
+        test.equals(this.parseStatement('a = (age > 18)'), '$a = $age > 18;\n');
         test.done();
     },
 

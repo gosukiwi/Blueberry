@@ -9,5 +9,5 @@ module.exports = function(obj) {
     var operator = obj.type == 'AND' ? '&&' : '||',
         parser = require('./expression.js');
 
-    return parser(obj.left) + ' ' + operator + ' ' + parser(obj.right);
+    return '(' + parser(obj.left) + ' ' + operator + ' ' + parser(obj.right) + ')';
 };

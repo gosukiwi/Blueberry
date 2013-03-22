@@ -1,7 +1,7 @@
 /*
  * A function called as an expression
  */
-outter_parser = function(obj) {
+var outter_parser = function(obj) {
    var identifierParser = require('./identifier.js'),
         argumentsParser = require('./expressionList.js'),
         output;

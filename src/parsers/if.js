@@ -17,7 +17,7 @@ module.exports = function(obj) {
         output += statementParser(obj.statements[i]);
     }
 
-    output += '}\n';
+    output += '}';
 
     return output;
 };

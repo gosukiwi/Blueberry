@@ -36,6 +36,10 @@ string
       } 
     }
 
+Comment
+  = "#" s:[0-9a-zA-Z_?!+\-=@$%#^&*/. \t]* newline
+  { return { type: 'COMMENT', value: s.join('').trim() }; }
+
 /* Identifiers are the name variables and functions can have */
 identifier
   = h:[a-zA-Z] t:[a-zA-Z_0-9]* { return { type: 'IDENTIFIER', value: h + t.join('') } }
@@ -60,18 +64,20 @@ statement
   / Def
   / Class
   / Call
+  / Comment
   / Empty
 
 Block
   = statement*
 
-Empty = [ \n\t] { return { type: 'EMPTY' } }
+Empty = val:[ \n\t]+ { return { type: 'EMPTY', value: val.join('') } }
 
 Class_Attribute 
-  = space* "@" id:identifier space+ "=" space+ val:And_Expression newline*
+  = "@" id:identifier space+ "=" space+ val:And_Expression newline*
   { return { type: 'CLASS_ATTRIBUTE_ASSIGNMENT', name: id, value: val } }
-  / space* "@" id:identifier newline*
+  / "@" id:identifier newline*
   { return { type: 'CLASS_ATTRIBUTE', name: id } }
+  / Empty
 
 Class_Body
   = Def
@@ -111,7 +117,7 @@ If
     }
   }
 
-If_Header = space* "if" space* exp:And_Expression space* newline+
+If_Header = "if" space* exp:And_Expression space* newline+
   { return { type: 'IF', condition: exp } }
 
 Elsif = space* "else" space+ i:If_Header b:Block "end"
@@ -124,7 +130,7 @@ Elsif = space* "else" space+ i:If_Header b:Block "end"
 
 Assign
   = 
-  space* id:identifier space* "=" space* "new" space+ exp:And_Expression
+  id:identifier space* "=" space* "new" space+ exp:And_Expression newline
   {
     return {
         type: 'INSTANTIATE',
@@ -132,7 +138,7 @@ Assign
         expression: exp
     }
   }
-  /space* id:identifier space* "=" space* exp:And_Expression
+  / id:identifier space* "=" space* exp:And_Expression
   {
     return {
       type: 'ASSIGN',
@@ -143,7 +149,7 @@ Assign
   
 
 Def
-  = space* "def" space+ id:identifier space* args:ArgList? space* newline+
+  = "def" space+ id:identifier space* args:ArgList? space* newline+
     b:Block
   "end"
   { return {
@@ -199,7 +205,7 @@ ArgList
 */
 Call
   =
-  space* id:identifier "." c:Call
+  id:identifier "." c:Call
   { return { type: 'CALL_METHOD', object: id, method: c } }
   /
   space* id:identifier space* "(" space* ")"
@@ -280,5 +286,4 @@ expression
   / identifier
   / "@" id:identifier 
   { return { type: 'INSTANCE_IDENTIFIER', value: id.value } }
-
 

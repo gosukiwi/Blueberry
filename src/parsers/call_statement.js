@@ -7,5 +7,5 @@ module.exports = function(obj) {
     }
 
     var callParser = require('./call_expression.js');
-    return callParser(obj) + ';\n';
+    return callParser(obj) + ';';
 };
