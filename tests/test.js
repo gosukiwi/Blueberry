@@ -58,6 +58,14 @@ module.exports = {
             this.load('./tests/php/class1.php')
         );
         test.done();
+    },
+
+    testConcat: function (test) {
+        test.equals(
+            this.parseStatement('a = "Hello" & this.name\n'),
+            '$a = \'Hello\' . $this->name;'
+        );
+        test.done();
     }
 };
 
