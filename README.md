@@ -63,7 +63,7 @@ end
 Ranges generate an array from start to end, so you can also do
 
 ```
-myArr = (0..10)
+myArr = (0..returnsInteger())
 ```
 
 You can of course call for with any collection
