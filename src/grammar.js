@@ -136,16 +136,41 @@ module.exports = (function(){
       }
       
       function parse_newline() {
-        var result0;
+        var result0, result1;
+        var pos0;
         
-        if (/^[\n]/.test(input.charAt(pos))) {
-          result0 = input.charAt(pos);
+        pos0 = pos;
+        if (/^[\n\r]/.test(input.charAt(pos))) {
+          result1 = input.charAt(pos);
           pos++;
         } else {
-          result0 = null;
+          result1 = null;
           if (reportFailures === 0) {
-            matchFailed("[\\n]");
+            matchFailed("[\\n\\r]");
           }
+        }
+        if (result1 !== null) {
+          result0 = [];
+          while (result1 !== null) {
+            result0.push(result1);
+            if (/^[\n\r]/.test(input.charAt(pos))) {
+              result1 = input.charAt(pos);
+              pos++;
+            } else {
+              result1 = null;
+              if (reportFailures === 0) {
+                matchFailed("[\\n\\r]");
+              }
+            }
+          }
+        } else {
+          result0 = null;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, s) { return s.join(''); })(pos0, result0);
+        }
+        if (result0 === null) {
+          pos = pos0;
         }
         return result0;
       }
@@ -617,26 +642,26 @@ module.exports = (function(){
         var pos0;
         
         pos0 = pos;
-        if (/^[ \n\t]/.test(input.charAt(pos))) {
+        if (/^[ \n\r\t]/.test(input.charAt(pos))) {
           result1 = input.charAt(pos);
           pos++;
         } else {
           result1 = null;
           if (reportFailures === 0) {
-            matchFailed("[ \\n\\t]");
+            matchFailed("[ \\n\\r\\t]");
           }
         }
         if (result1 !== null) {
           result0 = [];
           while (result1 !== null) {
             result0.push(result1);
-            if (/^[ \n\t]/.test(input.charAt(pos))) {
+            if (/^[ \n\r\t]/.test(input.charAt(pos))) {
               result1 = input.charAt(pos);
               pos++;
             } else {
               result1 = null;
               if (reportFailures === 0) {
-                matchFailed("[ \\n\\t]");
+                matchFailed("[ \\n\\r\\t]");
               }
             }
           }
