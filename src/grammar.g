@@ -28,13 +28,13 @@ number =
   / real_number
 
 string 
-    = "\"" s:[0-9a-zA-Z_?!'+\-=@#$%^&*/. \n\t]+ "\"" 
+    = "\"" s:[^"]+ "\"" 
     { return { 
         type: 'STRING', 
         value: s.join('') 
       } 
     }
-    / "'" s:["0-9a-zA-Z_?!+\-=@#$%^&*/. \n\t]+ "'" 
+    / "'" s:[^']+ "'" 
     { return { 
         type: 'STRING', 
         value: s.join('') 
@@ -267,34 +267,25 @@ Call
 
 /* AND and OR conditions */
 And_Expression
-  = l:Or_Expression space+ "and" space+ r:And_Expression
+  = l:substraction space+ "and" space+ r:And_Expression
   { return { type: 'AND', left: l, right: r } }
-  / Or_Expression
-
-Or_Expression
-  = l:bool_comparison space+ "or" space+ r:Or_Expression
+  / l:substraction space+ "or" space+ r:And_Expression
   { return { type: 'OR', left: l, right: r } }
   / substraction
 
 /* Arithmetic operators */
 
 substraction
-  = l:additive space* "-" space* r:substraction
+  = l:multiplicative space* "-" space* r:substraction
   { return { type: 'ARITHMETIC', operation: '-', left: l, right: r }; }
-  / additive
-
-additive
-  = l:multiplicative space* "+" space* r:additive
+  / l:multiplicative space* "+" space* r:substraction
   { return { type: 'ARITHMETIC', operation: '+', left: l, right: r }; }
   / multiplicative
 
 multiplicative
-  = l:division space* "*" space* r:multiplicative
+  = l:concat space* "*" space* r:multiplicative
   { return { type: 'ARITHMETIC', operation: '*', left: l, right: r }; }
-  / division
-
-division
-  = l:concat space* "/" space* r:division
+  / l:concat space* "/" space* r:multiplicative
   { return { type: 'ARITHMETIC', operation: '/', left: l, right: r }; }
   / concat
 
