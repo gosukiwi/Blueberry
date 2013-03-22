@@ -28,6 +28,18 @@ end
 
 TODO: unless
 
+### Boolean Not
+
+To apply a boolean not operation, use the ```not``` keyword
+
+```
+if !(age > 18)
+    doSomething()
+end
+
+myValue = !myVariable
+```
+
 ### Loops
 
 IcedTea has several loop flavours, ```while``` and ```for``` beeing the most

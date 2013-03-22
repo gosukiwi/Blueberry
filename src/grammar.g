@@ -310,6 +310,8 @@ expression
   = 
   "(" c:And_Expression ")"
   { return { type: 'PARENS_EXPRESSION', expression: c }; }
+  / "not" space* e:And_Expression
+  { return { type: 'BOOL_NOT', value: e } }
   / bool_comparison
   / Array_Identifier
   / Call

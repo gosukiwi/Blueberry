@@ -26,7 +26,8 @@ var outter_parser = function(obj) {
             range: require('./range.js'),
             array_identifier: require('./array_identifier.js'),
             array_create: require('./array_create.js'),
-            json_array: require('./json_array.js')
+            json_array: require('./json_array.js'),
+            bool_not: require('./bool_not.js')
         };
 
     switch(obj.type) {
@@ -57,6 +58,9 @@ var outter_parser = function(obj) {
         case 'CALL':
         case 'CALL_METHOD':
             output = parser.call(obj);
+            break;
+        case 'BOOL_NOT':
+            output = parser.bool_not(obj);
             break;
         case 'AND':
         case 'OR':
