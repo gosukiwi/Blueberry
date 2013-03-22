@@ -23,8 +23,12 @@ real_number
     } 
   }
 
+number =
+  integer
+  / real_number
+
 string 
-    = "\"" s:[0-9a-zA-Z_?!+\-=@#$%^&*/. \n\t]+ "\"" 
+    = "\"" s:[0-9a-zA-Z_?!'+\-=@#$%^&*/. \n\t]+ "\"" 
     { return { 
         type: 'STRING', 
         value: s.join('') 
@@ -269,8 +273,15 @@ multiplicative
   / division
 
 division
-  = l:expression space* "/" space* r:division
+  = l:concat space* "/" space* r:division
   { return { type: 'ARITHMETIC', operation: '/', left: l, right: r }; }
+  / concat
+
+/* Concatenation */
+
+concat 
+  = l:expression space* "&" space* r:concat
+  { return { type: 'CONCATENATION', left: l, right: r }; }
   / expression
 
 /* The most basic blocks besides tokens */

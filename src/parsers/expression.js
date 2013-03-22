@@ -19,7 +19,8 @@ var outter_parser = function(obj) {
             logical_operator: require('./logical_operator.js'),
             arithmetic: require('./arithmetic.js'),
             call: require('./call_expression.js'),
-            comparison: require('./comparison.js')
+            comparison: require('./comparison.js'),
+            concat: require('./concat.js')
         };
 
     switch(obj.type) {
@@ -31,6 +32,9 @@ var outter_parser = function(obj) {
             break;
         case 'STRING':
             output = parser.string(obj);
+            break;
+        case 'CONCATENATION':
+            output = parser.concat(obj);
             break;
         case 'ARITHMETIC':
             output = parser.arithmetic(obj);

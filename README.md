@@ -33,7 +33,7 @@ echo(mike.age)
 
 ```
 def myFunctionName(name)
-  return "Hello" + name
+  return "Hello" & name
 end
 ```
 

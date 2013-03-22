@@ -42,6 +42,7 @@ module.exports = (function(){
         "space": parse_space,
         "integer": parse_integer,
         "real_number": parse_real_number,
+        "number": parse_number,
         "string": parse_string,
         "Comment": parse_Comment,
         "identifier": parse_identifier,
@@ -67,6 +68,7 @@ module.exports = (function(){
         "additive": parse_additive,
         "multiplicative": parse_multiplicative,
         "division": parse_division,
+        "concat": parse_concat,
         "expression": parse_expression
       };
       
@@ -327,6 +329,16 @@ module.exports = (function(){
         return result0;
       }
       
+      function parse_number() {
+        var result0;
+        
+        result0 = parse_integer();
+        if (result0 === null) {
+          result0 = parse_real_number();
+        }
+        return result0;
+      }
+      
       function parse_string() {
         var result0, result1, result2;
         var pos0, pos1;
@@ -343,26 +355,26 @@ module.exports = (function(){
           }
         }
         if (result0 !== null) {
-          if (/^[0-9a-zA-Z_?!+\-=@#$%^&*\/. \n\t]/.test(input.charAt(pos))) {
+          if (/^[0-9a-zA-Z_?!'+\-=@#$%^&*\/. \n\t]/.test(input.charAt(pos))) {
             result2 = input.charAt(pos);
             pos++;
           } else {
             result2 = null;
             if (reportFailures === 0) {
-              matchFailed("[0-9a-zA-Z_?!+\\-=@#$%^&*\\/. \\n\\t]");
+              matchFailed("[0-9a-zA-Z_?!'+\\-=@#$%^&*\\/. \\n\\t]");
             }
           }
           if (result2 !== null) {
             result1 = [];
             while (result2 !== null) {
               result1.push(result2);
-              if (/^[0-9a-zA-Z_?!+\-=@#$%^&*\/. \n\t]/.test(input.charAt(pos))) {
+              if (/^[0-9a-zA-Z_?!'+\-=@#$%^&*\/. \n\t]/.test(input.charAt(pos))) {
                 result2 = input.charAt(pos);
                 pos++;
               } else {
                 result2 = null;
                 if (reportFailures === 0) {
-                  matchFailed("[0-9a-zA-Z_?!+\\-=@#$%^&*\\/. \\n\\t]");
+                  matchFailed("[0-9a-zA-Z_?!'+\\-=@#$%^&*\\/. \\n\\t]");
                 }
               }
             }
@@ -2637,7 +2649,7 @@ module.exports = (function(){
         
         pos0 = pos;
         pos1 = pos;
-        result0 = parse_expression();
+        result0 = parse_concat();
         if (result0 !== null) {
           result1 = [];
           result2 = parse_space();
@@ -2688,6 +2700,73 @@ module.exports = (function(){
         }
         if (result0 !== null) {
           result0 = (function(offset, l, r) { return { type: 'ARITHMETIC', operation: '/', left: l, right: r }; })(pos0, result0[0], result0[4]);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        if (result0 === null) {
+          result0 = parse_concat();
+        }
+        return result0;
+      }
+      
+      function parse_concat() {
+        var result0, result1, result2, result3, result4;
+        var pos0, pos1;
+        
+        pos0 = pos;
+        pos1 = pos;
+        result0 = parse_expression();
+        if (result0 !== null) {
+          result1 = [];
+          result2 = parse_space();
+          while (result2 !== null) {
+            result1.push(result2);
+            result2 = parse_space();
+          }
+          if (result1 !== null) {
+            if (input.charCodeAt(pos) === 38) {
+              result2 = "&";
+              pos++;
+            } else {
+              result2 = null;
+              if (reportFailures === 0) {
+                matchFailed("\"&\"");
+              }
+            }
+            if (result2 !== null) {
+              result3 = [];
+              result4 = parse_space();
+              while (result4 !== null) {
+                result3.push(result4);
+                result4 = parse_space();
+              }
+              if (result3 !== null) {
+                result4 = parse_concat();
+                if (result4 !== null) {
+                  result0 = [result0, result1, result2, result3, result4];
+                } else {
+                  result0 = null;
+                  pos = pos1;
+                }
+              } else {
+                result0 = null;
+                pos = pos1;
+              }
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+        } else {
+          result0 = null;
+          pos = pos1;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, l, r) { return { type: 'CONCATENATION', left: l, right: r }; })(pos0, result0[0], result0[4]);
         }
         if (result0 === null) {
           pos = pos0;

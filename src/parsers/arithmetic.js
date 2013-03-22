@@ -7,6 +7,5 @@ module.exports = function(obj) {
     }
 
     var parser = require('./expression.js');
-
     return '(' + parser(obj.left) + ' ' + obj.operation + ' ' + parser(obj.right) + ')';
 };
