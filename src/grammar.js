@@ -512,24 +512,24 @@ module.exports = (function(){
         }
         if (result0 !== null) {
           result1 = [];
-          if (/^[0-9a-zA-Z_?!+\-=@$%#^&*\/. \t]/.test(input.charAt(pos))) {
+          if (/^[0-9a-zA-Z_?!+\-=@$%#^&*\/. \t'"]/.test(input.charAt(pos))) {
             result2 = input.charAt(pos);
             pos++;
           } else {
             result2 = null;
             if (reportFailures === 0) {
-              matchFailed("[0-9a-zA-Z_?!+\\-=@$%#^&*\\/. \\t]");
+              matchFailed("[0-9a-zA-Z_?!+\\-=@$%#^&*\\/. \\t'\"]");
             }
           }
           while (result2 !== null) {
             result1.push(result2);
-            if (/^[0-9a-zA-Z_?!+\-=@$%#^&*\/. \t]/.test(input.charAt(pos))) {
+            if (/^[0-9a-zA-Z_?!+\-=@$%#^&*\/. \t'"]/.test(input.charAt(pos))) {
               result2 = input.charAt(pos);
               pos++;
             } else {
               result2 = null;
               if (reportFailures === 0) {
-                matchFailed("[0-9a-zA-Z_?!+\\-=@$%#^&*\\/. \\t]");
+                matchFailed("[0-9a-zA-Z_?!+\\-=@$%#^&*\\/. \\t'\"]");
               }
             }
           }
@@ -564,13 +564,13 @@ module.exports = (function(){
         
         pos0 = pos;
         pos1 = pos;
-        if (/^[a-zA-Z]/.test(input.charAt(pos))) {
+        if (/^[a-zA-Z_]/.test(input.charAt(pos))) {
           result0 = input.charAt(pos);
           pos++;
         } else {
           result0 = null;
           if (reportFailures === 0) {
-            matchFailed("[a-zA-Z]");
+            matchFailed("[a-zA-Z_]");
           }
         }
         if (result0 !== null) {
@@ -895,7 +895,10 @@ module.exports = (function(){
             pos = pos0;
           }
           if (result0 === null) {
-            result0 = parse_Empty();
+            result0 = parse_Comment();
+            if (result0 === null) {
+              result0 = parse_Empty();
+            }
           }
         }
         return result0;

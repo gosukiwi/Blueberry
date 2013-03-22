@@ -42,12 +42,12 @@ string
     }
 
 Comment
-  = "#" s:[0-9a-zA-Z_?!+\-=@$%#^&*/. \t]* newline
+  = "#" s:[0-9a-zA-Z_?!+\-=@$%#^&*/. \t'"]* newline
   { return { type: 'COMMENT', value: s.join('').trim() }; }
 
 /* Identifiers are the name variables and functions can have */
 identifier
-  = h:[a-zA-Z] t:[a-zA-Z_0-9]* { return { type: 'IDENTIFIER', value: h + t.join('') } }
+  = h:[a-zA-Z_] t:[a-zA-Z_0-9]* { return { type: 'IDENTIFIER', value: h + t.join('') } }
 
 /* Terminals */
 bool
@@ -93,6 +93,7 @@ Class_Attribute
   { return { type: 'CLASS_ATTRIBUTE_ASSIGNMENT', name: id, value: val } }
   / "@" id:identifier newline*
   { return { type: 'CLASS_ATTRIBUTE', name: id } }
+  / Comment
   / Empty
 
 Class_Body
@@ -322,5 +323,4 @@ expression
   / identifier
   / "@" id:identifier 
   { return { type: 'INSTANCE_IDENTIFIER', value: id.value } }
-
 
