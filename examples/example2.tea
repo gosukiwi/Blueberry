@@ -2,6 +2,10 @@ class Animal
   @name
   @age = 18
 
+  def construct(name)
+    @name = name
+  end
+
   def greet
     echo("Hello! I'm " & @name)
   end

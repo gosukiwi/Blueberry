@@ -1524,66 +1524,45 @@ module.exports = (function(){
         
         pos0 = pos;
         pos1 = pos;
-        result0 = parse_identifier();
-        if (result0 !== null) {
-          result1 = [];
-          result2 = parse_space();
-          while (result2 !== null) {
-            result1.push(result2);
-            result2 = parse_space();
+        if (input.charCodeAt(pos) === 64) {
+          result0 = "@";
+          pos++;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"@\"");
           }
+        }
+        if (result0 !== null) {
+          result1 = parse_identifier();
           if (result1 !== null) {
-            if (input.charCodeAt(pos) === 61) {
-              result2 = "=";
-              pos++;
-            } else {
-              result2 = null;
-              if (reportFailures === 0) {
-                matchFailed("\"=\"");
-              }
+            result2 = [];
+            result3 = parse_space();
+            while (result3 !== null) {
+              result2.push(result3);
+              result3 = parse_space();
             }
             if (result2 !== null) {
-              result3 = [];
-              result4 = parse_space();
-              while (result4 !== null) {
-                result3.push(result4);
-                result4 = parse_space();
+              if (input.charCodeAt(pos) === 61) {
+                result3 = "=";
+                pos++;
+              } else {
+                result3 = null;
+                if (reportFailures === 0) {
+                  matchFailed("\"=\"");
+                }
               }
               if (result3 !== null) {
-                if (input.substr(pos, 3) === "new") {
-                  result4 = "new";
-                  pos += 3;
-                } else {
-                  result4 = null;
-                  if (reportFailures === 0) {
-                    matchFailed("\"new\"");
-                  }
+                result4 = [];
+                result5 = parse_space();
+                while (result5 !== null) {
+                  result4.push(result5);
+                  result5 = parse_space();
                 }
                 if (result4 !== null) {
-                  result6 = parse_space();
-                  if (result6 !== null) {
-                    result5 = [];
-                    while (result6 !== null) {
-                      result5.push(result6);
-                      result6 = parse_space();
-                    }
-                  } else {
-                    result5 = null;
-                  }
+                  result5 = parse_And_Expression();
                   if (result5 !== null) {
-                    result6 = parse_And_Expression();
-                    if (result6 !== null) {
-                      result7 = parse_newline();
-                      if (result7 !== null) {
-                        result0 = [result0, result1, result2, result3, result4, result5, result6, result7];
-                      } else {
-                        result0 = null;
-                        pos = pos1;
-                      }
-                    } else {
-                      result0 = null;
-                      pos = pos1;
-                    }
+                    result0 = [result0, result1, result2, result3, result4, result5];
                   } else {
                     result0 = null;
                     pos = pos1;
@@ -1609,13 +1588,7 @@ module.exports = (function(){
           pos = pos1;
         }
         if (result0 !== null) {
-          result0 = (function(offset, id, exp) {
-            return {
-                type: 'INSTANTIATE',
-                identifier: id,
-                expression: exp
-            }
-          })(pos0, result0[0], result0[6]);
+          result0 = (function(offset, id, exp) { return { type: 'ASSIGN_INSTANCE_VARIABLE', identifier: id, expression: exp } })(pos0, result0[1], result0[5]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -1649,9 +1622,44 @@ module.exports = (function(){
                   result4 = parse_space();
                 }
                 if (result3 !== null) {
-                  result4 = parse_And_Expression();
+                  if (input.substr(pos, 3) === "new") {
+                    result4 = "new";
+                    pos += 3;
+                  } else {
+                    result4 = null;
+                    if (reportFailures === 0) {
+                      matchFailed("\"new\"");
+                    }
+                  }
                   if (result4 !== null) {
-                    result0 = [result0, result1, result2, result3, result4];
+                    result6 = parse_space();
+                    if (result6 !== null) {
+                      result5 = [];
+                      while (result6 !== null) {
+                        result5.push(result6);
+                        result6 = parse_space();
+                      }
+                    } else {
+                      result5 = null;
+                    }
+                    if (result5 !== null) {
+                      result6 = parse_And_Expression();
+                      if (result6 !== null) {
+                        result7 = parse_newline();
+                        if (result7 !== null) {
+                          result0 = [result0, result1, result2, result3, result4, result5, result6, result7];
+                        } else {
+                          result0 = null;
+                          pos = pos1;
+                        }
+                      } else {
+                        result0 = null;
+                        pos = pos1;
+                      }
+                    } else {
+                      result0 = null;
+                      pos = pos1;
+                    }
                   } else {
                     result0 = null;
                     pos = pos1;
@@ -1675,14 +1683,79 @@ module.exports = (function(){
           if (result0 !== null) {
             result0 = (function(offset, id, exp) {
               return {
-                type: 'ASSIGN',
-                identifier: id,
-                expression: exp
-              } 
-            })(pos0, result0[0], result0[4]);
+                  type: 'INSTANTIATE',
+                  identifier: id,
+                  expression: exp
+              }
+            })(pos0, result0[0], result0[6]);
           }
           if (result0 === null) {
             pos = pos0;
+          }
+          if (result0 === null) {
+            pos0 = pos;
+            pos1 = pos;
+            result0 = parse_identifier();
+            if (result0 !== null) {
+              result1 = [];
+              result2 = parse_space();
+              while (result2 !== null) {
+                result1.push(result2);
+                result2 = parse_space();
+              }
+              if (result1 !== null) {
+                if (input.charCodeAt(pos) === 61) {
+                  result2 = "=";
+                  pos++;
+                } else {
+                  result2 = null;
+                  if (reportFailures === 0) {
+                    matchFailed("\"=\"");
+                  }
+                }
+                if (result2 !== null) {
+                  result3 = [];
+                  result4 = parse_space();
+                  while (result4 !== null) {
+                    result3.push(result4);
+                    result4 = parse_space();
+                  }
+                  if (result3 !== null) {
+                    result4 = parse_And_Expression();
+                    if (result4 !== null) {
+                      result0 = [result0, result1, result2, result3, result4];
+                    } else {
+                      result0 = null;
+                      pos = pos1;
+                    }
+                  } else {
+                    result0 = null;
+                    pos = pos1;
+                  }
+                } else {
+                  result0 = null;
+                  pos = pos1;
+                }
+              } else {
+                result0 = null;
+                pos = pos1;
+              }
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+            if (result0 !== null) {
+              result0 = (function(offset, id, exp) {
+                return {
+                  type: 'ASSIGN',
+                  identifier: id,
+                  expression: exp
+                } 
+              })(pos0, result0[0], result0[4]);
+            }
+            if (result0 === null) {
+              pos = pos0;
+            }
           }
         }
         return result0;

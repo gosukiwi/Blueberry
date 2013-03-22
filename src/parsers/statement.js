@@ -20,6 +20,7 @@ module.exports = function(obj) {
 
     switch(obj.type) {
         case 'ASSIGN':
+        case 'ASSIGN_INSTANCE_VARIABLE':
             output = parser.assign(obj);
             break;
         case 'INSTANTIATE':

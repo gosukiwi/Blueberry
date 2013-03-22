@@ -16,8 +16,15 @@ These are some examples of all the things that are already working :)
 
 ```
 class Human
+  # name will be a public instance variable
   @name
+  # age will also be a public instance variable with a value of 18
   @age = 18
+
+  def __construct(name)
+    # this is the class' constructor
+    @name = name
+  end
 
   def greet
     echo(@name)

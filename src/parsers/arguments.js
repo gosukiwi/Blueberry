@@ -20,7 +20,7 @@ module.exports = function(obj) {
         vals = [];
 
     for(i = 0; i < obj.values.length; i += 1) {
-        vals.push(parser(obj.values[i]));
+        vals.push('$' + parser(obj.values[i]));
     }
 
     return vals.join(', ');

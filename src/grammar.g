@@ -154,6 +154,9 @@ Elsif = space* "else" space+ i:If_Header b:Block "end"
 
 Assign
   = 
+  "@" id:identifier space* "=" space* exp:And_Expression
+  { return { type: 'ASSIGN_INSTANCE_VARIABLE', identifier: id, expression: exp } } 
+  /
   id:identifier space* "=" space* "new" space+ exp:And_Expression newline
   {
     return {
@@ -319,4 +322,5 @@ expression
   / identifier
   / "@" id:identifier 
   { return { type: 'INSTANCE_IDENTIFIER', value: id.value } }
+
 
