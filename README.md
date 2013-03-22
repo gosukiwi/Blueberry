@@ -69,14 +69,24 @@ echo('Hello ' & name)
 
 ### Arrays
 
-You create arrays as you do in PHP
+You can create arrays with ```[]```
+Also, arrays can have initial values
 
 ```
-arr = array(1, 2, 'string')
-echo(arr[2])
+myArray = [1, 2, f(1)]
+
+callSomething([1, 2])
+
+emptyArray = []
 ```
 
-Arrays start from 0
+To get the array item at a given index is the same as PHP
+
+```
+item = arr[2]
+```
+
+Arrays indeces start from 0
 
 ### Multidimensional Arrays Using JSON Sytnax
 
