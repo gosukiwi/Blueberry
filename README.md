@@ -33,11 +33,11 @@ TODO: unless
 To apply a boolean not operation, use the ```not``` keyword
 
 ```
-if !(age > 18)
+if not (age > 18)
     doSomething()
 end
 
-myValue = !myVariable
+myValue = not myVariable
 ```
 
 ### Loops
