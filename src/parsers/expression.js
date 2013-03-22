@@ -23,7 +23,8 @@ var outter_parser = function(obj) {
             concat: require('./concat.js'),
             bool: require('./bool.js'),
             nil: require('./nil.js'),
-            range: require('./range.js')
+            range: require('./range.js'),
+            array_identifier: require('./array_identifier.js')
         };
 
     switch(obj.type) {
@@ -72,6 +73,9 @@ var outter_parser = function(obj) {
         case 'INSTANCE_IDENTIFIER':
             // @myInstanceVariable
             output = '$this->' + parser.identifier(obj);
+            break;
+        case 'ARRAY_IDENTIFIER':
+            output = parser.array_identifier(obj);
             break;
         case 'IDENTIFIER':
             // When an expression is parsed, it checks for a function call

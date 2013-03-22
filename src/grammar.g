@@ -274,20 +274,6 @@ And_Expression
 Or_Expression
   = l:bool_comparison space+ "or" space+ r:Or_Expression
   { return { type: 'OR', left: l, right: r } }
-  / bool_comparison
-
-/* Boolean Operations */
-bool_operator
-  = ">"
-  / "<"
-  / ">="
-  / "<="
-  / "=="
-  / "!="
-
-bool_comparison
-  = "(" l:And_Expression space* op:bool_operator space* r:And_Expression ")"
-  { return { type: 'COMPARISON', operator: op, left: l, right: r } }
   / substraction
 
 /* Arithmetic operators */
@@ -324,6 +310,8 @@ expression
   = 
   "(" c:And_Expression ")"
   { return { type: 'PARENS_EXPRESSION', expression: c }; }
+  / bool_comparison
+  / Array_Identifier
   / Call
   / string
   / real_number
@@ -337,4 +325,23 @@ expression
   { return { type: 'INSTANCE_IDENTIFIER', value: id.value } }
   / "(" start:And_Expression ".." end:And_Expression ")"
   { return { type: 'RANGE', from:start, to:end } }
+
+/* Boolean Operations */
+bool_operator
+  = ">"
+  / "<"
+  / ">="
+  / "<="
+  / "=="
+  / "!="
+
+bool_comparison
+  = "(" l:And_Expression space* op:bool_operator space* r:And_Expression ")"
+  { return { type: 'COMPARISON', operator: op, left: l, right: r } }
+
+/* Array Identifier */
+
+Array_Identifier
+  = id:identifier "[" idx:And_Expression "]"
+  { return { type: 'ARRAY_IDENTIFIER', name: id, index: idx } }
 
