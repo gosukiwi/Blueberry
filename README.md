@@ -80,7 +80,17 @@ Arrays start from 0
 
 ### Multidimensional Arrays Using JSON Sytnax
 
-TODO
+You can create multidimensional arrays using JSON syntax
+
+```
+myArray = {
+    'name': 'John',
+    'age': 18,
+    'more_data': {
+        'something': 'else'
+    }
+}
+```
 
 ### Functions
 
