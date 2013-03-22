@@ -49,7 +49,12 @@ var outter_parser = function(obj) {
         case 'PARENS_EXPRESSION':
             output = '(' + outter_parser(obj.expression) + ')';
             break;
+        case 'OBJECT_ATTRIBUTE_IDENTIFIER':
+            // myObjectInstance.myAttribute
+            output = '$' + parser.identifier(obj.object) + '->' + parser.identifier(obj.value);
+            break;
         case 'INSTANCE_IDENTIFIER':
+            // @myInstanceVariable
             output = '$this->' + parser.identifier(obj);
             break;
         case 'IDENTIFIER':

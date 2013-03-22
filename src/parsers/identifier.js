@@ -4,7 +4,8 @@
  *      [a-zA-Z] [a-zA-Z_0-9]*
  */
 module.exports = function(obj) {
-    if(obj.type !== 'IDENTIFIER' && obj.type !== 'INSTANCE_IDENTIFIER') {
+    if(obj.type !== 'IDENTIFIER' && obj.type !== 'INSTANCE_IDENTIFIER'
+        && obj.type !== 'OBJECT_ATTRIBUTE_IDENTIFIER') {
         throw "This is not an identifier!";
     }
 

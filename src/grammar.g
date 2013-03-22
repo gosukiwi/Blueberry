@@ -292,6 +292,8 @@ expression
   / string
   / real_number
   / integer
+  / l:identifier "." r:identifier
+  { return { type: 'OBJECT_ATTRIBUTE_IDENTIFIER', object: l, value: r } }
   / identifier
   / "@" id:identifier 
   { return { type: 'INSTANCE_IDENTIFIER', value: id.value } }

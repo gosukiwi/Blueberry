@@ -2962,23 +2962,23 @@ module.exports = (function(){
               if (result0 === null) {
                 result0 = parse_integer();
                 if (result0 === null) {
+                  pos0 = pos;
+                  pos1 = pos;
                   result0 = parse_identifier();
-                  if (result0 === null) {
-                    pos0 = pos;
-                    pos1 = pos;
-                    if (input.charCodeAt(pos) === 64) {
-                      result0 = "@";
+                  if (result0 !== null) {
+                    if (input.charCodeAt(pos) === 46) {
+                      result1 = ".";
                       pos++;
                     } else {
-                      result0 = null;
+                      result1 = null;
                       if (reportFailures === 0) {
-                        matchFailed("\"@\"");
+                        matchFailed("\".\"");
                       }
                     }
-                    if (result0 !== null) {
-                      result1 = parse_identifier();
-                      if (result1 !== null) {
-                        result0 = [result0, result1];
+                    if (result1 !== null) {
+                      result2 = parse_identifier();
+                      if (result2 !== null) {
+                        result0 = [result0, result1, result2];
                       } else {
                         result0 = null;
                         pos = pos1;
@@ -2987,11 +2987,48 @@ module.exports = (function(){
                       result0 = null;
                       pos = pos1;
                     }
-                    if (result0 !== null) {
-                      result0 = (function(offset, id) { return { type: 'INSTANCE_IDENTIFIER', value: id.value } })(pos0, result0[1]);
-                    }
+                  } else {
+                    result0 = null;
+                    pos = pos1;
+                  }
+                  if (result0 !== null) {
+                    result0 = (function(offset, l, r) { return { type: 'OBJECT_ATTRIBUTE_IDENTIFIER', object: l, value: r } })(pos0, result0[0], result0[2]);
+                  }
+                  if (result0 === null) {
+                    pos = pos0;
+                  }
+                  if (result0 === null) {
+                    result0 = parse_identifier();
                     if (result0 === null) {
-                      pos = pos0;
+                      pos0 = pos;
+                      pos1 = pos;
+                      if (input.charCodeAt(pos) === 64) {
+                        result0 = "@";
+                        pos++;
+                      } else {
+                        result0 = null;
+                        if (reportFailures === 0) {
+                          matchFailed("\"@\"");
+                        }
+                      }
+                      if (result0 !== null) {
+                        result1 = parse_identifier();
+                        if (result1 !== null) {
+                          result0 = [result0, result1];
+                        } else {
+                          result0 = null;
+                          pos = pos1;
+                        }
+                      } else {
+                        result0 = null;
+                        pos = pos1;
+                      }
+                      if (result0 !== null) {
+                        result0 = (function(offset, id) { return { type: 'INSTANCE_IDENTIFIER', value: id.value } })(pos0, result0[1]);
+                      }
+                      if (result0 === null) {
+                        pos = pos0;
+                      }
                     }
                   }
                 }
