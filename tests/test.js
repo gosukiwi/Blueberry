@@ -52,6 +52,31 @@ module.exports = {
         test.done();
     },
 
+    testBool: function (test) {
+        test.equals(
+            this.parseStatement('a = true'),
+            '$a = true;'
+        );
+        test.done();
+    },
+
+    testNil: function (test) {
+        test.equals(
+            this.parseStatement('a = nil'),
+            '$a = null;'
+        );
+        test.done();
+    },
+
+
+    testWhile: function (test) {
+        test.equals(
+            this.parseStatement('while a\nb = 1\nend'),
+            'while ($a) {\n$b = 1;\n}'
+        );
+        test.done();
+    },
+
     testClass: function (test) {
         test.equals(
             this.compileFile('./tests/icedtea/class1.tea'),

@@ -49,6 +49,16 @@ Comment
 identifier
   = h:[a-zA-Z] t:[a-zA-Z_0-9]* { return { type: 'IDENTIFIER', value: h + t.join('') } }
 
+/* Terminals */
+bool
+  = "true"
+  { return { type: 'BOOL', value: 'true' } }
+  / "false"
+  { return { type: 'BOOL', value: 'false' } }
+
+nil
+  = "nil" { return { type: 'NIL', value: 'NIL' } }
+
 
 
 /* BEGIN STATEMENTS */
@@ -65,6 +75,7 @@ identifier
 statement
   = 
   If
+  / While
   / Assign
   / Def
   / Class
@@ -95,6 +106,14 @@ Class
     b:Class_Body*
   "end"
   { return { type: 'CLASS', name: id, block:b, attributes: a } }
+
+/* A while statement */
+
+While
+ = "while" space+ condition:And_Expression newline+
+   body:Block
+ "end"
+ { return { type: 'WHILE', condition: condition, body: body } }
 
 /* An if statement */
 If
@@ -293,6 +312,8 @@ expression
   / string
   / real_number
   / integer
+  / bool
+  / nil
   / l:identifier "." r:identifier
   { return { type: 'OBJECT_ATTRIBUTE_IDENTIFIER', object: l, value: r } }
   / identifier

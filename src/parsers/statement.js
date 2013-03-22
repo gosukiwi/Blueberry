@@ -14,7 +14,8 @@ module.exports = function(obj) {
             'if_else': require('./if_else.js'),
             'call': require('./call_statement.js'),
             'class': require('./class.js'),
-            'instantiate': require('./instantiate.js')
+            'instantiate': require('./instantiate.js'),
+            'while': require('./while.js')
         };
 
     switch(obj.type) {
@@ -29,6 +30,9 @@ module.exports = function(obj) {
             break;
         case 'DEF':
             output = parser.def(obj);
+            break;
+        case 'WHILE':
+            output = parser.while(obj);
             break;
         case 'IF':
             output = parser.if(obj);

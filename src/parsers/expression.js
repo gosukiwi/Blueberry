@@ -20,10 +20,18 @@ var outter_parser = function(obj) {
             arithmetic: require('./arithmetic.js'),
             call: require('./call_expression.js'),
             comparison: require('./comparison.js'),
-            concat: require('./concat.js')
+            concat: require('./concat.js'),
+            bool: require('./bool.js'),
+            nil: require('./nil.js')
         };
 
     switch(obj.type) {
+        case 'NIL':
+            output = parser.nil(obj);
+            break;
+        case 'BOOL':
+            output = parser.bool(obj);
+            break;
         case 'NUMBER':
             output = parser.number(obj);
             break;
