@@ -325,6 +325,7 @@ expression
   { return { type: 'INSTANCE_IDENTIFIER', value: id.value } }
   / "(" start:And_Expression ".." end:And_Expression ")"
   { return { type: 'RANGE', from:start, to:end } }
+  / JSON_Object
 
 /* Boolean Operations */
 bool_operator
@@ -344,4 +345,15 @@ bool_comparison
 Array_Identifier
   = id:identifier "[" idx:And_Expression "]"
   { return { type: 'ARRAY_IDENTIFIER', name: id, index: idx } }
+
+/* JSON Object! */
+JSON_Item_List
+  = 
+  Empty* name:string space* ":" space* value:And_Expression Empty* "," more_values:JSON_Item_List
+  { return [{ name: name, value: value }].concat(more_values) }
+  / Empty* name:string space* ":" space* value:And_Expression Empty*
+  { return [{ name: name, value: value }] }
+JSON_Object
+  = "{" values: JSON_Item_List "}"
+  { return { type: 'JSON_ARRAY', values: values } }
 

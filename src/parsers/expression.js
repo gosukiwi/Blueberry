@@ -24,7 +24,8 @@ var outter_parser = function(obj) {
             bool: require('./bool.js'),
             nil: require('./nil.js'),
             range: require('./range.js'),
-            array_identifier: require('./array_identifier.js')
+            array_identifier: require('./array_identifier.js'),
+            json_array: require('./json_array.js')
         };
 
     switch(obj.type) {
@@ -73,6 +74,9 @@ var outter_parser = function(obj) {
         case 'INSTANCE_IDENTIFIER':
             // @myInstanceVariable
             output = '$this->' + parser.identifier(obj);
+            break;
+        case 'JSON_ARRAY':
+            output = parser.json_array(obj);
             break;
         case 'ARRAY_IDENTIFIER':
             output = parser.array_identifier(obj);
