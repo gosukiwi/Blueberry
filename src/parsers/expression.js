@@ -22,7 +22,8 @@ var outter_parser = function(obj) {
             comparison: require('./comparison.js'),
             concat: require('./concat.js'),
             bool: require('./bool.js'),
-            nil: require('./nil.js')
+            nil: require('./nil.js'),
+            range: require('./range.js')
         };
 
     switch(obj.type) {
@@ -46,6 +47,9 @@ var outter_parser = function(obj) {
             break;
         case 'ARITHMETIC':
             output = parser.arithmetic(obj);
+            break;
+        case 'RANGE':
+            output = parser.range(obj);
             break;
         case 'CALL':
         case 'CALL_METHOD':

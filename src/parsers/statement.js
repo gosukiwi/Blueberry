@@ -15,7 +15,8 @@ module.exports = function(obj) {
             'call': require('./call_statement.js'),
             'class': require('./class.js'),
             'instantiate': require('./instantiate.js'),
-            'while': require('./while.js')
+            'while': require('./while.js'),
+            'for': require('./for.js')
         };
 
     switch(obj.type) {
@@ -31,6 +32,10 @@ module.exports = function(obj) {
             break;
         case 'DEF':
             output = parser.def(obj);
+            break;
+        case 'FOR':
+        case 'COMPOSITE_FOR':
+            output = parser.for(obj);
             break;
         case 'WHILE':
             output = parser.while(obj);

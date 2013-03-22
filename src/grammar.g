@@ -76,6 +76,7 @@ statement
   = 
   If
   / While
+  / For
   / Assign
   / Def
   / Class
@@ -107,6 +108,17 @@ Class
     b:Class_Body*
   "end"
   { return { type: 'CLASS', name: id, block:b, attributes: a } }
+
+/* A for statement */
+For =
+  "for" space+ id:identifier space+ "in" space+ collection:And_Expression newline+
+    body:Block
+  "end"
+  { return { type: 'FOR', name: id, collection:collection, body: body } }
+  / "for" space+ key:identifier "," space* val:identifier space+ "in" space+ collection:And_Expression newline+
+    body:Block
+  "end"
+  { return { type: 'COMPOSITE_FOR', key: key, value: val, collection:collection, body: body } }
 
 /* A while statement */
 
@@ -323,4 +335,6 @@ expression
   / identifier
   / "@" id:identifier 
   { return { type: 'INSTANCE_IDENTIFIER', value: id.value } }
+  / "(" start:And_Expression ".." end:And_Expression ")"
+  { return { type: 'RANGE', from:start, to:end } }
 
