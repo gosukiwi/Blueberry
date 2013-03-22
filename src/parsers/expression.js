@@ -25,6 +25,7 @@ var outter_parser = function(obj) {
             nil: require('./nil.js'),
             range: require('./range.js'),
             array_identifier: require('./array_identifier.js'),
+            array_create: require('./array_create.js'),
             json_array: require('./json_array.js')
         };
 
@@ -77,6 +78,9 @@ var outter_parser = function(obj) {
             break;
         case 'JSON_ARRAY':
             output = parser.json_array(obj);
+            break;
+        case 'ARRAY_CREATE':
+            output = parser.array_create(obj);
             break;
         case 'ARRAY_IDENTIFIER':
             output = parser.array_identifier(obj);

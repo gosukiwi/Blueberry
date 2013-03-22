@@ -85,9 +85,9 @@ You can create multidimensional arrays using JSON syntax
 ```
 myArray = {
     'name': 'John',
-    'age': 18,
+    'age': getAge(),
     'more_data': {
-        'something': 'else'
+        'married': false
     }
 }
 ```

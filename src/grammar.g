@@ -326,6 +326,7 @@ expression
   / "(" start:And_Expression ".." end:And_Expression ")"
   { return { type: 'RANGE', from:start, to:end } }
   / JSON_Object
+  / Array_Create
 
 /* Boolean Operations */
 bool_operator
@@ -347,13 +348,39 @@ Array_Identifier
   { return { type: 'ARRAY_IDENTIFIER', name: id, index: idx } }
 
 /* JSON Object! */
-JSON_Item_List
-  = 
-  Empty* name:string space* ":" space* value:And_Expression Empty* "," more_values:JSON_Item_List
-  { return [{ name: name, value: value }].concat(more_values) }
-  / Empty* name:string space* ":" space* value:And_Expression Empty*
-  { return [{ name: name, value: value }] }
+JSON_Item
+  = Empty* name:string space* ":" space* value:And_Expression Empty*
+  { return { name: name, value: value } }
 JSON_Object
-  = "{" values: JSON_Item_List "}"
-  { return { type: 'JSON_ARRAY', values: values } }
+  = "{" h:JSON_Item t:(space* "," space* JSON_Item)* "}"
+  {
+    var values = [h]
+      , i; 
+
+    for(i = 0; i < t.length; i += 1) {
+      values.push(t[i].pop());
+    } 
+    
+    return {
+      type: 'JSON_ARRAY',
+      values: values
+    }
+  }
+
+/* Array creation shortcut */
+Array_Create
+  = "[" h:And_Expression? t:(space* "," space* And_Expression)* "]" 
+  {
+    var values = [h]
+      , i; 
+
+    for(i = 0; i < t.length; i += 1) {
+      values.push(t[i].pop());
+    } 
+    
+    return {
+      type: 'ARRAY_CREATE',
+      values: values
+    }
+  }
 
