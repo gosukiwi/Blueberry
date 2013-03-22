@@ -37,6 +37,14 @@ def myFunctionName(name)
 end
 ```
 
+### Loops
+
+```
+while someFunctionReturnsTrue()
+    echo('Hello, World!')
+end
+``` 
+
 ### Conditionals
 
 Boolean operations must be enclosed with ```()```
