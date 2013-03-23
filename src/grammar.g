@@ -267,32 +267,48 @@ Call
 
 /* AND and OR conditions */
 And_Expression
-  = l:substraction space+ "and" space+ r:And_Expression
+  = l:Bool_Comparison space+ "and" space+ r:And_Expression
   { return { type: 'AND', left: l, right: r } }
-  / l:substraction space+ "or" space+ r:And_Expression
+  / l:Bool_Comparison space+ "or" space+ r:And_Expression
   { return { type: 'OR', left: l, right: r } }
-  / substraction
+  / Bool_Comparison
+
+/* Boolean Comparison */
+Bool_Comparison
+  = l:Adition space* ">" space* r:Bool_Comparison
+  { return { type: 'COMPARISON', operator: '>', left: l, right: r } }
+  / l:Adition space* "<" space* r:Bool_Comparison
+  { return { type: 'COMPARISON', operator: '<', left: l, right: r } }
+  / l:Adition space* ">=" space* r:Bool_Comparison
+  { return { type: 'COMPARISON', operator: '>=', left: l, right: r } }
+  / l:Adition space* "<=" space* r:Bool_Comparison
+  { return { type: 'COMPARISON', operator: '<=', left: l, right: r } }
+  / l:Adition space* "==" space* r:Bool_Comparison
+  { return { type: 'COMPARISON', operator: '==', left: l, right: r } }
+  / l:Adition space* "!=" space* r:Bool_Comparison
+  { return { type: 'COMPARISON', operator: '!=', left: l, right: r } }
+  / Adition
 
 /* Arithmetic operators */
 
-substraction
-  = l:multiplicative space* "-" space* r:substraction
+Adition
+  = l:Multiplicative space* "-" space* r:Adition
   { return { type: 'ARITHMETIC', operation: '-', left: l, right: r }; }
-  / l:multiplicative space* "+" space* r:substraction
+  / l:Multiplicative space* "+" space* r:Adition
   { return { type: 'ARITHMETIC', operation: '+', left: l, right: r }; }
-  / multiplicative
+  / Multiplicative
 
-multiplicative
-  = l:concat space* "*" space* r:multiplicative
+Multiplicative
+  = l:Concat  space* "*" space* r:Multiplicative
   { return { type: 'ARITHMETIC', operation: '*', left: l, right: r }; }
-  / l:concat space* "/" space* r:multiplicative
+  / l:Concat  space* "/" space* r:Multiplicative
   { return { type: 'ARITHMETIC', operation: '/', left: l, right: r }; }
-  / concat
+  / Concat 
 
 /* Concatenation */
 
-concat 
-  = l:expression space* "&" space* r:concat
+Concat 
+  = l:expression space* "&" space* r:Concat 
   { return { type: 'CONCATENATION', left: l, right: r }; }
   / expression
 
@@ -303,7 +319,6 @@ expression
   { return { type: 'PARENS_EXPRESSION', expression: c }; }
   / "not" space* e:And_Expression
   { return { type: 'BOOL_NOT', value: e } }
-  / bool_comparison
   / Array_Identifier
   / Call
   / string
@@ -320,19 +335,6 @@ expression
   { return { type: 'RANGE', from:start, to:end } }
   / JSON_Object
   / Array_Create
-
-/* Boolean Operations */
-bool_operator
-  = ">"
-  / "<"
-  / ">="
-  / "<="
-  / "=="
-  / "!="
-
-bool_comparison
-  = "(" l:And_Expression space* op:bool_operator space* r:And_Expression ")"
-  { return { type: 'COMPARISON', operator: op, left: l, right: r } }
 
 /* Array Identifier */
 
