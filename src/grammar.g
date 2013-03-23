@@ -167,8 +167,8 @@ Elsif = space* "else" space+ i:If_Header b:Block "end"
 
 Assign
   = 
-  "@" id:identifier space* "=" space* exp:And_Expression
-  { return { type: 'ASSIGN_INSTANCE_VARIABLE', identifier: id, expression: exp } } 
+  "@" assign:Assign
+  { return { type: 'ASSIGN_INSTANCE_VARIABLE', assignment: assign } } 
   /
   id:identifier space* "=" space* "new" space+ exp:And_Expression newline
   {
@@ -186,6 +186,15 @@ Assign
       condition: condition,
       left: t,
       right: f
+    } 
+  }
+  / id:identifier space* "=" space* l:And_Expression space* "??" space* r:And_Expression
+  {
+    return {
+      type: 'ASSIGN_DEFAULT_VALUE',
+      identifier: id,
+      left: l,
+      right: r
     } 
   }
   / id:identifier space* "=" space* exp:And_Expression

@@ -2111,51 +2111,9 @@ module.exports = (function(){
           }
         }
         if (result0 !== null) {
-          result1 = parse_identifier();
+          result1 = parse_Assign();
           if (result1 !== null) {
-            result2 = [];
-            result3 = parse_space();
-            while (result3 !== null) {
-              result2.push(result3);
-              result3 = parse_space();
-            }
-            if (result2 !== null) {
-              if (input.charCodeAt(pos) === 61) {
-                result3 = "=";
-                pos++;
-              } else {
-                result3 = null;
-                if (reportFailures === 0) {
-                  matchFailed("\"=\"");
-                }
-              }
-              if (result3 !== null) {
-                result4 = [];
-                result5 = parse_space();
-                while (result5 !== null) {
-                  result4.push(result5);
-                  result5 = parse_space();
-                }
-                if (result4 !== null) {
-                  result5 = parse_And_Expression();
-                  if (result5 !== null) {
-                    result0 = [result0, result1, result2, result3, result4, result5];
-                  } else {
-                    result0 = null;
-                    pos = pos1;
-                  }
-                } else {
-                  result0 = null;
-                  pos = pos1;
-                }
-              } else {
-                result0 = null;
-                pos = pos1;
-              }
-            } else {
-              result0 = null;
-              pos = pos1;
-            }
+            result0 = [result0, result1];
           } else {
             result0 = null;
             pos = pos1;
@@ -2165,7 +2123,7 @@ module.exports = (function(){
           pos = pos1;
         }
         if (result0 !== null) {
-          result0 = (function(offset, id, exp) { return { type: 'ASSIGN_INSTANCE_VARIABLE', identifier: id, expression: exp } })(pos0, result0[1], result0[5]);
+          result0 = (function(offset, assign) { return { type: 'ASSIGN_INSTANCE_VARIABLE', assignment: assign } })(pos0, result0[1]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -2450,7 +2408,49 @@ module.exports = (function(){
                     if (result3 !== null) {
                       result4 = parse_And_Expression();
                       if (result4 !== null) {
-                        result0 = [result0, result1, result2, result3, result4];
+                        result5 = [];
+                        result6 = parse_space();
+                        while (result6 !== null) {
+                          result5.push(result6);
+                          result6 = parse_space();
+                        }
+                        if (result5 !== null) {
+                          if (input.substr(pos, 2) === "??") {
+                            result6 = "??";
+                            pos += 2;
+                          } else {
+                            result6 = null;
+                            if (reportFailures === 0) {
+                              matchFailed("\"??\"");
+                            }
+                          }
+                          if (result6 !== null) {
+                            result7 = [];
+                            result8 = parse_space();
+                            while (result8 !== null) {
+                              result7.push(result8);
+                              result8 = parse_space();
+                            }
+                            if (result7 !== null) {
+                              result8 = parse_And_Expression();
+                              if (result8 !== null) {
+                                result0 = [result0, result1, result2, result3, result4, result5, result6, result7, result8];
+                              } else {
+                                result0 = null;
+                                pos = pos1;
+                              }
+                            } else {
+                              result0 = null;
+                              pos = pos1;
+                            }
+                          } else {
+                            result0 = null;
+                            pos = pos1;
+                          }
+                        } else {
+                          result0 = null;
+                          pos = pos1;
+                        }
                       } else {
                         result0 = null;
                         pos = pos1;
@@ -2472,16 +2472,82 @@ module.exports = (function(){
                 pos = pos1;
               }
               if (result0 !== null) {
-                result0 = (function(offset, id, exp) {
+                result0 = (function(offset, id, l, r) {
                   return {
-                    type: 'ASSIGN',
+                    type: 'ASSIGN_DEFAULT_VALUE',
                     identifier: id,
-                    expression: exp
+                    left: l,
+                    right: r
                   } 
-                })(pos0, result0[0], result0[4]);
+                })(pos0, result0[0], result0[4], result0[8]);
               }
               if (result0 === null) {
                 pos = pos0;
+              }
+              if (result0 === null) {
+                pos0 = pos;
+                pos1 = pos;
+                result0 = parse_identifier();
+                if (result0 !== null) {
+                  result1 = [];
+                  result2 = parse_space();
+                  while (result2 !== null) {
+                    result1.push(result2);
+                    result2 = parse_space();
+                  }
+                  if (result1 !== null) {
+                    if (input.charCodeAt(pos) === 61) {
+                      result2 = "=";
+                      pos++;
+                    } else {
+                      result2 = null;
+                      if (reportFailures === 0) {
+                        matchFailed("\"=\"");
+                      }
+                    }
+                    if (result2 !== null) {
+                      result3 = [];
+                      result4 = parse_space();
+                      while (result4 !== null) {
+                        result3.push(result4);
+                        result4 = parse_space();
+                      }
+                      if (result3 !== null) {
+                        result4 = parse_And_Expression();
+                        if (result4 !== null) {
+                          result0 = [result0, result1, result2, result3, result4];
+                        } else {
+                          result0 = null;
+                          pos = pos1;
+                        }
+                      } else {
+                        result0 = null;
+                        pos = pos1;
+                      }
+                    } else {
+                      result0 = null;
+                      pos = pos1;
+                    }
+                  } else {
+                    result0 = null;
+                    pos = pos1;
+                  }
+                } else {
+                  result0 = null;
+                  pos = pos1;
+                }
+                if (result0 !== null) {
+                  result0 = (function(offset, id, exp) {
+                    return {
+                      type: 'ASSIGN',
+                      identifier: id,
+                      expression: exp
+                    } 
+                  })(pos0, result0[0], result0[4]);
+                }
+                if (result0 === null) {
+                  pos = pos0;
+                }
               }
             }
           }

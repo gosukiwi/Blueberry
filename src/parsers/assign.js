@@ -5,9 +5,9 @@
  *  In PHP:
  *      $a = 1;
  */
-module.exports = function(obj) {
+var outter_parser = function(obj) {
     if(obj.type !== 'ASSIGN' && obj.type !== 'ASSIGN_INSTANCE_VARIABLE'
-        && obj.type !== 'ASSIGN_TERNARY_OPERATOR') {
+        && obj.type !== 'ASSIGN_TERNARY_OPERATOR' && obj.type !== 'ASSIGN_DEFAULT_VALUE') {
         throw "This is not an assignment!";
     }
 
@@ -15,12 +15,16 @@ module.exports = function(obj) {
         identifierParser = require('./identifier.js');
 
     if(obj.type === 'ASSIGN_INSTANCE_VARIABLE') {
-        return '$this->' + identifierParser(obj.identifier) + ' = ' + expressionParser(obj.expression) + ';';
+        return '$this->' + outter_parser(obj.assignment).substring(1);
     } else if(obj.type === 'ASSIGN_TERNARY_OPERATOR') {
         return '$' + identifierParser(obj.identifier) + ' = ' + 
             expressionParser(obj.condition) + ' ? ' + expressionParser(obj.left) + ' : ' + expressionParser(obj.right) + ';';
+    } else if(obj.type === 'ASSIGN_DEFAULT_VALUE') {
+        return '$' + identifierParser(obj.identifier) + ' = ' + 
+            expressionParser(obj.left) + ' ? ' + expressionParser(obj.left) + ' : ' + expressionParser(obj.right) + ';';
     }
 
     return '$' + identifierParser(obj.identifier) + ' = ' + expressionParser(obj.expression) + ';';
 };
 
+module.exports = outter_parser;
