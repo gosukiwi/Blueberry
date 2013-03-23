@@ -44,6 +44,18 @@ myValue = not myVariable
 title = age > 18 ? 'Mister' : 'Boy'
 ```
 
+### Default Value
+
+```
+name = getName() ?? 'Mike'
+```
+
+If ```getName()``` is falsy, 'Mike' will be used, that translates as
+
+```
+name = getName() ? getName () : 'Mike'
+```
+
 ### Loops
 
 IcedTea has several loop flavours, ```while``` and ```for``` beeing the most
