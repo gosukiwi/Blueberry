@@ -38,6 +38,12 @@ end
 myValue = not myVariable
 ```
 
+### Ternary Operator
+
+```
+title = age > 18 ? 'Mister' : 'Boy'
+```
+
 ### Loops
 
 IcedTea has several loop flavours, ```while``` and ```for``` beeing the most
