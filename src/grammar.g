@@ -178,6 +178,16 @@ Assign
         expression: exp
     }
   }
+  / id:identifier space* "=" space* condition:And_Expression space* "?" space* t:And_Expression space* ":" space* f:And_Expression
+  {
+    return {
+      type: 'ASSIGN_TERNARY_OPERATOR',
+      identifier: id,
+      condition: condition,
+      left: t,
+      right: f
+    } 
+  }
   / id:identifier space* "=" space* exp:And_Expression
   {
     return {

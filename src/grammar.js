@@ -2096,7 +2096,7 @@ module.exports = (function(){
           return cachedResult.result;
         }
         
-        var result0, result1, result2, result3, result4, result5, result6, result7;
+        var result0, result1, result2, result3, result4, result5, result6, result7, result8, result9, result10, result11, result12;
         var pos0, pos1;
         
         pos0 = pos;
@@ -2300,7 +2300,91 @@ module.exports = (function(){
                   if (result3 !== null) {
                     result4 = parse_And_Expression();
                     if (result4 !== null) {
-                      result0 = [result0, result1, result2, result3, result4];
+                      result5 = [];
+                      result6 = parse_space();
+                      while (result6 !== null) {
+                        result5.push(result6);
+                        result6 = parse_space();
+                      }
+                      if (result5 !== null) {
+                        if (input.charCodeAt(pos) === 63) {
+                          result6 = "?";
+                          pos++;
+                        } else {
+                          result6 = null;
+                          if (reportFailures === 0) {
+                            matchFailed("\"?\"");
+                          }
+                        }
+                        if (result6 !== null) {
+                          result7 = [];
+                          result8 = parse_space();
+                          while (result8 !== null) {
+                            result7.push(result8);
+                            result8 = parse_space();
+                          }
+                          if (result7 !== null) {
+                            result8 = parse_And_Expression();
+                            if (result8 !== null) {
+                              result9 = [];
+                              result10 = parse_space();
+                              while (result10 !== null) {
+                                result9.push(result10);
+                                result10 = parse_space();
+                              }
+                              if (result9 !== null) {
+                                if (input.charCodeAt(pos) === 58) {
+                                  result10 = ":";
+                                  pos++;
+                                } else {
+                                  result10 = null;
+                                  if (reportFailures === 0) {
+                                    matchFailed("\":\"");
+                                  }
+                                }
+                                if (result10 !== null) {
+                                  result11 = [];
+                                  result12 = parse_space();
+                                  while (result12 !== null) {
+                                    result11.push(result12);
+                                    result12 = parse_space();
+                                  }
+                                  if (result11 !== null) {
+                                    result12 = parse_And_Expression();
+                                    if (result12 !== null) {
+                                      result0 = [result0, result1, result2, result3, result4, result5, result6, result7, result8, result9, result10, result11, result12];
+                                    } else {
+                                      result0 = null;
+                                      pos = pos1;
+                                    }
+                                  } else {
+                                    result0 = null;
+                                    pos = pos1;
+                                  }
+                                } else {
+                                  result0 = null;
+                                  pos = pos1;
+                                }
+                              } else {
+                                result0 = null;
+                                pos = pos1;
+                              }
+                            } else {
+                              result0 = null;
+                              pos = pos1;
+                            }
+                          } else {
+                            result0 = null;
+                            pos = pos1;
+                          }
+                        } else {
+                          result0 = null;
+                          pos = pos1;
+                        }
+                      } else {
+                        result0 = null;
+                        pos = pos1;
+                      }
                     } else {
                       result0 = null;
                       pos = pos1;
@@ -2322,16 +2406,83 @@ module.exports = (function(){
               pos = pos1;
             }
             if (result0 !== null) {
-              result0 = (function(offset, id, exp) {
+              result0 = (function(offset, id, condition, t, f) {
                 return {
-                  type: 'ASSIGN',
+                  type: 'ASSIGN_TERNARY_OPERATOR',
                   identifier: id,
-                  expression: exp
+                  condition: condition,
+                  left: t,
+                  right: f
                 } 
-              })(pos0, result0[0], result0[4]);
+              })(pos0, result0[0], result0[4], result0[8], result0[12]);
             }
             if (result0 === null) {
               pos = pos0;
+            }
+            if (result0 === null) {
+              pos0 = pos;
+              pos1 = pos;
+              result0 = parse_identifier();
+              if (result0 !== null) {
+                result1 = [];
+                result2 = parse_space();
+                while (result2 !== null) {
+                  result1.push(result2);
+                  result2 = parse_space();
+                }
+                if (result1 !== null) {
+                  if (input.charCodeAt(pos) === 61) {
+                    result2 = "=";
+                    pos++;
+                  } else {
+                    result2 = null;
+                    if (reportFailures === 0) {
+                      matchFailed("\"=\"");
+                    }
+                  }
+                  if (result2 !== null) {
+                    result3 = [];
+                    result4 = parse_space();
+                    while (result4 !== null) {
+                      result3.push(result4);
+                      result4 = parse_space();
+                    }
+                    if (result3 !== null) {
+                      result4 = parse_And_Expression();
+                      if (result4 !== null) {
+                        result0 = [result0, result1, result2, result3, result4];
+                      } else {
+                        result0 = null;
+                        pos = pos1;
+                      }
+                    } else {
+                      result0 = null;
+                      pos = pos1;
+                    }
+                  } else {
+                    result0 = null;
+                    pos = pos1;
+                  }
+                } else {
+                  result0 = null;
+                  pos = pos1;
+                }
+              } else {
+                result0 = null;
+                pos = pos1;
+              }
+              if (result0 !== null) {
+                result0 = (function(offset, id, exp) {
+                  return {
+                    type: 'ASSIGN',
+                    identifier: id,
+                    expression: exp
+                  } 
+                })(pos0, result0[0], result0[4]);
+              }
+              if (result0 === null) {
+                pos = pos0;
+              }
             }
           }
         }
