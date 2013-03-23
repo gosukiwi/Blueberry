@@ -13,7 +13,7 @@ module.exports = function(obj) {
 
     output = 'array(';
     for(i = 0; i < obj.values.length; i += 1) {
-        vals.push("'" + obj.values[i].name.value + "' => " + parser(obj.values[i].value));
+        vals.push(parser(obj.values[i].name) + " => " + parser(obj.values[i].value));
     }
     output += vals.join(', ') + ')';
 

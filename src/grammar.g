@@ -363,7 +363,7 @@ Array_Identifier
 
 /* JSON Object! */
 JSON_Item
-  = Empty* name:string space* ":" space* value:And_Expression Empty*
+  = Empty* name:And_Expression space* ":" space* value:And_Expression Empty*
   { return { name: name, value: value } }
 JSON_Object
   = "{" h:JSON_Item t:(space* "," space* JSON_Item)* "}"

@@ -4449,7 +4449,7 @@ module.exports = (function(){
           result1 = parse_Empty();
         }
         if (result0 !== null) {
-          result1 = parse_string();
+          result1 = parse_And_Expression();
           if (result1 !== null) {
             result2 = [];
             result3 = parse_space();
