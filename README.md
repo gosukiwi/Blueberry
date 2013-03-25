@@ -160,7 +160,7 @@ Of course you can omit the ```finally``` and the catch argument
 ```
 try
   someCodeHere()
-catch myError
+catch
   echo(myError->getMessage())
 end
 ```

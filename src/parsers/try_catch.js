@@ -17,7 +17,7 @@ module.exports = function(obj) {
     }
 
     if(obj.catch_argument === null) {
-        output += '} catch {\n';
+        output += '} catch (Exception $ex) {\n';
     } else {
         output += '} catch (Exception ' + expressionParser(obj.catch_argument) + ') {\n';
     }
