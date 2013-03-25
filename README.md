@@ -161,7 +161,10 @@ Of course you can omit the ```finally``` and the catch argument
 try
   someCodeHere()
 catch
-  echo(myError->getMessage())
+  # When you don't include an argument identifier, "ex" is used
+  # Nevertheless, most of the time you don't include one it's because you wont
+  # use it.
+  echo(ex->getMessage())
 end
 ```
 
