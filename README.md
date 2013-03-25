@@ -222,7 +222,7 @@ Here's a list of all the command ```icedtea.js``` accepts
 
 ### Compile
 
-Example: ```compile input [output]```
+Usage: ```compile input [output]```
 
  If input is a file, compiles it onto output, if output is not defined,
  create a file with the same name as the input file but .php extension.

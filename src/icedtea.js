@@ -13,6 +13,7 @@
         get_argument,
         compile,
         compileFile,
+        walk,
         commands;
 
     /*
@@ -63,15 +64,113 @@
         output = output || source.substring(0, source.lastIndexOf('.')) + '.php';
         fs.writeFileSync(output, php_code);
     };
+
+    // Walk a directory in a recursive and parallel way
+    // usage: walk(dir, function(err, file_list) {});
+    walk = function(dir, done) {
+        var results = [];
+        fs.readdir(dir, function(err, list) {
+            if (err) {
+                return done(err);
+            }
+
+            var pending = list.length;
+
+            if (!pending) {
+                return done(null, results);
+            }
+
+            list.forEach(function(file) {
+                file = dir + '/' + file;
+                fs.stat(file, function(err, stat) {
+                    if (stat && stat.isDirectory()) {
+                        walk(file, function(err, res) {
+                            results = results.concat(res);
+                            if (!--pending) {
+                                done(null, results);
+                            }
+                        });
+                    } else {
+                        results.push(file);
+                        if (!--pending) {
+                            done(null, results);
+                        }
+                    }
+                });
+            });
+        });
+    };
     
     commands = {};
+
+    /*
+     * Watches for a file or folder, when they change, compile to passed
+     * output
+     */
+    commands.watch = function () {
+        var input = get_argument(1),
+            output = get_argument(2),
+            is_dir,
+            new_file;
+
+        if(!fs.existsSync(input)) {
+            console.log('The path ' + input + ' does not exist');
+            process.exit(1);
+        }
+
+        // Whether the input path is a directory or a file
+        is_dir = fs.statSync(input).isDirectory();
+
+        if(!output) {
+            if(is_dir) {
+                output = input;
+            } else {
+                output = input.substring(0, input.lastIndexOf('.')) + '.php';
+            }
+        }
+
+        fs.watch(input, function(evt, file) {
+            if(!file || file.indexOf('.php') !== -1) {
+                // file name not provided
+                return;
+            }
+
+            if(is_dir) {
+                new_file = file.substring(0, file.lastIndexOf('.')) + '.php';
+                compileFile(input + '/' + file, output + '/' + new_file);
+            } else {
+                compileFile(input, output);
+            }
+        });
+    };
+
+    /*
+     * Clean a directory recursively of all .php files
+     * THIS IS DESTRUCTIVE SO BE CAREFUL! This is intended to be used when
+     * you compile in your working directory by error, so you can clean all
+     * .php files
+     */
+    commands.clean = function () {
+        // TODO
+    }
+
+    /*
+     * Compiles a file or all the files in a directory
+     * usage: compile input [output]
+     *
+     * input can be a file or directory, if directory recursively compiles
+     * all .tea files
+     * If the output is not defined it will compile in the same path and
+     * only change the extension to .php
+     */
     commands.compile = function() {
         var source = get_argument(1),
             output = get_argument(2),
-            files,
             i,
             stats,
-            new_file;
+            new_file,
+            new_file_dir,
+            source_path_start;
     
         stats = fs.statSync(source);
     
@@ -79,21 +178,44 @@
         if (stats.isFile()) {
             compileFile(source, output);
         } else if (stats.isDirectory()) {
-            // All the files inside the directory
-            files = fs.readdirSync(source);
+            // Check for valid output path
+            if(output && !fs.existsSync(output)) {
+                console.log('The output path ' + output + ' does not exist.');
+                process.exit(1);
+            }
+
             // The output folder, if no output defined or invalid, use source
             if(!output || !fs.statSync(output).isDirectory()) {
                 output = source;
-            }
-    
-            for (i = 0; i < files.length; i += 1) {
-                if (files[i].substring(files[i].lastIndexOf('.')) === '.tea') {
+            } 
+
+            // Here we store the length in characters of the path, so later on 
+            // we know the base of our path
+            source_path_start = source.length;
+
+            walk(source, function(err, files) {
+                for (i = 0; i < files.length; i += 1) {
+                    if (files[i].substring(files[i].lastIndexOf('.')) !== '.tea') {
+                        continue;
+                    }
+
                     // The new name of the file
                     new_file = files[i].substring(0, files[i].lastIndexOf('.')) + '.php';
-                    // Compile it!
-                    compileFile(source + '/' + files[i], output + '/' + new_file);
+                    // Now replace the paths
+                    new_file = output + new_file.substring(source_path_start);
+                    // If on windows, replace \ with /
+                    new_file = new_file.replace('\\', '/');
+
+                    // Check if the output folder exists
+                    new_file_dir = new_file.substring(0, new_file.lastIndexOf('/'));
+                    if(!fs.existsSync(new_file_dir)) {
+                        fs.mkdirSync(new_file_dir);
+                    }
+
+                    // And compile it!
+                    compileFile(files[i], new_file);
                 }
-            }
+            });
         } else {
             console.log('Invalid path, only files and directories can be compiled');
             process.exit(1);
