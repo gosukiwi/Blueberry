@@ -24,7 +24,20 @@ else
 end
 ```
 
-TODO: unless
+You can also use ```switch```
+
+```
+switch someVariable
+  when "mike"
+    echo('Hello, Mike!')
+  when "john"
+    echo('Hello, John!')
+  when "annie", "marceline"
+    echo('Hai gals')
+  else
+    echo('Hello, World!')
+end
+```
 
 ### Boolean Not
 
