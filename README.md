@@ -143,6 +143,30 @@ myArray = {
 }
 ```
 
+### Try-Catch
+
+```
+try
+  someCodeHere()
+catch myError
+  echo(myError->getMessage())
+finally
+  doSomethingElse()
+end
+```
+
+Of course you can omit the ```finally``` and the catch argument
+
+```
+try
+  someCodeHere()
+catch myError
+  echo(myError->getMessage())
+finally
+  doSomethingElse()
+end
+```
+
 ### Functions
 
 Functions are created using the ```def``` keyword
