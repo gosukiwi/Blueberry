@@ -78,6 +78,7 @@ statement
   / While
   / For
   / Switch
+  / Try_Catch
   / Assign
   / Def
   / Class
@@ -109,6 +110,25 @@ Class
     b:Class_Body*
   "end"
   { return { type: 'CLASS', name: id, block:b, attributes: a } }
+
+
+/* A try statement */
+
+Try_Catch =
+  "try" space* newline+
+    tryBody:Block
+  "catch" space* arg:identifier? newline+
+    catchBody:Block
+  "finally" space* newline+
+    finallyBody:Block
+  "end"
+  { return { type: 'TRY_CATCH', try: tryBody, catch: catchBody, catch_argument: arg || null, finally: finallyBody } }  
+  / "try" space* newline+
+    tryBody:Block
+  "catch" space* arg:identifier? newline+
+    catchBody:Block
+  "end"
+  { return { type: 'TRY_CATCH', try: tryBody, catch: catchBody, catch_argument: arg || null, finally: null } }  
 
 /* A switch statement */
 

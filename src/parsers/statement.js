@@ -17,7 +17,8 @@ module.exports = function(obj) {
             'instantiate': require('./instantiate.js'),
             'while': require('./while.js'),
             'for': require('./for.js'),
-            'switch': require('./switch.js')
+            'switch': require('./switch.js'),
+            'try_catch': require('./try_catch.js')
         };
 
     switch(obj.type) {
@@ -35,6 +36,9 @@ module.exports = function(obj) {
             break;
         case 'DEF':
             output = parser.def(obj);
+            break;
+        case 'TRY_CATCH':
+            output = parser.try_catch(obj);
             break;
         case 'SWITCH':
             output = parser.switch(obj);
