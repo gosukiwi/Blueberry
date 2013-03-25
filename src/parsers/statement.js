@@ -16,7 +16,8 @@ module.exports = function(obj) {
             'class': require('./class.js'),
             'instantiate': require('./instantiate.js'),
             'while': require('./while.js'),
-            'for': require('./for.js')
+            'for': require('./for.js'),
+            'switch': require('./switch.js')
         };
 
     switch(obj.type) {
@@ -34,6 +35,9 @@ module.exports = function(obj) {
             break;
         case 'DEF':
             output = parser.def(obj);
+            break;
+        case 'SWITCH':
+            output = parser.switch(obj);
             break;
         case 'FOR':
         case 'COMPOSITE_FOR':

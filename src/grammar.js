@@ -54,6 +54,9 @@ module.exports = (function(){
         "Class_Attribute": parse_Class_Attribute,
         "Class_Body": parse_Class_Body,
         "Class": parse_Class,
+        "Switch": parse_Switch,
+        "When_Condition_Group": parse_When_Condition_Group,
+        "When_Group": parse_When_Group,
         "For": parse_For,
         "While": parse_While,
         "If": parse_If,
@@ -829,17 +832,20 @@ module.exports = (function(){
           if (result0 === null) {
             result0 = parse_For();
             if (result0 === null) {
-              result0 = parse_Assign();
+              result0 = parse_Switch();
               if (result0 === null) {
-                result0 = parse_Def();
+                result0 = parse_Assign();
                 if (result0 === null) {
-                  result0 = parse_Class();
+                  result0 = parse_Def();
                   if (result0 === null) {
-                    result0 = parse_Call();
+                    result0 = parse_Class();
                     if (result0 === null) {
-                      result0 = parse_Comment();
+                      result0 = parse_Call();
                       if (result0 === null) {
-                        result0 = parse_Empty();
+                        result0 = parse_Comment();
+                        if (result0 === null) {
+                          result0 = parse_Empty();
+                        }
                       }
                     }
                   }
@@ -1227,6 +1233,426 @@ module.exports = (function(){
         }
         if (result0 === null) {
           pos = pos0;
+        }
+        
+        cache[cacheKey] = {
+          nextPos: pos,
+          result:  result0
+        };
+        return result0;
+      }
+      
+      function parse_Switch() {
+        var cacheKey = "Switch@" + pos;
+        var cachedResult = cache[cacheKey];
+        if (cachedResult) {
+          pos = cachedResult.nextPos;
+          return cachedResult.result;
+        }
+        
+        var result0, result1, result2, result3, result4, result5;
+        var pos0, pos1;
+        
+        pos0 = pos;
+        pos1 = pos;
+        if (input.substr(pos, 6) === "switch") {
+          result0 = "switch";
+          pos += 6;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"switch\"");
+          }
+        }
+        if (result0 !== null) {
+          result2 = parse_space();
+          if (result2 !== null) {
+            result1 = [];
+            while (result2 !== null) {
+              result1.push(result2);
+              result2 = parse_space();
+            }
+          } else {
+            result1 = null;
+          }
+          if (result1 !== null) {
+            result2 = parse_And_Expression();
+            if (result2 !== null) {
+              result4 = parse_newline();
+              if (result4 !== null) {
+                result3 = [];
+                while (result4 !== null) {
+                  result3.push(result4);
+                  result4 = parse_newline();
+                }
+              } else {
+                result3 = null;
+              }
+              if (result3 !== null) {
+                result4 = parse_When_Group();
+                if (result4 !== null) {
+                  if (input.substr(pos, 3) === "end") {
+                    result5 = "end";
+                    pos += 3;
+                  } else {
+                    result5 = null;
+                    if (reportFailures === 0) {
+                      matchFailed("\"end\"");
+                    }
+                  }
+                  if (result5 !== null) {
+                    result0 = [result0, result1, result2, result3, result4, result5];
+                  } else {
+                    result0 = null;
+                    pos = pos1;
+                  }
+                } else {
+                  result0 = null;
+                  pos = pos1;
+                }
+              } else {
+                result0 = null;
+                pos = pos1;
+              }
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+        } else {
+          result0 = null;
+          pos = pos1;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, condition, cases) { return { type: 'SWITCH', condition: condition, cases: cases } })(pos0, result0[2], result0[4]);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        
+        cache[cacheKey] = {
+          nextPos: pos,
+          result:  result0
+        };
+        return result0;
+      }
+      
+      function parse_When_Condition_Group() {
+        var cacheKey = "When_Condition_Group@" + pos;
+        var cachedResult = cache[cacheKey];
+        if (cachedResult) {
+          pos = cachedResult.nextPos;
+          return cachedResult.result;
+        }
+        
+        var result0, result1, result2, result3, result4;
+        var pos0, pos1;
+        
+        pos0 = pos;
+        pos1 = pos;
+        result0 = parse_And_Expression();
+        if (result0 !== null) {
+          result1 = [];
+          result2 = parse_space();
+          while (result2 !== null) {
+            result1.push(result2);
+            result2 = parse_space();
+          }
+          if (result1 !== null) {
+            if (input.charCodeAt(pos) === 44) {
+              result2 = ",";
+              pos++;
+            } else {
+              result2 = null;
+              if (reportFailures === 0) {
+                matchFailed("\",\"");
+              }
+            }
+            if (result2 !== null) {
+              result3 = [];
+              result4 = parse_space();
+              while (result4 !== null) {
+                result3.push(result4);
+                result4 = parse_space();
+              }
+              if (result3 !== null) {
+                result4 = parse_When_Condition_Group();
+                if (result4 !== null) {
+                  result0 = [result0, result1, result2, result3, result4];
+                } else {
+                  result0 = null;
+                  pos = pos1;
+                }
+              } else {
+                result0 = null;
+                pos = pos1;
+              }
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+        } else {
+          result0 = null;
+          pos = pos1;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, e1, e2) { return [e1].concat(e2); })(pos0, result0[0], result0[4]);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        if (result0 === null) {
+          pos0 = pos;
+          result0 = parse_And_Expression();
+          if (result0 !== null) {
+            result0 = (function(offset, expr) { return expr; })(pos0, result0);
+          }
+          if (result0 === null) {
+            pos = pos0;
+          }
+        }
+        
+        cache[cacheKey] = {
+          nextPos: pos,
+          result:  result0
+        };
+        return result0;
+      }
+      
+      function parse_When_Group() {
+        var cacheKey = "When_Group@" + pos;
+        var cachedResult = cache[cacheKey];
+        if (cachedResult) {
+          pos = cachedResult.nextPos;
+          return cachedResult.result;
+        }
+        
+        var result0, result1, result2, result3, result4, result5, result6;
+        var pos0, pos1;
+        
+        pos0 = pos;
+        pos1 = pos;
+        result0 = [];
+        result1 = parse_space();
+        while (result1 !== null) {
+          result0.push(result1);
+          result1 = parse_space();
+        }
+        if (result0 !== null) {
+          if (input.substr(pos, 4) === "when") {
+            result1 = "when";
+            pos += 4;
+          } else {
+            result1 = null;
+            if (reportFailures === 0) {
+              matchFailed("\"when\"");
+            }
+          }
+          if (result1 !== null) {
+            result3 = parse_space();
+            if (result3 !== null) {
+              result2 = [];
+              while (result3 !== null) {
+                result2.push(result3);
+                result3 = parse_space();
+              }
+            } else {
+              result2 = null;
+            }
+            if (result2 !== null) {
+              result3 = parse_When_Condition_Group();
+              if (result3 !== null) {
+                result5 = parse_newline();
+                if (result5 !== null) {
+                  result4 = [];
+                  while (result5 !== null) {
+                    result4.push(result5);
+                    result5 = parse_newline();
+                  }
+                } else {
+                  result4 = null;
+                }
+                if (result4 !== null) {
+                  result5 = parse_Block();
+                  if (result5 !== null) {
+                    result6 = parse_When_Group();
+                    if (result6 !== null) {
+                      result0 = [result0, result1, result2, result3, result4, result5, result6];
+                    } else {
+                      result0 = null;
+                      pos = pos1;
+                    }
+                  } else {
+                    result0 = null;
+                    pos = pos1;
+                  }
+                } else {
+                  result0 = null;
+                  pos = pos1;
+                }
+              } else {
+                result0 = null;
+                pos = pos1;
+              }
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+        } else {
+          result0 = null;
+          pos = pos1;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, c, body, o) { return [{ condition: c, body: body }].concat(o); })(pos0, result0[3], result0[5], result0[6]);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        if (result0 === null) {
+          pos0 = pos;
+          pos1 = pos;
+          result0 = [];
+          result1 = parse_space();
+          while (result1 !== null) {
+            result0.push(result1);
+            result1 = parse_space();
+          }
+          if (result0 !== null) {
+            if (input.substr(pos, 4) === "when") {
+              result1 = "when";
+              pos += 4;
+            } else {
+              result1 = null;
+              if (reportFailures === 0) {
+                matchFailed("\"when\"");
+              }
+            }
+            if (result1 !== null) {
+              result3 = parse_space();
+              if (result3 !== null) {
+                result2 = [];
+                while (result3 !== null) {
+                  result2.push(result3);
+                  result3 = parse_space();
+                }
+              } else {
+                result2 = null;
+              }
+              if (result2 !== null) {
+                result3 = parse_When_Condition_Group();
+                if (result3 !== null) {
+                  result5 = parse_newline();
+                  if (result5 !== null) {
+                    result4 = [];
+                    while (result5 !== null) {
+                      result4.push(result5);
+                      result5 = parse_newline();
+                    }
+                  } else {
+                    result4 = null;
+                  }
+                  if (result4 !== null) {
+                    result5 = parse_Block();
+                    if (result5 !== null) {
+                      result0 = [result0, result1, result2, result3, result4, result5];
+                    } else {
+                      result0 = null;
+                      pos = pos1;
+                    }
+                  } else {
+                    result0 = null;
+                    pos = pos1;
+                  }
+                } else {
+                  result0 = null;
+                  pos = pos1;
+                }
+              } else {
+                result0 = null;
+                pos = pos1;
+              }
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+          if (result0 !== null) {
+            result0 = (function(offset, c, body) { return { condition: c, body: body }; })(pos0, result0[3], result0[5]);
+          }
+          if (result0 === null) {
+            pos = pos0;
+          }
+          if (result0 === null) {
+            pos0 = pos;
+            pos1 = pos;
+            result0 = [];
+            result1 = parse_space();
+            while (result1 !== null) {
+              result0.push(result1);
+              result1 = parse_space();
+            }
+            if (result0 !== null) {
+              if (input.substr(pos, 4) === "else") {
+                result1 = "else";
+                pos += 4;
+              } else {
+                result1 = null;
+                if (reportFailures === 0) {
+                  matchFailed("\"else\"");
+                }
+              }
+              if (result1 !== null) {
+                result3 = parse_newline();
+                if (result3 !== null) {
+                  result2 = [];
+                  while (result3 !== null) {
+                    result2.push(result3);
+                    result3 = parse_newline();
+                  }
+                } else {
+                  result2 = null;
+                }
+                if (result2 !== null) {
+                  result3 = parse_Block();
+                  if (result3 !== null) {
+                    result0 = [result0, result1, result2, result3];
+                  } else {
+                    result0 = null;
+                    pos = pos1;
+                  }
+                } else {
+                  result0 = null;
+                  pos = pos1;
+                }
+              } else {
+                result0 = null;
+                pos = pos1;
+              }
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+            if (result0 !== null) {
+              result0 = (function(offset, body) { return { condition: null, body: body } })(pos0, result0[3]);
+            }
+            if (result0 === null) {
+              pos = pos0;
+            }
+          }
         }
         
         cache[cacheKey] = {

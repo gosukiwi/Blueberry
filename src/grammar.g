@@ -77,6 +77,7 @@ statement
   If
   / While
   / For
+  / Switch
   / Assign
   / Def
   / Class
@@ -108,6 +109,33 @@ Class
     b:Class_Body*
   "end"
   { return { type: 'CLASS', name: id, block:b, attributes: a } }
+
+/* A switch statement */
+
+Switch =
+  "switch" space+ condition:And_Expression newline+
+   cases:When_Group
+  "end"
+  { return { type: 'SWITCH', condition: condition, cases: cases } }
+
+When_Condition_Group =
+  e1:And_Expression space* "," space* e2:When_Condition_Group
+  { return [e1].concat(e2); }
+  / expr: And_Expression
+  { return expr; }
+  
+
+When_Group 
+  = space* "when" space+ c:When_Condition_Group newline+
+   body:Block
+   o:When_Group
+  { return [{ condition: c, body: body }].concat(o); }
+  / space* "when" space+ c:When_Condition_Group newline+
+   body:Block
+  { return { condition: c, body: body }; }
+  / space* "else" newline+
+    body:Block
+  { return { condition: null, body: body } }
 
 /* A for statement */
 For =
