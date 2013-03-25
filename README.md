@@ -162,8 +162,6 @@ try
   someCodeHere()
 catch myError
   echo(myError->getMessage())
-finally
-  doSomethingElse()
 end
 ```
 
