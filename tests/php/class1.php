@@ -11,4 +11,3 @@ class Person {
 $mike = new Person();
 $mike->SayHi();
 echo($mike->age);
-

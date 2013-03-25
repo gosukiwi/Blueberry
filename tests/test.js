@@ -40,7 +40,7 @@ module.exports = {
         test.equals(this.parseStatement('a = 1'), '$a = 1;');
         test.equals(this.parseStatement('a = 1 + 6'), '$a = (1 + 6);');
         test.equals(this.parseStatement('a = f(1 + 6)'), '$a = f((1 + 6));');
-        test.equals(this.parseStatement('a = (age > 18)'), '$a = $age > 18;');
+        test.equals(this.parseStatement('a = age > 18'), '$a = $age > 18;');
         test.done();
     },
 
@@ -90,6 +90,88 @@ module.exports = {
             this.parseStatement('a = "Hello" & this.name\n'),
             '$a = \'Hello\' . $this->name;'
         );
+        test.done();
+    },
+
+    testSwitch: function (test) {
+        test.equals(
+            this.compileFile('./tests/icedtea/switch1.tea'),
+            this.load('./tests/php/switch1.php')
+        );
+        test.done();
+    },
+
+    testNot: function (test) {
+        test.equals(
+            this.parseStatement('a = not true'),
+            '$a = !true;'
+        );
+
+        test.equals(
+            this.parseStatement('if not age > 18\ncannotDrink()\nend'),
+            'if (!$age > 18) {\ncannotDrink();\n}'
+        );
+
+        test.done();
+    },
+
+
+    testTernaryOperator: function (test) {
+        test.equals(
+            this.parseStatement('a = var ? 1 : 2'),
+            '$a = $var ? 1 : 2;'
+        );
+
+        test.done();
+    },
+
+    testDefaultValue: function (test) {
+        test.equals(
+            this.parseStatement('a = var ?? 2'),
+            '$a = $var ? $var : 2;'
+        );
+
+        test.done();
+    },
+
+    testFor: function (test) {
+        test.equals(
+            this.parseStatement('for i in (0..10)\necho(i)\nend'),
+            'foreach (range(0, 10) as $i) {\necho($i);\n}'
+        );
+
+        test.equals(
+            this.parseStatement('for k, v in {\'a\': 1}\necho(k)\nend'),
+            'foreach (array(\'a\' => 1) as $k, $v) {\necho($k);\n}'
+        );
+
+        test.done();
+    },
+
+    testJSON: function (test) {
+        test.equals(
+            this.parseStatement('a = { "name": "Mike", "meta": { "age": 18 } }'),
+            '$a = array(\'name\' => \'Mike\', \'meta\' => array(\'age\' => 18));'
+        );
+
+        test.done();
+    },
+
+    testArray: function (test) {
+        test.equals(
+            this.parseStatement('a = [1, "two", [f(x)]]'),
+            '$a = array(1, \'two\', array(f($x)));'
+        );
+
+        test.done();
+    },
+
+    testTry: function (test) {
+        test.equals(
+            this.parseStatement('try\na=1\ncatch error\nb=2\nfinally\nc=3\nend'),
+            'try {\n$a = 1;\n} catch (Exception $error) {\n$b = 2;\n} finally {\n$c = 3;\n}'
+        );
+
         test.done();
     }
 };
