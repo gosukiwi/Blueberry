@@ -152,7 +152,7 @@
      */
     commands.clean = function () {
         // TODO
-    }
+    };
 
     /*
      * Compiles a file or all the files in a directory
