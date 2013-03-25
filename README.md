@@ -19,7 +19,7 @@ The easiest way to compile Iced Tea code into PHP code is using the
 If using unix you can just symlink the executable to your ```/bin``` folder, 
 if windows, add the path to ```tea.bat``` to your PATH env variable.
 
-See the wiki for extensive documentation on the CLI (Command Line Interface)
+See the [wiki](https://github.com/gosukiwi/IcedTea/wiki) for extensive documentation on the CLI (Command Line Interface)
 
 ## Syntax Examples
 
@@ -57,7 +57,7 @@ end
 To apply a boolean not operation, use the ```not``` keyword
 
 ```
-if not (age > 18)
+if not age > 18
     doSomething()
 end
 
