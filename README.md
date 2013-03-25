@@ -206,3 +206,27 @@ mike.greet()
 echo('Mike is ' & mike.age & ' years old.')
 ```
 
+## Command Line Usage
+
+The easiest way to compile Iced Tea code into PHP code is using the 
+```icedtea.js``` file, you can run it with node
+
+```node icedtea.js compile myInput.tea```
+
+That will compile ```myInput.tea``` into ```myInput.php```, you can also 
+choose what out file you want
+
+```node incedtea.js compile myInput.tea someFile.php```
+
+Here's a list of all the command ```icedtea.js``` accepts
+
+ ```compile input output```
+
+ If input is a file, compiles it onto output, if output is not defined,
+ create a file with the same names a input but .php extension.
+
+ If input is a directory, __recursively__ compile all ```.tea``` files in the directory
+ onto the output directory, mantaining directory structure, if no output directory
+ is specified, they will just be compiled onto the same directory with .php
+ extension.
+
