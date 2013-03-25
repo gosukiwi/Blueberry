@@ -162,7 +162,7 @@ myArray = {
 try
   someCodeHere()
 catch myError
-  echo(myError->getMessage())
+  echo(myError.getMessage())
 finally
   doSomethingElse()
 end
@@ -177,7 +177,7 @@ catch
   # When you don't include an argument identifier, "ex" is used
   # Nevertheless, most of the time you don't include one it's because you wont
   # use it.
-  echo(ex->getMessage())
+  echo(ex.getMessage())
 end
 ```
 
