@@ -12,7 +12,11 @@ module.exports = function(obj) {
         output,
         i;
 
-    output = 'class ' + identifierParser(obj.name) + ' {\n'; 
+    if(obj.extends === null) {
+        output = 'class ' + identifierParser(obj.name) + ' {\n'; 
+    } else {
+        output = 'class ' + identifierParser(obj.name) + ' extends ' + identifierParser(obj.extends) + ' {\n'; 
+    }
 
     // Parse attributes
     for(i = 0; i < obj.attributes.length; i += 1) {

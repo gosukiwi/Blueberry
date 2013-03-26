@@ -234,6 +234,15 @@ module.exports = {
         );
 
         test.done();
+    },
+
+    testClassInheritance: function (test) {
+        test.equals(
+            this.parseStatement('class A < B\nend'),
+            'class A extends B {\n}'
+        );
+
+        test.done();
     }
 };
 

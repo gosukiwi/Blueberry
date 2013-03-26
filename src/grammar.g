@@ -91,6 +91,8 @@ Block
 
 Empty = val:[ \n\r\t]+ { return { type: 'EMPTY', value: val.join('') } }
 
+/* Class Implementation */
+
 Class_Access_Modifier
   = "private"
   / "public"
@@ -113,13 +115,19 @@ Class_Body
   { return { type: 'CLASS_METHOD', access: 'public', def: def } }
   / Empty
 
+Class_Head
+  = "class" space+ name:identifier space* newline+
+  { return { name: name, extends: null } }
+  / "class" space+ name:identifier space+ "<" space+ parent:identifier space* newline+
+  { return { name: name, extends: parent } }
+
 Class
   = 
-  "class" space+ id:identifier space* newline+
+  head:Class_Head
     a:Class_Attribute*
     b:Class_Body*
   "end"
-  { return { type: 'CLASS', name: id, block:b, attributes: a } }
+  { return { type: 'CLASS', name: head.name, extends: head.extends, block:b, attributes: a } }
 
 
 /* A try statement */

@@ -233,3 +233,11 @@ end
 
 If no access modifier is used, ```public``` is used.
 
+Inheritance is done Ruby-Style
+
+```
+class B < A
+  # Class B extends from A
+end
+```
+
