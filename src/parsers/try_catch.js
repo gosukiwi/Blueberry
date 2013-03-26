@@ -1,5 +1,6 @@
 /*
  * A try-catch block
+ * Node Format: { type: 'TRY_CATCH', try: [statement]*, catch_argument: [identifier] | null, catch: [statement]*, finally: [statement]* | null }
  */
 module.exports = function(obj) {
     if(obj.type !== 'TRY_CATCH') {

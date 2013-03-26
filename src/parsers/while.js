@@ -1,5 +1,6 @@
 /*
- * A while
+ * A while statement
+ * Node Format: { type: 'WHILE', condition: [expression], body: [statement]* }
  */
 module.exports = function(obj) {
     if(obj.type !== 'WHILE') {
