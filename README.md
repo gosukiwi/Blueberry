@@ -1,12 +1,12 @@
-# IcedTea
-IcedTea is a script language with clean syntax, inspired from CoffeeScript, 
+# Iced Tea
+Iced Tea is a script language with clean syntax, inspired from CoffeeScript, 
 Python and Ruby.
 
-IcedTea compiles to __PHP__ so everything you do with IcedTea can run wherever
+Iced Tea compiles to __PHP__ so everything you do with Iced Tea can run wherever
 PHP can run, this is awesome for shared web servers where you can only run
 default PHP.
 
-Right now IcedTea is still in early development, but it's planned to implement
+Right now Iced Tea is still in early development, but it's planned to implement
 something very similar to CoffeeScript.
 
 ## Command Line Usage
