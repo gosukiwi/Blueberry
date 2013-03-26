@@ -37,7 +37,15 @@ module.exports = {
         callback();
     },
 
-    assign: function (test) {
+    testPrimitives: function (test) {
+        test.equals(this.parseStatement('a = 1'), '$a = 1;');
+        test.equals(this.parseStatement('a = 1.5'), '$a = 1.5;');
+        test.equals(this.parseStatement('a = "asd"'), '$a = \'asd\';');
+        test.equals(this.parseStatement('a = \'asd\''), '$a = \'asd\';');
+        test.done();
+    },
+
+    testAssign: function (test) {
         test.equals(this.parseStatement('a = 1'), '$a = 1;');
         test.equals(this.parseStatement('a = 1 + 6'), '$a = (1 + 6);');
         test.equals(this.parseStatement('a = f(1 + 6)'), '$a = f((1 + 6));');

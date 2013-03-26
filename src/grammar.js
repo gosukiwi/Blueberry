@@ -39,16 +39,15 @@ module.exports = (function(){
       var parseFunctions = {
         "start": parse_start,
         "newline": parse_newline,
-        "space": parse_space,
+        "_": parse__,
         "integer": parse_integer,
         "real_number": parse_real_number,
-        "number": parse_number,
         "string": parse_string,
         "Comment": parse_Comment,
         "identifier": parse_identifier,
         "bool": parse_bool,
         "nil": parse_nil,
-        "statement": parse_statement,
+        "Statement": parse_Statement,
         "Block": parse_Block,
         "Empty": parse_Empty,
         "Class_Access_Modifier": parse_Class_Access_Modifier,
@@ -149,10 +148,10 @@ module.exports = (function(){
         var result0, result1;
         
         result0 = [];
-        result1 = parse_statement();
+        result1 = parse_Statement();
         while (result1 !== null) {
           result0.push(result1);
-          result1 = parse_statement();
+          result1 = parse_Statement();
         }
         
         cache[cacheKey] = {
@@ -214,8 +213,8 @@ module.exports = (function(){
         return result0;
       }
       
-      function parse_space() {
-        var cacheKey = "space@" + pos;
+      function parse__() {
+        var cacheKey = "_@" + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -402,28 +401,6 @@ module.exports = (function(){
         return result0;
       }
       
-      function parse_number() {
-        var cacheKey = "number@" + pos;
-        var cachedResult = cache[cacheKey];
-        if (cachedResult) {
-          pos = cachedResult.nextPos;
-          return cachedResult.result;
-        }
-        
-        var result0;
-        
-        result0 = parse_integer();
-        if (result0 === null) {
-          result0 = parse_real_number();
-        }
-        
-        cache[cacheKey] = {
-          nextPos: pos,
-          result:  result0
-        };
-        return result0;
-      }
-      
       function parse_string() {
         var cacheKey = "string@" + pos;
         var cachedResult = cache[cacheKey];
@@ -499,10 +476,10 @@ module.exports = (function(){
         }
         if (result0 !== null) {
           result0 = (function(offset, s) { return { 
-                type: 'STRING', 
-                value: s.join('') 
-              } 
-            })(pos0, result0[1]);
+              type: 'STRING', 
+              value: s.join('') 
+            } 
+          })(pos0, result0[1]);
         }
         if (result0 === null) {
           pos = pos0;
@@ -572,10 +549,10 @@ module.exports = (function(){
           }
           if (result0 !== null) {
             result0 = (function(offset, s) { return { 
-                  type: 'STRING', 
-                  value: s.join('') 
-                } 
-              })(pos0, result0[1]);
+                type: 'STRING', 
+                value: s.join('') 
+              } 
+            })(pos0, result0[1]);
           }
           if (result0 === null) {
             pos = pos0;
@@ -950,8 +927,8 @@ module.exports = (function(){
         return result0;
       }
       
-      function parse_statement() {
-        var cacheKey = "statement@" + pos;
+      function parse_Statement() {
+        var cacheKey = "Statement@" + pos;
         var cachedResult = cache[cacheKey];
         if (cachedResult) {
           pos = cachedResult.nextPos;
@@ -1010,10 +987,10 @@ module.exports = (function(){
         var result0, result1;
         
         result0 = [];
-        result1 = parse_statement();
+        result1 = parse_Statement();
         while (result1 !== null) {
           result0.push(result1);
-          result1 = parse_statement();
+          result1 = parse_Statement();
         }
         
         cache[cacheKey] = {
@@ -1139,12 +1116,12 @@ module.exports = (function(){
         pos1 = pos;
         result0 = parse_Class_Access_Modifier();
         if (result0 !== null) {
-          result2 = parse_space();
+          result2 = parse__();
           if (result2 !== null) {
             result1 = [];
             while (result2 !== null) {
               result1.push(result2);
-              result2 = parse_space();
+              result2 = parse__();
             }
           } else {
             result1 = null;
@@ -1186,12 +1163,12 @@ module.exports = (function(){
           if (result0 !== null) {
             result1 = parse_identifier();
             if (result1 !== null) {
-              result3 = parse_space();
+              result3 = parse__();
               if (result3 !== null) {
                 result2 = [];
                 while (result3 !== null) {
                   result2.push(result3);
-                  result3 = parse_space();
+                  result3 = parse__();
                 }
               } else {
                 result2 = null;
@@ -1207,12 +1184,12 @@ module.exports = (function(){
                   }
                 }
                 if (result3 !== null) {
-                  result5 = parse_space();
+                  result5 = parse__();
                   if (result5 !== null) {
                     result4 = [];
                     while (result5 !== null) {
                       result4.push(result5);
-                      result5 = parse_space();
+                      result5 = parse__();
                     }
                   } else {
                     result4 = null;
@@ -1312,12 +1289,12 @@ module.exports = (function(){
         pos1 = pos;
         result0 = parse_Class_Access_Modifier();
         if (result0 !== null) {
-          result2 = parse_space();
+          result2 = parse__();
           if (result2 !== null) {
             result1 = [];
             while (result2 !== null) {
               result1.push(result2);
-              result2 = parse_space();
+              result2 = parse__();
             }
           } else {
             result1 = null;
@@ -1388,12 +1365,12 @@ module.exports = (function(){
           }
         }
         if (result0 !== null) {
-          result2 = parse_space();
+          result2 = parse__();
           if (result2 !== null) {
             result1 = [];
             while (result2 !== null) {
               result1.push(result2);
-              result2 = parse_space();
+              result2 = parse__();
             }
           } else {
             result1 = null;
@@ -1402,10 +1379,10 @@ module.exports = (function(){
             result2 = parse_identifier();
             if (result2 !== null) {
               result3 = [];
-              result4 = parse_space();
+              result4 = parse__();
               while (result4 !== null) {
                 result3.push(result4);
-                result4 = parse_space();
+                result4 = parse__();
               }
               if (result3 !== null) {
                 result5 = parse_newline();
@@ -1459,12 +1436,12 @@ module.exports = (function(){
             }
           }
           if (result0 !== null) {
-            result2 = parse_space();
+            result2 = parse__();
             if (result2 !== null) {
               result1 = [];
               while (result2 !== null) {
                 result1.push(result2);
-                result2 = parse_space();
+                result2 = parse__();
               }
             } else {
               result1 = null;
@@ -1472,12 +1449,12 @@ module.exports = (function(){
             if (result1 !== null) {
               result2 = parse_identifier();
               if (result2 !== null) {
-                result4 = parse_space();
+                result4 = parse__();
                 if (result4 !== null) {
                   result3 = [];
                   while (result4 !== null) {
                     result3.push(result4);
-                    result4 = parse_space();
+                    result4 = parse__();
                   }
                 } else {
                   result3 = null;
@@ -1493,12 +1470,12 @@ module.exports = (function(){
                     }
                   }
                   if (result4 !== null) {
-                    result6 = parse_space();
+                    result6 = parse__();
                     if (result6 !== null) {
                       result5 = [];
                       while (result6 !== null) {
                         result5.push(result6);
-                        result6 = parse_space();
+                        result6 = parse__();
                       }
                     } else {
                       result5 = null;
@@ -1507,10 +1484,10 @@ module.exports = (function(){
                       result6 = parse_identifier();
                       if (result6 !== null) {
                         result7 = [];
-                        result8 = parse_space();
+                        result8 = parse__();
                         while (result8 !== null) {
                           result7.push(result8);
-                          result8 = parse_space();
+                          result8 = parse__();
                         }
                         if (result7 !== null) {
                           result9 = parse_newline();
@@ -1670,10 +1647,10 @@ module.exports = (function(){
         }
         if (result0 !== null) {
           result1 = [];
-          result2 = parse_space();
+          result2 = parse__();
           while (result2 !== null) {
             result1.push(result2);
-            result2 = parse_space();
+            result2 = parse__();
           }
           if (result1 !== null) {
             result3 = parse_newline();
@@ -1700,10 +1677,10 @@ module.exports = (function(){
                 }
                 if (result4 !== null) {
                   result5 = [];
-                  result6 = parse_space();
+                  result6 = parse__();
                   while (result6 !== null) {
                     result5.push(result6);
-                    result6 = parse_space();
+                    result6 = parse__();
                   }
                   if (result5 !== null) {
                     result6 = parse_identifier();
@@ -1733,10 +1710,10 @@ module.exports = (function(){
                           }
                           if (result9 !== null) {
                             result10 = [];
-                            result11 = parse_space();
+                            result11 = parse__();
                             while (result11 !== null) {
                               result10.push(result11);
-                              result11 = parse_space();
+                              result11 = parse__();
                             }
                             if (result10 !== null) {
                               result12 = parse_newline();
@@ -1839,10 +1816,10 @@ module.exports = (function(){
           }
           if (result0 !== null) {
             result1 = [];
-            result2 = parse_space();
+            result2 = parse__();
             while (result2 !== null) {
               result1.push(result2);
-              result2 = parse_space();
+              result2 = parse__();
             }
             if (result1 !== null) {
               result3 = parse_newline();
@@ -1869,10 +1846,10 @@ module.exports = (function(){
                   }
                   if (result4 !== null) {
                     result5 = [];
-                    result6 = parse_space();
+                    result6 = parse__();
                     while (result6 !== null) {
                       result5.push(result6);
-                      result6 = parse_space();
+                      result6 = parse__();
                     }
                     if (result5 !== null) {
                       result6 = parse_identifier();
@@ -1980,12 +1957,12 @@ module.exports = (function(){
           }
         }
         if (result0 !== null) {
-          result2 = parse_space();
+          result2 = parse__();
           if (result2 !== null) {
             result1 = [];
             while (result2 !== null) {
               result1.push(result2);
-              result2 = parse_space();
+              result2 = parse__();
             }
           } else {
             result1 = null;
@@ -2071,10 +2048,10 @@ module.exports = (function(){
         result0 = parse_And_Expression();
         if (result0 !== null) {
           result1 = [];
-          result2 = parse_space();
+          result2 = parse__();
           while (result2 !== null) {
             result1.push(result2);
-            result2 = parse_space();
+            result2 = parse__();
           }
           if (result1 !== null) {
             if (input.charCodeAt(pos) === 44) {
@@ -2088,10 +2065,10 @@ module.exports = (function(){
             }
             if (result2 !== null) {
               result3 = [];
-              result4 = parse_space();
+              result4 = parse__();
               while (result4 !== null) {
                 result3.push(result4);
-                result4 = parse_space();
+                result4 = parse__();
               }
               if (result3 !== null) {
                 result4 = parse_When_Condition_Group();
@@ -2155,10 +2132,10 @@ module.exports = (function(){
         pos0 = pos;
         pos1 = pos;
         result0 = [];
-        result1 = parse_space();
+        result1 = parse__();
         while (result1 !== null) {
           result0.push(result1);
-          result1 = parse_space();
+          result1 = parse__();
         }
         if (result0 !== null) {
           if (input.substr(pos, 4) === "when") {
@@ -2171,12 +2148,12 @@ module.exports = (function(){
             }
           }
           if (result1 !== null) {
-            result3 = parse_space();
+            result3 = parse__();
             if (result3 !== null) {
               result2 = [];
               while (result3 !== null) {
                 result2.push(result3);
-                result3 = parse_space();
+                result3 = parse__();
               }
             } else {
               result2 = null;
@@ -2238,10 +2215,10 @@ module.exports = (function(){
           pos0 = pos;
           pos1 = pos;
           result0 = [];
-          result1 = parse_space();
+          result1 = parse__();
           while (result1 !== null) {
             result0.push(result1);
-            result1 = parse_space();
+            result1 = parse__();
           }
           if (result0 !== null) {
             if (input.substr(pos, 4) === "when") {
@@ -2254,12 +2231,12 @@ module.exports = (function(){
               }
             }
             if (result1 !== null) {
-              result3 = parse_space();
+              result3 = parse__();
               if (result3 !== null) {
                 result2 = [];
                 while (result3 !== null) {
                   result2.push(result3);
-                  result3 = parse_space();
+                  result3 = parse__();
                 }
               } else {
                 result2 = null;
@@ -2315,10 +2292,10 @@ module.exports = (function(){
             pos0 = pos;
             pos1 = pos;
             result0 = [];
-            result1 = parse_space();
+            result1 = parse__();
             while (result1 !== null) {
               result0.push(result1);
-              result1 = parse_space();
+              result1 = parse__();
             }
             if (result0 !== null) {
               if (input.substr(pos, 4) === "else") {
@@ -2400,12 +2377,12 @@ module.exports = (function(){
           }
         }
         if (result0 !== null) {
-          result2 = parse_space();
+          result2 = parse__();
           if (result2 !== null) {
             result1 = [];
             while (result2 !== null) {
               result1.push(result2);
-              result2 = parse_space();
+              result2 = parse__();
             }
           } else {
             result1 = null;
@@ -2413,12 +2390,12 @@ module.exports = (function(){
           if (result1 !== null) {
             result2 = parse_identifier();
             if (result2 !== null) {
-              result4 = parse_space();
+              result4 = parse__();
               if (result4 !== null) {
                 result3 = [];
                 while (result4 !== null) {
                   result3.push(result4);
-                  result4 = parse_space();
+                  result4 = parse__();
                 }
               } else {
                 result3 = null;
@@ -2434,12 +2411,12 @@ module.exports = (function(){
                   }
                 }
                 if (result4 !== null) {
-                  result6 = parse_space();
+                  result6 = parse__();
                   if (result6 !== null) {
                     result5 = [];
                     while (result6 !== null) {
                       result5.push(result6);
-                      result6 = parse_space();
+                      result6 = parse__();
                     }
                   } else {
                     result5 = null;
@@ -2530,12 +2507,12 @@ module.exports = (function(){
             }
           }
           if (result0 !== null) {
-            result2 = parse_space();
+            result2 = parse__();
             if (result2 !== null) {
               result1 = [];
               while (result2 !== null) {
                 result1.push(result2);
-                result2 = parse_space();
+                result2 = parse__();
               }
             } else {
               result1 = null;
@@ -2554,20 +2531,20 @@ module.exports = (function(){
                 }
                 if (result3 !== null) {
                   result4 = [];
-                  result5 = parse_space();
+                  result5 = parse__();
                   while (result5 !== null) {
                     result4.push(result5);
-                    result5 = parse_space();
+                    result5 = parse__();
                   }
                   if (result4 !== null) {
                     result5 = parse_identifier();
                     if (result5 !== null) {
-                      result7 = parse_space();
+                      result7 = parse__();
                       if (result7 !== null) {
                         result6 = [];
                         while (result7 !== null) {
                           result6.push(result7);
-                          result7 = parse_space();
+                          result7 = parse__();
                         }
                       } else {
                         result6 = null;
@@ -2583,12 +2560,12 @@ module.exports = (function(){
                           }
                         }
                         if (result7 !== null) {
-                          result9 = parse_space();
+                          result9 = parse__();
                           if (result9 !== null) {
                             result8 = [];
                             while (result9 !== null) {
                               result8.push(result9);
-                              result9 = parse_space();
+                              result9 = parse__();
                             }
                           } else {
                             result8 = null;
@@ -2710,12 +2687,12 @@ module.exports = (function(){
           }
         }
         if (result0 !== null) {
-          result2 = parse_space();
+          result2 = parse__();
           if (result2 !== null) {
             result1 = [];
             while (result2 !== null) {
               result1.push(result2);
-              result2 = parse_space();
+              result2 = parse__();
             }
           } else {
             result1 = null;
@@ -2905,19 +2882,19 @@ module.exports = (function(){
         }
         if (result0 !== null) {
           result1 = [];
-          result2 = parse_space();
+          result2 = parse__();
           while (result2 !== null) {
             result1.push(result2);
-            result2 = parse_space();
+            result2 = parse__();
           }
           if (result1 !== null) {
             result2 = parse_And_Expression();
             if (result2 !== null) {
               result3 = [];
-              result4 = parse_space();
+              result4 = parse__();
               while (result4 !== null) {
                 result3.push(result4);
-                result4 = parse_space();
+                result4 = parse__();
               }
               if (result3 !== null) {
                 result5 = parse_newline();
@@ -2980,10 +2957,10 @@ module.exports = (function(){
         pos0 = pos;
         pos1 = pos;
         result0 = [];
-        result1 = parse_space();
+        result1 = parse__();
         while (result1 !== null) {
           result0.push(result1);
-          result1 = parse_space();
+          result1 = parse__();
         }
         if (result0 !== null) {
           if (input.substr(pos, 4) === "else") {
@@ -2996,12 +2973,12 @@ module.exports = (function(){
             }
           }
           if (result1 !== null) {
-            result3 = parse_space();
+            result3 = parse__();
             if (result3 !== null) {
               result2 = [];
               while (result3 !== null) {
                 result2.push(result3);
-                result3 = parse_space();
+                result3 = parse__();
               }
             } else {
               result2 = null;
@@ -3056,10 +3033,10 @@ module.exports = (function(){
           pos0 = pos;
           pos1 = pos;
           result0 = [];
-          result1 = parse_space();
+          result1 = parse__();
           while (result1 !== null) {
             result0.push(result1);
-            result1 = parse_space();
+            result1 = parse__();
           }
           if (result0 !== null) {
             if (input.substr(pos, 4) === "else") {
@@ -3072,12 +3049,12 @@ module.exports = (function(){
               }
             }
             if (result1 !== null) {
-              result3 = parse_space();
+              result3 = parse__();
               if (result3 !== null) {
                 result2 = [];
                 while (result3 !== null) {
                   result2.push(result3);
-                  result3 = parse_space();
+                  result3 = parse__();
                 }
               } else {
                 result2 = null;
@@ -3085,12 +3062,12 @@ module.exports = (function(){
               if (result2 !== null) {
                 result3 = parse_If_Header();
                 if (result3 !== null) {
-                  result5 = parse_statement();
+                  result5 = parse_Statement();
                   if (result5 !== null) {
                     result4 = [];
                     while (result5 !== null) {
                       result4.push(result5);
-                      result5 = parse_statement();
+                      result5 = parse_Statement();
                     }
                   } else {
                     result4 = null;
@@ -3133,10 +3110,10 @@ module.exports = (function(){
             pos0 = pos;
             pos1 = pos;
             result0 = [];
-            result1 = parse_space();
+            result1 = parse__();
             while (result1 !== null) {
               result0.push(result1);
-              result1 = parse_space();
+              result1 = parse__();
             }
             if (result0 !== null) {
               if (input.substr(pos, 4) === "else") {
@@ -3150,10 +3127,10 @@ module.exports = (function(){
               }
               if (result1 !== null) {
                 result2 = [];
-                result3 = parse_space();
+                result3 = parse__();
                 while (result3 !== null) {
                   result2.push(result3);
-                  result3 = parse_space();
+                  result3 = parse__();
                 }
                 if (result2 !== null) {
                   result4 = parse_newline();
@@ -3167,12 +3144,12 @@ module.exports = (function(){
                     result3 = null;
                   }
                   if (result3 !== null) {
-                    result5 = parse_statement();
+                    result5 = parse_Statement();
                     if (result5 !== null) {
                       result4 = [];
                       while (result5 !== null) {
                         result4.push(result5);
-                        result5 = parse_statement();
+                        result5 = parse_Statement();
                       }
                     } else {
                       result4 = null;
@@ -3328,19 +3305,19 @@ module.exports = (function(){
           result0 = parse_identifier();
           if (result0 !== null) {
             result1 = [];
-            result2 = parse_space();
+            result2 = parse__();
             while (result2 !== null) {
               result1.push(result2);
-              result2 = parse_space();
+              result2 = parse__();
             }
             if (result1 !== null) {
               result2 = parse_Assign_Operartor();
               if (result2 !== null) {
                 result3 = [];
-                result4 = parse_space();
+                result4 = parse__();
                 while (result4 !== null) {
                   result3.push(result4);
-                  result4 = parse_space();
+                  result4 = parse__();
                 }
                 if (result3 !== null) {
                   if (input.substr(pos, 3) === "new") {
@@ -3353,12 +3330,12 @@ module.exports = (function(){
                     }
                   }
                   if (result4 !== null) {
-                    result6 = parse_space();
+                    result6 = parse__();
                     if (result6 !== null) {
                       result5 = [];
                       while (result6 !== null) {
                         result5.push(result6);
-                        result6 = parse_space();
+                        result6 = parse__();
                       }
                     } else {
                       result5 = null;
@@ -3414,10 +3391,10 @@ module.exports = (function(){
             result0 = parse_identifier();
             if (result0 !== null) {
               result1 = [];
-              result2 = parse_space();
+              result2 = parse__();
               while (result2 !== null) {
                 result1.push(result2);
-                result2 = parse_space();
+                result2 = parse__();
               }
               if (result1 !== null) {
                 if (input.charCodeAt(pos) === 61) {
@@ -3431,19 +3408,19 @@ module.exports = (function(){
                 }
                 if (result2 !== null) {
                   result3 = [];
-                  result4 = parse_space();
+                  result4 = parse__();
                   while (result4 !== null) {
                     result3.push(result4);
-                    result4 = parse_space();
+                    result4 = parse__();
                   }
                   if (result3 !== null) {
                     result4 = parse_And_Expression();
                     if (result4 !== null) {
                       result5 = [];
-                      result6 = parse_space();
+                      result6 = parse__();
                       while (result6 !== null) {
                         result5.push(result6);
-                        result6 = parse_space();
+                        result6 = parse__();
                       }
                       if (result5 !== null) {
                         if (input.charCodeAt(pos) === 63) {
@@ -3457,19 +3434,19 @@ module.exports = (function(){
                         }
                         if (result6 !== null) {
                           result7 = [];
-                          result8 = parse_space();
+                          result8 = parse__();
                           while (result8 !== null) {
                             result7.push(result8);
-                            result8 = parse_space();
+                            result8 = parse__();
                           }
                           if (result7 !== null) {
                             result8 = parse_And_Expression();
                             if (result8 !== null) {
                               result9 = [];
-                              result10 = parse_space();
+                              result10 = parse__();
                               while (result10 !== null) {
                                 result9.push(result10);
-                                result10 = parse_space();
+                                result10 = parse__();
                               }
                               if (result9 !== null) {
                                 if (input.charCodeAt(pos) === 58) {
@@ -3483,10 +3460,10 @@ module.exports = (function(){
                                 }
                                 if (result10 !== null) {
                                   result11 = [];
-                                  result12 = parse_space();
+                                  result12 = parse__();
                                   while (result12 !== null) {
                                     result11.push(result12);
-                                    result12 = parse_space();
+                                    result12 = parse__();
                                   }
                                   if (result11 !== null) {
                                     result12 = parse_And_Expression();
@@ -3564,10 +3541,10 @@ module.exports = (function(){
               result0 = parse_identifier();
               if (result0 !== null) {
                 result1 = [];
-                result2 = parse_space();
+                result2 = parse__();
                 while (result2 !== null) {
                   result1.push(result2);
-                  result2 = parse_space();
+                  result2 = parse__();
                 }
                 if (result1 !== null) {
                   if (input.charCodeAt(pos) === 61) {
@@ -3581,19 +3558,19 @@ module.exports = (function(){
                   }
                   if (result2 !== null) {
                     result3 = [];
-                    result4 = parse_space();
+                    result4 = parse__();
                     while (result4 !== null) {
                       result3.push(result4);
-                      result4 = parse_space();
+                      result4 = parse__();
                     }
                     if (result3 !== null) {
                       result4 = parse_And_Expression();
                       if (result4 !== null) {
                         result5 = [];
-                        result6 = parse_space();
+                        result6 = parse__();
                         while (result6 !== null) {
                           result5.push(result6);
-                          result6 = parse_space();
+                          result6 = parse__();
                         }
                         if (result5 !== null) {
                           if (input.substr(pos, 2) === "??") {
@@ -3607,10 +3584,10 @@ module.exports = (function(){
                           }
                           if (result6 !== null) {
                             result7 = [];
-                            result8 = parse_space();
+                            result8 = parse__();
                             while (result8 !== null) {
                               result7.push(result8);
-                              result8 = parse_space();
+                              result8 = parse__();
                             }
                             if (result7 !== null) {
                               result8 = parse_And_Expression();
@@ -3671,19 +3648,19 @@ module.exports = (function(){
                 result0 = parse_identifier();
                 if (result0 !== null) {
                   result1 = [];
-                  result2 = parse_space();
+                  result2 = parse__();
                   while (result2 !== null) {
                     result1.push(result2);
-                    result2 = parse_space();
+                    result2 = parse__();
                   }
                   if (result1 !== null) {
                     result2 = parse_Assign_Operartor();
                     if (result2 !== null) {
                       result3 = [];
-                      result4 = parse_space();
+                      result4 = parse__();
                       while (result4 !== null) {
                         result3.push(result4);
-                        result4 = parse_space();
+                        result4 = parse__();
                       }
                       if (result3 !== null) {
                         result4 = parse_And_Expression();
@@ -3757,12 +3734,12 @@ module.exports = (function(){
           }
         }
         if (result0 !== null) {
-          result2 = parse_space();
+          result2 = parse__();
           if (result2 !== null) {
             result1 = [];
             while (result2 !== null) {
               result1.push(result2);
-              result2 = parse_space();
+              result2 = parse__();
             }
           } else {
             result1 = null;
@@ -3771,20 +3748,20 @@ module.exports = (function(){
             result2 = parse_identifier();
             if (result2 !== null) {
               result3 = [];
-              result4 = parse_space();
+              result4 = parse__();
               while (result4 !== null) {
                 result3.push(result4);
-                result4 = parse_space();
+                result4 = parse__();
               }
               if (result3 !== null) {
                 result4 = parse_ArgList();
                 result4 = result4 !== null ? result4 : "";
                 if (result4 !== null) {
                   result5 = [];
-                  result6 = parse_space();
+                  result6 = parse__();
                   while (result6 !== null) {
                     result5.push(result6);
-                    result6 = parse_space();
+                    result6 = parse__();
                   }
                   if (result5 !== null) {
                     result7 = parse_newline();
@@ -3895,10 +3872,10 @@ module.exports = (function(){
             result2 = [];
             pos2 = pos;
             result3 = [];
-            result4 = parse_space();
+            result4 = parse__();
             while (result4 !== null) {
               result3.push(result4);
-              result4 = parse_space();
+              result4 = parse__();
             }
             if (result3 !== null) {
               if (input.charCodeAt(pos) === 44) {
@@ -3912,10 +3889,10 @@ module.exports = (function(){
               }
               if (result4 !== null) {
                 result5 = [];
-                result6 = parse_space();
+                result6 = parse__();
                 while (result6 !== null) {
                   result5.push(result6);
-                  result6 = parse_space();
+                  result6 = parse__();
                 }
                 if (result5 !== null) {
                   result6 = parse_And_Expression();
@@ -3941,10 +3918,10 @@ module.exports = (function(){
               result2.push(result3);
               pos2 = pos;
               result3 = [];
-              result4 = parse_space();
+              result4 = parse__();
               while (result4 !== null) {
                 result3.push(result4);
-                result4 = parse_space();
+                result4 = parse__();
               }
               if (result3 !== null) {
                 if (input.charCodeAt(pos) === 44) {
@@ -3958,10 +3935,10 @@ module.exports = (function(){
                 }
                 if (result4 !== null) {
                   result5 = [];
-                  result6 = parse_space();
+                  result6 = parse__();
                   while (result6 !== null) {
                     result5.push(result6);
-                    result6 = parse_space();
+                    result6 = parse__();
                   }
                   if (result5 !== null) {
                     result6 = parse_And_Expression();
@@ -4117,10 +4094,10 @@ module.exports = (function(){
             result2 = [];
             pos2 = pos;
             result3 = [];
-            result4 = parse_space();
+            result4 = parse__();
             while (result4 !== null) {
               result3.push(result4);
-              result4 = parse_space();
+              result4 = parse__();
             }
             if (result3 !== null) {
               if (input.charCodeAt(pos) === 44) {
@@ -4134,10 +4111,10 @@ module.exports = (function(){
               }
               if (result4 !== null) {
                 result5 = [];
-                result6 = parse_space();
+                result6 = parse__();
                 while (result6 !== null) {
                   result5.push(result6);
-                  result6 = parse_space();
+                  result6 = parse__();
                 }
                 if (result5 !== null) {
                   result6 = parse_Argument_Identifier();
@@ -4163,10 +4140,10 @@ module.exports = (function(){
               result2.push(result3);
               pos2 = pos;
               result3 = [];
-              result4 = parse_space();
+              result4 = parse__();
               while (result4 !== null) {
                 result3.push(result4);
-                result4 = parse_space();
+                result4 = parse__();
               }
               if (result3 !== null) {
                 if (input.charCodeAt(pos) === 44) {
@@ -4180,10 +4157,10 @@ module.exports = (function(){
                 }
                 if (result4 !== null) {
                   result5 = [];
-                  result6 = parse_space();
+                  result6 = parse__();
                   while (result6 !== null) {
                     result5.push(result6);
-                    result6 = parse_space();
+                    result6 = parse__();
                   }
                   if (result5 !== null) {
                     result6 = parse_Argument_Identifier();
@@ -4310,19 +4287,19 @@ module.exports = (function(){
           pos0 = pos;
           pos1 = pos;
           result0 = [];
-          result1 = parse_space();
+          result1 = parse__();
           while (result1 !== null) {
             result0.push(result1);
-            result1 = parse_space();
+            result1 = parse__();
           }
           if (result0 !== null) {
             result1 = parse_identifier();
             if (result1 !== null) {
               result2 = [];
-              result3 = parse_space();
+              result3 = parse__();
               while (result3 !== null) {
                 result2.push(result3);
-                result3 = parse_space();
+                result3 = parse__();
               }
               if (result2 !== null) {
                 if (input.charCodeAt(pos) === 40) {
@@ -4336,10 +4313,10 @@ module.exports = (function(){
                 }
                 if (result3 !== null) {
                   result4 = [];
-                  result5 = parse_space();
+                  result5 = parse__();
                   while (result5 !== null) {
                     result4.push(result5);
-                    result5 = parse_space();
+                    result5 = parse__();
                   }
                   if (result4 !== null) {
                     if (input.charCodeAt(pos) === 41) {
@@ -4394,10 +4371,10 @@ module.exports = (function(){
             result0 = parse_identifier();
             if (result0 !== null) {
               result1 = [];
-              result2 = parse_space();
+              result2 = parse__();
               while (result2 !== null) {
                 result1.push(result2);
-                result2 = parse_space();
+                result2 = parse__();
               }
               if (result1 !== null) {
                 result2 = parse_ExprList();
@@ -4451,12 +4428,12 @@ module.exports = (function(){
         pos1 = pos;
         result0 = parse_Bool_Comparison();
         if (result0 !== null) {
-          result2 = parse_space();
+          result2 = parse__();
           if (result2 !== null) {
             result1 = [];
             while (result2 !== null) {
               result1.push(result2);
-              result2 = parse_space();
+              result2 = parse__();
             }
           } else {
             result1 = null;
@@ -4472,12 +4449,12 @@ module.exports = (function(){
               }
             }
             if (result2 !== null) {
-              result4 = parse_space();
+              result4 = parse__();
               if (result4 !== null) {
                 result3 = [];
                 while (result4 !== null) {
                   result3.push(result4);
-                  result4 = parse_space();
+                  result4 = parse__();
                 }
               } else {
                 result3 = null;
@@ -4517,12 +4494,12 @@ module.exports = (function(){
           pos1 = pos;
           result0 = parse_Bool_Comparison();
           if (result0 !== null) {
-            result2 = parse_space();
+            result2 = parse__();
             if (result2 !== null) {
               result1 = [];
               while (result2 !== null) {
                 result1.push(result2);
-                result2 = parse_space();
+                result2 = parse__();
               }
             } else {
               result1 = null;
@@ -4538,12 +4515,12 @@ module.exports = (function(){
                 }
               }
               if (result2 !== null) {
-                result4 = parse_space();
+                result4 = parse__();
                 if (result4 !== null) {
                   result3 = [];
                   while (result4 !== null) {
                     result3.push(result4);
-                    result4 = parse_space();
+                    result4 = parse__();
                   }
                 } else {
                   result3 = null;
@@ -4606,10 +4583,10 @@ module.exports = (function(){
         result0 = parse_Adition();
         if (result0 !== null) {
           result1 = [];
-          result2 = parse_space();
+          result2 = parse__();
           while (result2 !== null) {
             result1.push(result2);
-            result2 = parse_space();
+            result2 = parse__();
           }
           if (result1 !== null) {
             if (input.charCodeAt(pos) === 62) {
@@ -4623,10 +4600,10 @@ module.exports = (function(){
             }
             if (result2 !== null) {
               result3 = [];
-              result4 = parse_space();
+              result4 = parse__();
               while (result4 !== null) {
                 result3.push(result4);
-                result4 = parse_space();
+                result4 = parse__();
               }
               if (result3 !== null) {
                 result4 = parse_Bool_Comparison();
@@ -4664,10 +4641,10 @@ module.exports = (function(){
           result0 = parse_Adition();
           if (result0 !== null) {
             result1 = [];
-            result2 = parse_space();
+            result2 = parse__();
             while (result2 !== null) {
               result1.push(result2);
-              result2 = parse_space();
+              result2 = parse__();
             }
             if (result1 !== null) {
               if (input.charCodeAt(pos) === 60) {
@@ -4681,10 +4658,10 @@ module.exports = (function(){
               }
               if (result2 !== null) {
                 result3 = [];
-                result4 = parse_space();
+                result4 = parse__();
                 while (result4 !== null) {
                   result3.push(result4);
-                  result4 = parse_space();
+                  result4 = parse__();
                 }
                 if (result3 !== null) {
                   result4 = parse_Bool_Comparison();
@@ -4722,10 +4699,10 @@ module.exports = (function(){
             result0 = parse_Adition();
             if (result0 !== null) {
               result1 = [];
-              result2 = parse_space();
+              result2 = parse__();
               while (result2 !== null) {
                 result1.push(result2);
-                result2 = parse_space();
+                result2 = parse__();
               }
               if (result1 !== null) {
                 if (input.substr(pos, 2) === ">=") {
@@ -4739,10 +4716,10 @@ module.exports = (function(){
                 }
                 if (result2 !== null) {
                   result3 = [];
-                  result4 = parse_space();
+                  result4 = parse__();
                   while (result4 !== null) {
                     result3.push(result4);
-                    result4 = parse_space();
+                    result4 = parse__();
                   }
                   if (result3 !== null) {
                     result4 = parse_Bool_Comparison();
@@ -4780,10 +4757,10 @@ module.exports = (function(){
               result0 = parse_Adition();
               if (result0 !== null) {
                 result1 = [];
-                result2 = parse_space();
+                result2 = parse__();
                 while (result2 !== null) {
                   result1.push(result2);
-                  result2 = parse_space();
+                  result2 = parse__();
                 }
                 if (result1 !== null) {
                   if (input.substr(pos, 2) === "<=") {
@@ -4797,10 +4774,10 @@ module.exports = (function(){
                   }
                   if (result2 !== null) {
                     result3 = [];
-                    result4 = parse_space();
+                    result4 = parse__();
                     while (result4 !== null) {
                       result3.push(result4);
-                      result4 = parse_space();
+                      result4 = parse__();
                     }
                     if (result3 !== null) {
                       result4 = parse_Bool_Comparison();
@@ -4838,10 +4815,10 @@ module.exports = (function(){
                 result0 = parse_Adition();
                 if (result0 !== null) {
                   result1 = [];
-                  result2 = parse_space();
+                  result2 = parse__();
                   while (result2 !== null) {
                     result1.push(result2);
-                    result2 = parse_space();
+                    result2 = parse__();
                   }
                   if (result1 !== null) {
                     if (input.substr(pos, 2) === "==") {
@@ -4855,10 +4832,10 @@ module.exports = (function(){
                     }
                     if (result2 !== null) {
                       result3 = [];
-                      result4 = parse_space();
+                      result4 = parse__();
                       while (result4 !== null) {
                         result3.push(result4);
-                        result4 = parse_space();
+                        result4 = parse__();
                       }
                       if (result3 !== null) {
                         result4 = parse_Bool_Comparison();
@@ -4896,10 +4873,10 @@ module.exports = (function(){
                   result0 = parse_Adition();
                   if (result0 !== null) {
                     result1 = [];
-                    result2 = parse_space();
+                    result2 = parse__();
                     while (result2 !== null) {
                       result1.push(result2);
-                      result2 = parse_space();
+                      result2 = parse__();
                     }
                     if (result1 !== null) {
                       if (input.substr(pos, 2) === "!=") {
@@ -4913,10 +4890,10 @@ module.exports = (function(){
                       }
                       if (result2 !== null) {
                         result3 = [];
-                        result4 = parse_space();
+                        result4 = parse__();
                         while (result4 !== null) {
                           result3.push(result4);
-                          result4 = parse_space();
+                          result4 = parse__();
                         }
                         if (result3 !== null) {
                           result4 = parse_Bool_Comparison();
@@ -4980,10 +4957,10 @@ module.exports = (function(){
         result0 = parse_Multiplicative();
         if (result0 !== null) {
           result1 = [];
-          result2 = parse_space();
+          result2 = parse__();
           while (result2 !== null) {
             result1.push(result2);
-            result2 = parse_space();
+            result2 = parse__();
           }
           if (result1 !== null) {
             if (input.charCodeAt(pos) === 45) {
@@ -4997,10 +4974,10 @@ module.exports = (function(){
             }
             if (result2 !== null) {
               result3 = [];
-              result4 = parse_space();
+              result4 = parse__();
               while (result4 !== null) {
                 result3.push(result4);
-                result4 = parse_space();
+                result4 = parse__();
               }
               if (result3 !== null) {
                 result4 = parse_Adition();
@@ -5038,10 +5015,10 @@ module.exports = (function(){
           result0 = parse_Multiplicative();
           if (result0 !== null) {
             result1 = [];
-            result2 = parse_space();
+            result2 = parse__();
             while (result2 !== null) {
               result1.push(result2);
-              result2 = parse_space();
+              result2 = parse__();
             }
             if (result1 !== null) {
               if (input.charCodeAt(pos) === 43) {
@@ -5055,10 +5032,10 @@ module.exports = (function(){
               }
               if (result2 !== null) {
                 result3 = [];
-                result4 = parse_space();
+                result4 = parse__();
                 while (result4 !== null) {
                   result3.push(result4);
-                  result4 = parse_space();
+                  result4 = parse__();
                 }
                 if (result3 !== null) {
                   result4 = parse_Adition();
@@ -5118,10 +5095,10 @@ module.exports = (function(){
         result0 = parse_Concat();
         if (result0 !== null) {
           result1 = [];
-          result2 = parse_space();
+          result2 = parse__();
           while (result2 !== null) {
             result1.push(result2);
-            result2 = parse_space();
+            result2 = parse__();
           }
           if (result1 !== null) {
             if (input.charCodeAt(pos) === 42) {
@@ -5135,10 +5112,10 @@ module.exports = (function(){
             }
             if (result2 !== null) {
               result3 = [];
-              result4 = parse_space();
+              result4 = parse__();
               while (result4 !== null) {
                 result3.push(result4);
-                result4 = parse_space();
+                result4 = parse__();
               }
               if (result3 !== null) {
                 result4 = parse_Multiplicative();
@@ -5176,10 +5153,10 @@ module.exports = (function(){
           result0 = parse_Concat();
           if (result0 !== null) {
             result1 = [];
-            result2 = parse_space();
+            result2 = parse__();
             while (result2 !== null) {
               result1.push(result2);
-              result2 = parse_space();
+              result2 = parse__();
             }
             if (result1 !== null) {
               if (input.charCodeAt(pos) === 47) {
@@ -5193,10 +5170,10 @@ module.exports = (function(){
               }
               if (result2 !== null) {
                 result3 = [];
-                result4 = parse_space();
+                result4 = parse__();
                 while (result4 !== null) {
                   result3.push(result4);
-                  result4 = parse_space();
+                  result4 = parse__();
                 }
                 if (result3 !== null) {
                   result4 = parse_Multiplicative();
@@ -5256,10 +5233,10 @@ module.exports = (function(){
         result0 = parse_expression();
         if (result0 !== null) {
           result1 = [];
-          result2 = parse_space();
+          result2 = parse__();
           while (result2 !== null) {
             result1.push(result2);
-            result2 = parse_space();
+            result2 = parse__();
           }
           if (result1 !== null) {
             if (input.charCodeAt(pos) === 38) {
@@ -5273,10 +5250,10 @@ module.exports = (function(){
             }
             if (result2 !== null) {
               result3 = [];
-              result4 = parse_space();
+              result4 = parse__();
               while (result4 !== null) {
                 result3.push(result4);
-                result4 = parse_space();
+                result4 = parse__();
               }
               if (result3 !== null) {
                 result4 = parse_Concat();
@@ -5387,10 +5364,10 @@ module.exports = (function(){
           }
           if (result0 !== null) {
             result1 = [];
-            result2 = parse_space();
+            result2 = parse__();
             while (result2 !== null) {
               result1.push(result2);
-              result2 = parse_space();
+              result2 = parse__();
             }
             if (result1 !== null) {
               result2 = parse_And_Expression();
@@ -5677,10 +5654,10 @@ module.exports = (function(){
           result1 = parse_And_Expression();
           if (result1 !== null) {
             result2 = [];
-            result3 = parse_space();
+            result3 = parse__();
             while (result3 !== null) {
               result2.push(result3);
-              result3 = parse_space();
+              result3 = parse__();
             }
             if (result2 !== null) {
               if (input.charCodeAt(pos) === 58) {
@@ -5694,10 +5671,10 @@ module.exports = (function(){
               }
               if (result3 !== null) {
                 result4 = [];
-                result5 = parse_space();
+                result5 = parse__();
                 while (result5 !== null) {
                   result4.push(result5);
-                  result5 = parse_space();
+                  result5 = parse__();
                 }
                 if (result4 !== null) {
                   result5 = parse_And_Expression();
@@ -5780,10 +5757,10 @@ module.exports = (function(){
             result2 = [];
             pos2 = pos;
             result3 = [];
-            result4 = parse_space();
+            result4 = parse__();
             while (result4 !== null) {
               result3.push(result4);
-              result4 = parse_space();
+              result4 = parse__();
             }
             if (result3 !== null) {
               if (input.charCodeAt(pos) === 44) {
@@ -5797,10 +5774,10 @@ module.exports = (function(){
               }
               if (result4 !== null) {
                 result5 = [];
-                result6 = parse_space();
+                result6 = parse__();
                 while (result6 !== null) {
                   result5.push(result6);
-                  result6 = parse_space();
+                  result6 = parse__();
                 }
                 if (result5 !== null) {
                   result6 = parse_JSON_Item();
@@ -5826,10 +5803,10 @@ module.exports = (function(){
               result2.push(result3);
               pos2 = pos;
               result3 = [];
-              result4 = parse_space();
+              result4 = parse__();
               while (result4 !== null) {
                 result3.push(result4);
-                result4 = parse_space();
+                result4 = parse__();
               }
               if (result3 !== null) {
                 if (input.charCodeAt(pos) === 44) {
@@ -5843,10 +5820,10 @@ module.exports = (function(){
                 }
                 if (result4 !== null) {
                   result5 = [];
-                  result6 = parse_space();
+                  result6 = parse__();
                   while (result6 !== null) {
                     result5.push(result6);
-                    result6 = parse_space();
+                    result6 = parse__();
                   }
                   if (result5 !== null) {
                     result6 = parse_JSON_Item();
@@ -5952,10 +5929,10 @@ module.exports = (function(){
             result2 = [];
             pos2 = pos;
             result3 = [];
-            result4 = parse_space();
+            result4 = parse__();
             while (result4 !== null) {
               result3.push(result4);
-              result4 = parse_space();
+              result4 = parse__();
             }
             if (result3 !== null) {
               if (input.charCodeAt(pos) === 44) {
@@ -5969,10 +5946,10 @@ module.exports = (function(){
               }
               if (result4 !== null) {
                 result5 = [];
-                result6 = parse_space();
+                result6 = parse__();
                 while (result6 !== null) {
                   result5.push(result6);
-                  result6 = parse_space();
+                  result6 = parse__();
                 }
                 if (result5 !== null) {
                   result6 = parse_And_Expression();
@@ -5998,10 +5975,10 @@ module.exports = (function(){
               result2.push(result3);
               pos2 = pos;
               result3 = [];
-              result4 = parse_space();
+              result4 = parse__();
               while (result4 !== null) {
                 result3.push(result4);
-                result4 = parse_space();
+                result4 = parse__();
               }
               if (result3 !== null) {
                 if (input.charCodeAt(pos) === 44) {
@@ -6015,10 +5992,10 @@ module.exports = (function(){
                 }
                 if (result4 !== null) {
                   result5 = [];
-                  result6 = parse_space();
+                  result6 = parse__();
                   while (result6 !== null) {
                     result5.push(result6);
-                    result6 = parse_space();
+                    result6 = parse__();
                   }
                   if (result5 !== null) {
                     result6 = parse_And_Expression();

@@ -4,13 +4,12 @@
   The main inspiration is CoffeeScript
 */
 
-start = statement*
+start = Statement*
 
-/* Define atoms */
+/* Define tokens */
 
-newline 
-  = s:[\n\r]+ { return s.join(''); }
-space = [ \t]
+newline = s:[\n\r]+ { return s.join(''); }
+_ = [ \t]
 integer = n:[0-9]+ { return { type: 'NUMBER', value: parseInt(n.join(''), 10) } }
 
 real_number 
@@ -21,23 +20,19 @@ real_number
     } 
   }
 
-number =
-  integer
-  / real_number
-
 string 
-    = "\"" s:[^"]+ "\"" 
-    { return { 
-        type: 'STRING', 
-        value: s.join('') 
-      } 
-    }
-    / "'" s:[^']+ "'" 
-    { return { 
-        type: 'STRING', 
-        value: s.join('') 
-      } 
-    }
+  = "\"" s:[^"]+ "\"" 
+  { return { 
+      type: 'STRING', 
+      value: s.join('') 
+    } 
+  }
+  / "'" s:[^']+ "'" 
+  { return { 
+      type: 'STRING', 
+      value: s.join('') 
+    } 
+  }
 
 Comment
   = "/*" comment:(!"*/" .)* "*/"
@@ -55,7 +50,7 @@ Comment
   { return { type: 'COMMENT', multiline: false, value: comment.join('').trim() }; }
 
 /* Identifiers are the name variables and functions can have */
-identifier
+identifier 
   = h:[a-zA-Z_] t:[a-zA-Z_0-9]* { return { type: 'IDENTIFIER', value: h + t.join('') } }
 
 /* Terminals */
@@ -72,16 +67,7 @@ nil
 
 /* BEGIN STATEMENTS */
 
-/* 
-  A statement is a line of code basically 
-  All statements will be ended with a ; when passed to PHP
-  
-  IMPORTANT! All statements must refer to And_Condition instead of Expression
-  FOR NOW @___@
-  Statements remain the same
-*/
-
-statement
+Statement
   = 
   If
   / While
@@ -96,7 +82,7 @@ statement
   / Empty
 
 Block
-  = statement*
+  = Statement*
 
 Empty = val:[ \n\r\t]+ { return { type: 'EMPTY', value: val.join('') } }
 
@@ -108,9 +94,9 @@ Class_Access_Modifier
   / "protected"
 
 Class_Attribute
-  = access:Class_Access_Modifier space+ attr:Class_Attribute
+  = access:Class_Access_Modifier _+ attr:Class_Attribute
   { return { type: 'CLASS_ATTRIBUTE', access: access, name: attr.name, value: attr.value || null } }
-  / "@" id:identifier space+ "=" space+ val:And_Expression
+  / "@" id:identifier _+ "=" _+ val:And_Expression
   { return { type: 'CLASS_ATTRIBUTE', access: 'public', name: id, value: val } }
   / "@" id:identifier
   { return { type: 'CLASS_ATTRIBUTE', access: 'public', name: id, value: null } }
@@ -118,16 +104,16 @@ Class_Attribute
   / Empty
 
 Class_Body
-  = access:Class_Access_Modifier space+ def:Def
+  = access:Class_Access_Modifier _+ def:Def
   { return { type: 'CLASS_METHOD', access: access, def: def } }
   / def:Def
   { return { type: 'CLASS_METHOD', access: 'public', def: def } }
   / Empty
 
 Class_Head
-  = "class" space+ name:identifier space* newline+
+  = "class" _+ name:identifier _* newline+
   { return { name: name, extends: null } }
-  / "class" space+ name:identifier space+ "<" space+ parent:identifier space* newline+
+  / "class" _+ name:identifier _+ "<" _+ parent:identifier _* newline+
   { return { name: name, extends: parent } }
 
 Class
@@ -139,71 +125,71 @@ Class
   { return { type: 'CLASS', name: head.name, extends: head.extends, block:b, attributes: a } }
 
 
-/* A try statement */
+/* A try Statement */
 
 Try_Catch =
-  "try" space* newline+
+  "try" _* newline+
     tryBody:Block
-  "catch" space* arg:identifier? newline+
+  "catch" _* arg:identifier? newline+
     catchBody:Block
-  "finally" space* newline+
+  "finally" _* newline+
     finallyBody:Block
   "end"
   { return { type: 'TRY_CATCH', try: tryBody, catch: catchBody, catch_argument: arg || null, finally: finallyBody } }  
-  / "try" space* newline+
+  / "try" _* newline+
     tryBody:Block
-  "catch" space* arg:identifier? newline+
+  "catch" _* arg:identifier? newline+
     catchBody:Block
   "end"
   { return { type: 'TRY_CATCH', try: tryBody, catch: catchBody, catch_argument: arg || null, finally: null } }  
 
-/* A switch statement */
+/* A switch Statement */
 
 Switch =
-  "switch" space+ condition:And_Expression newline+
+  "switch" _+ condition:And_Expression newline+
    cases:When_Group
   "end"
   { return { type: 'SWITCH', condition: condition, cases: cases } }
 
 When_Condition_Group =
-  e1:And_Expression space* "," space* e2:When_Condition_Group
+  e1:And_Expression _* "," _* e2:When_Condition_Group
   { return [e1].concat(e2); }
   / expr: And_Expression
   { return expr; }
   
 
 When_Group 
-  = space* "when" space+ c:When_Condition_Group newline+
+  = _* "when" _+ c:When_Condition_Group newline+
    body:Block
    o:When_Group
   { return [{ condition: c, body: body }].concat(o); }
-  / space* "when" space+ c:When_Condition_Group newline+
+  / _* "when" _+ c:When_Condition_Group newline+
    body:Block
   { return { condition: c, body: body }; }
-  / space* "else" newline+
+  / _* "else" newline+
     body:Block
   { return { condition: null, body: body } }
 
-/* A for statement */
+/* A for Statement */
 For =
-  "for" space+ id:identifier space+ "in" space+ collection:And_Expression newline+
+  "for" _+ id:identifier _+ "in" _+ collection:And_Expression newline+
     body:Block
   "end"
   { return { type: 'FOR', name: id, collection:collection, body: body } }
-  / "for" space+ key:identifier "," space* val:identifier space+ "in" space+ collection:And_Expression newline+
+  / "for" _+ key:identifier "," _* val:identifier _+ "in" _+ collection:And_Expression newline+
     body:Block
   "end"
   { return { type: 'COMPOSITE_FOR', key: key, value: val, collection:collection, body: body } }
 
-/* A while statement */
+/* A while Statement */
 
 While
- = "while" space+ condition:And_Expression newline+
+ = "while" _+ condition:And_Expression newline+
    body:Block
  "end"
  { return { type: 'WHILE', condition: condition, body: body } }
 
-/* An if statement */
+/* An if Statement */
 If
   = h:If_Header
        b:Block
@@ -229,14 +215,14 @@ If
     }
   }
 
-If_Header = "if" space* exp:And_Expression space* newline+
+If_Header = "if" _* exp:And_Expression _* newline+
   { return { type: 'IF', condition: exp } }
 
-Elsif = space* "else" space+ i:If_Header b:Block "end"
+Elsif = _* "else" _+ i:If_Header b:Block "end"
   { return { type: 'IF', condition: i.condition, statements:b } }
-  / space* "else" space+ i:If_Header es:statement+ e:Elsif
+  / _* "else" _+ i:If_Header es:Statement+ e:Elsif
   { return { type: 'IF_ELSE', condition: i.condition, if_true: es, else: e } }
-  / space* "else" space* newline+ es:statement+ "end"
+  / _* "else" _* newline+ es:Statement+ "end"
   { return { type: 'ELSE', statements: es } }
 
 
@@ -250,7 +236,7 @@ Assign
   = "@" assign:Assign
   { return { type: 'ASSIGN_INSTANCE_VARIABLE', assignment: assign } } 
   /
-  id:identifier space* mode:Assign_Operartor space* "new" space+ exp:And_Expression
+  id:identifier _* mode:Assign_Operartor _* "new" _+ exp:And_Expression
   {
     return {
         type: 'INSTANTIATE',
@@ -259,7 +245,7 @@ Assign
         mode: mode
     }
   }
-  / id:identifier space* "=" space* condition:And_Expression space* "?" space* t:And_Expression space* ":" space* f:And_Expression
+  / id:identifier _* "=" _* condition:And_Expression _* "?" _* t:And_Expression _* ":" _* f:And_Expression
   {
     return {
       type: 'ASSIGN_TERNARY_OPERATOR',
@@ -269,7 +255,7 @@ Assign
       right: f
     } 
   }
-  / id:identifier space* "=" space* l:And_Expression space* "??" space* r:And_Expression
+  / id:identifier _* "=" _* l:And_Expression _* "??" _* r:And_Expression
   {
     return {
       type: 'ASSIGN_DEFAULT_VALUE',
@@ -278,7 +264,7 @@ Assign
       right: r
     } 
   }
-  / id:identifier space* mode:Assign_Operartor space* exp:And_Expression
+  / id:identifier _* mode:Assign_Operartor _* exp:And_Expression
   {
     return {
       type: 'ASSIGN',
@@ -290,7 +276,7 @@ Assign
   
 
 Def
-  = "def" space+ id:identifier space* args:ArgList? space* newline+
+  = "def" _+ id:identifier _* args:ArgList? _* newline+
     b:Block
   "end"
   { return {
@@ -308,7 +294,7 @@ Def
   pretty much anything
 */
 ExprList
-  = "(" h:And_Expression t:(space* "," space* And_Expression)* ")" {
+  = "(" h:And_Expression t:(_* "," _* And_Expression)* ")" {
     var values = [h]
       , i; 
 
@@ -332,7 +318,7 @@ Argument_Identifier
  / identifier  
 
 ArgList
- = "(" h:Argument_Identifier t:(space* "," space* Argument_Identifier)* ")" {
+ = "(" h:Argument_Identifier t:(_* "," _* Argument_Identifier)* ")" {
     var values = [h]
       , i; 
 
@@ -354,14 +340,14 @@ Call
   id:identifier "." c:Call
   { return { type: 'CALL_METHOD', object: id, method: c } }
   /
-  space* id:identifier space* "(" space* ")"
+  _* id:identifier _* "(" _* ")"
   { return {
       type: 'CALL',
       identifier: id,
       args: null
     }
   }
-  / id:identifier space* args:ExprList
+  / id:identifier _* args:ExprList
   { return {
       type: 'CALL',
       identifier: id,
@@ -373,48 +359,48 @@ Call
 
 /* AND and OR conditions */
 And_Expression
-  = l:Bool_Comparison space+ "and" space+ r:And_Expression
+  = l:Bool_Comparison _+ "and" _+ r:And_Expression
   { return { type: 'AND', left: l, right: r } }
-  / l:Bool_Comparison space+ "or" space+ r:And_Expression
+  / l:Bool_Comparison _+ "or" _+ r:And_Expression
   { return { type: 'OR', left: l, right: r } }
   / Bool_Comparison
 
 /* Boolean Comparison */
 Bool_Comparison
-  = l:Adition space* ">" space* r:Bool_Comparison
+  = l:Adition _* ">" _* r:Bool_Comparison
   { return { type: 'COMPARISON', operator: '>', left: l, right: r } }
-  / l:Adition space* "<" space* r:Bool_Comparison
+  / l:Adition _* "<" _* r:Bool_Comparison
   { return { type: 'COMPARISON', operator: '<', left: l, right: r } }
-  / l:Adition space* ">=" space* r:Bool_Comparison
+  / l:Adition _* ">=" _* r:Bool_Comparison
   { return { type: 'COMPARISON', operator: '>=', left: l, right: r } }
-  / l:Adition space* "<=" space* r:Bool_Comparison
+  / l:Adition _* "<=" _* r:Bool_Comparison
   { return { type: 'COMPARISON', operator: '<=', left: l, right: r } }
-  / l:Adition space* "==" space* r:Bool_Comparison
+  / l:Adition _* "==" _* r:Bool_Comparison
   { return { type: 'COMPARISON', operator: '==', left: l, right: r } }
-  / l:Adition space* "!=" space* r:Bool_Comparison
+  / l:Adition _* "!=" _* r:Bool_Comparison
   { return { type: 'COMPARISON', operator: '!=', left: l, right: r } }
   / Adition
 
 /* Arithmetic operators */
 
 Adition
-  = l:Multiplicative space* "-" space* r:Adition
+  = l:Multiplicative _* "-" _* r:Adition
   { return { type: 'ARITHMETIC', operation: '-', left: l, right: r }; }
-  / l:Multiplicative space* "+" space* r:Adition
+  / l:Multiplicative _* "+" _* r:Adition
   { return { type: 'ARITHMETIC', operation: '+', left: l, right: r }; }
   / Multiplicative
 
 Multiplicative
-  = l:Concat  space* "*" space* r:Multiplicative
+  = l:Concat  _* "*" _* r:Multiplicative
   { return { type: 'ARITHMETIC', operation: '*', left: l, right: r }; }
-  / l:Concat  space* "/" space* r:Multiplicative
+  / l:Concat  _* "/" _* r:Multiplicative
   { return { type: 'ARITHMETIC', operation: '/', left: l, right: r }; }
   / Concat 
 
 /* Concatenation */
 
 Concat 
-  = l:expression space* "&" space* r:Concat 
+  = l:expression _* "&" _* r:Concat 
   { return { type: 'CONCATENATION', left: l, right: r }; }
   / expression
 
@@ -423,7 +409,7 @@ expression
   = 
   "(" c:And_Expression ")"
   { return { type: 'PARENS_EXPRESSION', expression: c }; }
-  / "not" space* e:And_Expression
+  / "not" _* e:And_Expression
   { return { type: 'BOOL_NOT', value: e } }
   / Array_Identifier
   / Call
@@ -450,10 +436,10 @@ Array_Identifier
 
 /* JSON Object! */
 JSON_Item
-  = Empty* name:And_Expression space* ":" space* value:And_Expression Empty*
+  = Empty* name:And_Expression _* ":" _* value:And_Expression Empty*
   { return { name: name, value: value } }
 JSON_Object
-  = "{" h:JSON_Item t:(space* "," space* JSON_Item)* "}"
+  = "{" h:JSON_Item t:(_* "," _* JSON_Item)* "}"
   {
     var values = [h]
       , i; 
@@ -470,7 +456,7 @@ JSON_Object
 
 /* Array creation shortcut */
 Array_Create
-  = "[" h:And_Expression? t:(space* "," space* And_Expression)* "]" 
+  = "[" h:And_Expression? t:(_* "," _* And_Expression)* "]" 
   {
     var values = [h]
       , i; 
