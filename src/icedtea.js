@@ -56,8 +56,12 @@
         source_code = fs.readFileSync(source, 'utf8');
     
         // Now I need to get all the code inside <?tea ?> tags (TEA TAGS! Heh)
-        php_code = source_code.replace(/<\?tea([\s\S]*?)\?>/g, function(match, tea_code) {
-            return '<?php' + compile(tea_code) + '?>';
+        // I use some javascript regex tricks, see: 
+        // http://gosukiwi-blog.tumblr.com/post/46341523752/javascript-regular-expression-gotchas
+        php_code = source_code.replace(/<\?tea([\s\S]*?)(\?>|(?![\s\S]))/g, function(match, tea_code, close_tag) {
+            // Here tea_code is the value for the matched group 1 of the regular expression
+            // And close_tag is the value for the matched group 2
+            return '<?php' + compile(tea_code) + ((close_tag) ? '?>' : '');
         });
     
         // Finally write the php code to the output file
