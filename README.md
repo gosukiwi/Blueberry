@@ -23,221 +23,30 @@ See the [wiki](https://github.com/gosukiwi/IcedTea/wiki) for extensive documenta
 
 ## Syntax Examples
 
-These are some examples of all the things that are already working :)
-
-### Conditionals
+Here's an example of the overall syntax of Iced Tea
 
 ```
-if age > 18 and age < 99
-    doSomething()
-else if age > 99
-    doSomethingElse()
-else
-    doNothing()
-end
-```
+a = 1 # variable definition
 
-You can also use ```switch```
+# you can use JSON syntax to define associative arrays
+arr = { 'name': 'Mike', 'age': 18, 'meta': { 'items: [1, 2, 3] } }
 
-```
-switch someVariable
-  when "mike"
-    echo('Hello, Mike!')
-  when "john"
-    echo('Hello, John!')
-  when "annie", "marceline"
-    echo('Hai gals')
-  else
-    echo('Hello, World!')
-end
-```
-
-### Boolean Not
-
-To apply a boolean not operation, use the ```not``` keyword
-
-```
-if not age > 18
-    doSomething()
+if a == 1
+  echo('Hello, World!')
 end
 
-myValue = not myVariable
-```
-
-### Ternary Operator
-
-```
-title = age > 18 ? 'Mister' : 'Boy'
-```
-
-### Default Value
-
-```
-name = getName() ?? 'Mike'
-```
-
-If ```getName()``` is falsy, 'Mike' will be used, that translates as
-
-```
-name = getName() ? getName () : 'Mike'
-```
-
-### Loops
-
-IcedTea has several loop flavours, ```while``` and ```for``` beeing the most
-common ones.
-
-```
-while someFunctionReturnsTrue()
-    echo('Hello, World!')
+for(i in (0..10))
+  echo(i)
 end
 
-# The for is very similar to ruby's :)
-for i in (0..10)
-    echo(i)
-end
-```
-
-Ranges generate an array from start to end, so you can also do
-
-```
-myArr = (0..returnsInteger())
-```
-
-You can of course call for with any collection
-
-```
-myData = array(1, 2, 3, 4)
-for i in myData
-    echo(i)
-end
-```
-
-### Concatenation
-
-The concatenation operator is ```&```.
-
-```
-echo('Hello ' & name)
-```
-
-### Arrays
-
-You can create arrays with ```[]```
-Also, arrays can have initial values
-
-```
-myArray = [1, 2, f(1)]
-
-callSomething([1, 2])
-
-emptyArray = []
-```
-
-To get the array item at a given index is the same as PHP
-
-```
-item = arr[2]
-```
-
-Arrays indeces start from 0
-
-### Multidimensional Arrays Using JSON Sytnax
-
-You can create multidimensional arrays using JSON syntax
-
-```
-myArray = {
-    'name': 'John',
-    'age': getAge(),
-    'more_data': {
-        'married': false
-    }
-}
-```
-
-### Try-Catch
-
-```
-try
-  someCodeHere()
-catch myError
-  echo(myError.getMessage())
-finally
-  doSomethingElse()
-end
-```
-
-Of course you can omit the ```finally``` and the catch argument
-
-```
-try
-  someCodeHere()
-catch
-  # When you don't include an argument identifier, "ex" is used
-  # Nevertheless, most of the time you don't include one it's because you wont
-  # use it.
-  echo(ex.getMessage())
-end
-```
-
-### Functions
-
-Functions are created using the ```def``` keyword
-
-```
-def myFunctionName(name)
-  return "Hello" & name
-end
-```
-
-### Classes
-
-Classes include the ```@``` operator from Ruby, using that operator you can
-create instance variables and later on refer to them in a very simple and
-readable way.
-
-```
-class Human
-  # name will be a public instance variable
+class MyClass < MyParentClass
   @name
-  # age will also be a public instance variable with a value of 18
-  @age = 18
 
-  def __construct(name)
-    # this is the class' constructor
-    @name = name
-  end
-
-  def greet
-    echo("Hi! I'm " & @name)
-  end
-end
-
-mike = new Human()
-mike.greet()
-echo('Mike is ' & mike.age & ' years old.')
-```
-
-You can also use access modifiers
-
-```
-class MyClass
-  private @name
-
-  protected def getName()
-    return @name
+  def Greet
+    echo('Hello! My name is ' & @name)
   end
 end
 ```
 
-If no access modifier is used, ```public``` is used.
-
-Inheritance is done Ruby-Style
-
-```
-class B < A
-  # Class B extends from A
-end
-```
+For more information, see the [wiki](https://github.com/gosukiwi/IcedTea/wiki).
 
