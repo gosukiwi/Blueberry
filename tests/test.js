@@ -49,6 +49,17 @@ module.exports = {
             this.parseStatement('if can_drink\necho("Beer Beer!")\nend'),
             'if ($can_drink) {\necho(\'Beer Beer!\');\n}'
         );
+
+        test.equals(
+            this.parseStatement('if can_drink\necho("Beer Beer!")\nelse\necho("Juice")\nend'),
+            'if ($can_drink) {\necho(\'Beer Beer!\');\n} else {\necho(\'Juice\');\n}'
+        );
+
+        test.equals(
+            this.parseStatement('if can_drink\necho("Beer Beer!")\nelse if age < 6\necho("Milk")\nelse\necho("Juice")\nend'),
+            'if ($can_drink) {\necho(\'Beer Beer!\');\n} else if ($age < 6) {\necho(\'Milk\');\n} else {\necho(\'Juice\');\n}'
+        );
+
         test.done();
     },
 
@@ -57,6 +68,12 @@ module.exports = {
             this.parseStatement('a = true'),
             '$a = true;'
         );
+
+        test.equals(
+            this.parseStatement('a = false'),
+            '$a = false;'
+        );
+
         test.done();
     },
 
@@ -74,6 +91,12 @@ module.exports = {
             this.parseStatement('while a\nb = 1\nend'),
             'while ($a) {\n$b = 1;\n}'
         );
+
+        test.equals(
+            this.parseStatement('while age > 18\nb = 1\nend'),
+            'while ($age > 18) {\n$b = 1;\n}'
+        );
+
         test.done();
     },
 
@@ -134,6 +157,15 @@ module.exports = {
         test.done();
     },
 
+    testRange: function(test) {
+        test.equals(
+            this.parseStatement('a = (0..10)'),
+            '$a = range(0, 10);'
+        );
+
+        test.done();
+    },
+
     testFor: function (test) {
         test.equals(
             this.parseStatement('for i in (0..10)\necho(i)\nend'),
@@ -170,6 +202,16 @@ module.exports = {
         test.equals(
             this.parseStatement('try\na=1\ncatch error\nb=2\nfinally\nc=3\nend'),
             'try {\n$a = 1;\n} catch (Exception $error) {\n$b = 2;\n} finally {\n$c = 3;\n}'
+        );
+
+        test.equals(
+            this.parseStatement('try\na=1\ncatch\nb=2\nfinally\nc=3\nend'),
+            'try {\n$a = 1;\n} catch (Exception $ex) {\n$b = 2;\n} finally {\n$c = 3;\n}'
+        );
+
+        test.equals(
+            this.parseStatement('try\na=1\ncatch\nb=2\nend'),
+            'try {\n$a = 1;\n} catch (Exception $ex) {\n$b = 2;\n}'
         );
 
         test.done();
