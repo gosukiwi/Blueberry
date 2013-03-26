@@ -20,7 +20,11 @@ module.exports = function(obj) {
         vals = [];
 
     for(i = 0; i < obj.values.length; i += 1) {
-        vals.push('$' + parser(obj.values[i]));
+        if(obj.values[i].type === 'IDENTIFIER_BY_REFERENCE') {
+            vals.push('&$' + parser(obj.values[i]));
+        } else {
+            vals.push('$' + parser(obj.values[i]));
+        }
     }
 
     return vals.join(', ');

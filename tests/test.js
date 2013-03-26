@@ -31,6 +31,7 @@ module.exports = {
 
         callback();
     },
+
     tearDown: function (callback) {
         // clean up
         callback();
@@ -240,6 +241,15 @@ module.exports = {
         test.equals(
             this.parseStatement('class A < B\nend'),
             'class A extends B {\n}'
+        );
+
+        test.done();
+    },
+
+    testIdentifierByReference: function (test) {
+        test.equals(
+            this.parseStatement('def myFunc (&var, var2)\nend'),
+            'function myFunc (&$var, $var2) {\n}'
         );
 
         test.done();

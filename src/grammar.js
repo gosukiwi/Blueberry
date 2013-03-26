@@ -68,6 +68,7 @@ module.exports = (function(){
         "Assign": parse_Assign,
         "Def": parse_Def,
         "ExprList": parse_ExprList,
+        "Argument_Identifier": parse_Argument_Identifier,
         "ArgList": parse_ArgList,
         "Call": parse_Call,
         "And_Expression": parse_And_Expression,
@@ -3890,6 +3891,57 @@ module.exports = (function(){
         return result0;
       }
       
+      function parse_Argument_Identifier() {
+        var cacheKey = "Argument_Identifier@" + pos;
+        var cachedResult = cache[cacheKey];
+        if (cachedResult) {
+          pos = cachedResult.nextPos;
+          return cachedResult.result;
+        }
+        
+        var result0, result1;
+        var pos0, pos1;
+        
+        pos0 = pos;
+        pos1 = pos;
+        if (input.charCodeAt(pos) === 38) {
+          result0 = "&";
+          pos++;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"&\"");
+          }
+        }
+        if (result0 !== null) {
+          result1 = parse_identifier();
+          if (result1 !== null) {
+            result0 = [result0, result1];
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+        } else {
+          result0 = null;
+          pos = pos1;
+        }
+        if (result0 !== null) {
+          result0 = (function(offset, id) { return { type: 'IDENTIFIER_BY_REFERENCE', value: id.value } })(pos0, result0[1]);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        if (result0 === null) {
+          result0 = parse_identifier();
+        }
+        
+        cache[cacheKey] = {
+          nextPos: pos,
+          result:  result0
+        };
+        return result0;
+      }
+      
       function parse_ArgList() {
         var cacheKey = "ArgList@" + pos;
         var cachedResult = cache[cacheKey];
@@ -3913,7 +3965,7 @@ module.exports = (function(){
           }
         }
         if (result0 !== null) {
-          result1 = parse_identifier();
+          result1 = parse_Argument_Identifier();
           if (result1 !== null) {
             result2 = [];
             pos2 = pos;
@@ -3941,7 +3993,7 @@ module.exports = (function(){
                   result6 = parse_space();
                 }
                 if (result5 !== null) {
-                  result6 = parse_identifier();
+                  result6 = parse_Argument_Identifier();
                   if (result6 !== null) {
                     result3 = [result3, result4, result5, result6];
                   } else {
@@ -3987,7 +4039,7 @@ module.exports = (function(){
                     result6 = parse_space();
                   }
                   if (result5 !== null) {
-                    result6 = parse_identifier();
+                    result6 = parse_Argument_Identifier();
                     if (result6 !== null) {
                       result3 = [result3, result4, result5, result6];
                     } else {

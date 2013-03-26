@@ -1,9 +1,7 @@
 /*
-  IcedTea Grammar
-
+  ICED TEA GRAMMAR
   Iced tea is a programming languages of the families of CoffeeScript and Python.
   The main inspiration is CoffeeScript
-
 */
 
 start = statement*
@@ -310,8 +308,13 @@ ExprList
   Sometimes (for function definitions)
   argument lists can only contain identifiers
 */
+Argument_Identifier
+ = "&" id:identifier
+ { return { type: 'IDENTIFIER_BY_REFERENCE', value: id.value } }
+ / identifier  
+
 ArgList
- = "(" h:identifier t:(space* "," space* identifier)* ")" {
+ = "(" h:Argument_Identifier t:(space* "," space* Argument_Identifier)* ")" {
     var values = [h]
       , i; 
 
