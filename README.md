@@ -6,8 +6,8 @@ Iced Tea compiles to __PHP__ so everything you do with Iced Tea can run wherever
 PHP can run, this is awesome for shared web servers where you can only run
 default PHP.
 
-Right now Iced Tea is still in early development, but it's planned to implement
-something very similar to CoffeeScript.
+Right now Iced Tea is still in very early development, it's usage is encouraged
+mostly for testing purposes.
 
 ## Command Line Usage
 
