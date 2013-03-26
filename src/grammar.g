@@ -91,16 +91,26 @@ Block
 
 Empty = val:[ \n\r\t]+ { return { type: 'EMPTY', value: val.join('') } }
 
-Class_Attribute 
-  = "@" id:identifier space+ "=" space+ val:And_Expression newline*
-  { return { type: 'CLASS_ATTRIBUTE_ASSIGNMENT', name: id, value: val } }
+Class_Access_Modifier
+  = "private"
+  / "public"
+  / "protected"
+
+Class_Attribute
+  = access:Class_Access_Modifier space+ attr:Class_Attribute
+  { return { type: 'CLASS_ATTRIBUTE', access: access, name: attr.name, value: attr.value || null } }
+  / "@" id:identifier space+ "=" space+ val:And_Expression newline*
+  { return { type: 'CLASS_ATTRIBUTE', access: 'public', name: id, value: val } }
   / "@" id:identifier newline*
-  { return { type: 'CLASS_ATTRIBUTE', name: id } }
+  { return { type: 'CLASS_ATTRIBUTE', access: 'public', name: id, value: null } }
   / Comment
   / Empty
 
 Class_Body
-  = Def
+  = access:Class_Access_Modifier space+ def:Def
+  { return { type: 'CLASS_METHOD', access: access, def: def } }
+  / def:Def
+  { return { type: 'CLASS_METHOD', access: 'public', def: def } }
   / Empty
 
 Class

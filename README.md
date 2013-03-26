@@ -219,4 +219,17 @@ mike.greet()
 echo('Mike is ' & mike.age & ' years old.')
 ```
 
+You can also use access modifiers
+
+```
+class MyClass
+  private @name
+
+  protected def getName()
+    return @name
+  end
+end
+```
+
+If no access modifier is used, ```public``` is used.
 

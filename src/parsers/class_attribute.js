@@ -8,11 +8,12 @@ module.exports = function(obj) {
         emptyParser = require('./empty.js');
 
     switch(obj.type) {
-        case 'CLASS_ATTRIBUTE_ASSIGNMENT':
-            output = 'public $' + identifierParser(obj.name) + ' = ' + expressionParser(obj.value) + ';\n';
-            break;
         case 'CLASS_ATTRIBUTE':
-            output = 'public $' + identifierParser(obj.name) + ';\n';
+            if(obj.value !== null) {
+                output = obj.access + ' $' + identifierParser(obj.name) + ' = ' + expressionParser(obj.value) + ';\n';
+            } else {
+                output = obj.access + ' $' + identifierParser(obj.name) + ';\n';
+            }
             break;
         case 'EMPTY':
             output = emptyParser(obj);

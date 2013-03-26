@@ -23,7 +23,8 @@ module.exports = function(obj) {
     for(i = 0; i < obj.block.length; i += 1) {
         output += statementParser(obj.block[i]);
     }
-    output += '}\n';
+
+    output += '}';
 
     return output;
 };

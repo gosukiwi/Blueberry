@@ -215,6 +215,25 @@ module.exports = {
         );
 
         test.done();
+    },
+
+    testClassAcessModifier: function (test) {
+        test.equals(
+            this.parseStatement('class MyClass\nprivate @var1\nprivate @var2 = 1\nend'),
+            'class MyClass {\nprivate $var1;\nprivate $var2 = 1;\n}'
+        );
+
+        test.equals(
+            this.parseStatement('class MyClass\nprivate @var1\nprivate def PrivateMethod\na = 1\nend\nend'),
+            'class MyClass {\nprivate $var1;\nprivate function PrivateMethod () {\n$a = 1;\n}\n}'
+        );
+
+        test.equals(
+            this.parseStatement('class MyClass\nprivate @var1\ndef PublicMethod\na = 1\nend\nend'),
+            'class MyClass {\nprivate $var1;\npublic function PublicMethod () {\n$a = 1;\n}\n}'
+        );
+
+        test.done();
     }
 };
 

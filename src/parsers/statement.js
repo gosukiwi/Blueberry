@@ -14,6 +14,7 @@ module.exports = function(obj) {
             'if_else': require('./if_else.js'),
             'call': require('./call_statement.js'),
             'class': require('./class.js'),
+            'class_method': require('./class_method.js'),
             'instantiate': require('./instantiate.js'),
             'while': require('./while.js'),
             'for': require('./for.js'),
@@ -33,6 +34,9 @@ module.exports = function(obj) {
             break;
         case 'CLASS':
             output = parser.class(obj);
+            break;
+        case 'CLASS_METHOD':
+            output = parser.class_method(obj);
             break;
         case 'DEF':
             output = parser.def(obj);

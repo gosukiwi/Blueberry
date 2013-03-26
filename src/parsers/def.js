@@ -27,7 +27,7 @@ module.exports = function(obj) {
         output += parseStatement(obj.statements[i]);
     }
 
-    output += "}\n";
+    output += "}";
 
     return output;
 };
