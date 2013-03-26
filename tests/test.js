@@ -183,8 +183,8 @@ module.exports = {
 
     testJSON: function (test) {
         test.equals(
-            this.parseStatement('a = { "name": "Mike", "meta": { "age": 18 } }'),
-            '$a = array(\'name\' => \'Mike\', \'meta\' => array(\'age\' => 18));'
+            this.parseStatement('a = { "name": "Mike", "meta": { "age": 18, "list": [1,2,3] } }'),
+            '$a = array(\'name\' => \'Mike\', \'meta\' => array(\'age\' => 18, \'list\' => array(1, 2, 3)));'
         );
 
         test.done();
