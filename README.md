@@ -21,11 +21,13 @@ if windows, add the path to ```tea.bat``` to your PATH env variable.
 
 See the [wiki](https://github.com/gosukiwi/IcedTea/wiki) for extensive documentation on the CLI (Command Line Interface)
 
-## Syntax Examples
-
-Here's an example of the overall syntax of Iced Tea
+## Syntax At A Glance
 
 ```
+/* 
+ I'm a multiline comment
+*/
+
 a = 1 # variable definition
 
 # you can use JSON syntax to define associative arrays
