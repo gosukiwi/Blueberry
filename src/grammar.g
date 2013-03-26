@@ -42,8 +42,8 @@ string
     }
 
 Comment
-  = "#" s:[0-9a-zA-Z_?!+\-=@$%#^&*/. \t'"]* newline
-  { return { type: 'COMMENT', value: s.join('').trim() }; }
+  = "#" comment:[^\n\r]*
+  { return { type: 'COMMENT', value: comment.join('').trim() }; }
 
 /* Identifiers are the name variables and functions can have */
 identifier

@@ -611,35 +611,29 @@ module.exports = (function(){
         }
         if (result0 !== null) {
           result1 = [];
-          if (/^[0-9a-zA-Z_?!+\-=@$%#^&*\/. \t'"]/.test(input.charAt(pos))) {
+          if (/^[^\n\r]/.test(input.charAt(pos))) {
             result2 = input.charAt(pos);
             pos++;
           } else {
             result2 = null;
             if (reportFailures === 0) {
-              matchFailed("[0-9a-zA-Z_?!+\\-=@$%#^&*\\/. \\t'\"]");
+              matchFailed("[^\\n\\r]");
             }
           }
           while (result2 !== null) {
             result1.push(result2);
-            if (/^[0-9a-zA-Z_?!+\-=@$%#^&*\/. \t'"]/.test(input.charAt(pos))) {
+            if (/^[^\n\r]/.test(input.charAt(pos))) {
               result2 = input.charAt(pos);
               pos++;
             } else {
               result2 = null;
               if (reportFailures === 0) {
-                matchFailed("[0-9a-zA-Z_?!+\\-=@$%#^&*\\/. \\t'\"]");
+                matchFailed("[^\\n\\r]");
               }
             }
           }
           if (result1 !== null) {
-            result2 = parse_newline();
-            if (result2 !== null) {
-              result0 = [result0, result1, result2];
-            } else {
-              result0 = null;
-              pos = pos1;
-            }
+            result0 = [result0, result1];
           } else {
             result0 = null;
             pos = pos1;
@@ -649,7 +643,7 @@ module.exports = (function(){
           pos = pos1;
         }
         if (result0 !== null) {
-          result0 = (function(offset, s) { return { type: 'COMMENT', value: s.join('').trim() }; })(pos0, result0[1]);
+          result0 = (function(offset, comment) { return { type: 'COMMENT', value: comment.join('').trim() }; })(pos0, result0[1]);
         }
         if (result0 === null) {
           pos = pos0;
