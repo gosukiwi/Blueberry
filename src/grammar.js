@@ -65,6 +65,7 @@ module.exports = (function(){
         "If": parse_If,
         "If_Header": parse_If_Header,
         "Elsif": parse_Elsif,
+        "Assign_Operartor": parse_Assign_Operartor,
         "Assign": parse_Assign,
         "Def": parse_Def,
         "ExprList": parse_ExprList,
@@ -3115,6 +3116,59 @@ module.exports = (function(){
         return result0;
       }
       
+      function parse_Assign_Operartor() {
+        var cacheKey = "Assign_Operartor@" + pos;
+        var cachedResult = cache[cacheKey];
+        if (cachedResult) {
+          pos = cachedResult.nextPos;
+          return cachedResult.result;
+        }
+        
+        var result0;
+        var pos0;
+        
+        pos0 = pos;
+        if (input.charCodeAt(pos) === 61) {
+          result0 = "=";
+          pos++;
+        } else {
+          result0 = null;
+          if (reportFailures === 0) {
+            matchFailed("\"=\"");
+          }
+        }
+        if (result0 !== null) {
+          result0 = (function(offset) { return 'BY_VALUE' })(pos0);
+        }
+        if (result0 === null) {
+          pos = pos0;
+        }
+        if (result0 === null) {
+          pos0 = pos;
+          if (input.substr(pos, 2) === "&=") {
+            result0 = "&=";
+            pos += 2;
+          } else {
+            result0 = null;
+            if (reportFailures === 0) {
+              matchFailed("\"&=\"");
+            }
+          }
+          if (result0 !== null) {
+            result0 = (function(offset) { return 'BY_REFERENCE' })(pos0);
+          }
+          if (result0 === null) {
+            pos = pos0;
+          }
+        }
+        
+        cache[cacheKey] = {
+          nextPos: pos,
+          result:  result0
+        };
+        return result0;
+      }
+      
       function parse_Assign() {
         var cacheKey = "Assign@" + pos;
         var cachedResult = cache[cacheKey];
@@ -3167,15 +3221,7 @@ module.exports = (function(){
               result2 = parse_space();
             }
             if (result1 !== null) {
-              if (input.charCodeAt(pos) === 61) {
-                result2 = "=";
-                pos++;
-              } else {
-                result2 = null;
-                if (reportFailures === 0) {
-                  matchFailed("\"=\"");
-                }
-              }
+              result2 = parse_Assign_Operartor();
               if (result2 !== null) {
                 result3 = [];
                 result4 = parse_space();
@@ -3243,13 +3289,14 @@ module.exports = (function(){
             pos = pos1;
           }
           if (result0 !== null) {
-            result0 = (function(offset, id, exp) {
+            result0 = (function(offset, id, mode, exp) {
               return {
                   type: 'INSTANTIATE',
                   identifier: id,
-                  expression: exp
+                  expression: exp,
+                  mode: mode
               }
-            })(pos0, result0[0], result0[6]);
+            })(pos0, result0[0], result0[2], result0[6]);
           }
           if (result0 === null) {
             pos = pos0;
@@ -3523,15 +3570,7 @@ module.exports = (function(){
                     result2 = parse_space();
                   }
                   if (result1 !== null) {
-                    if (input.charCodeAt(pos) === 61) {
-                      result2 = "=";
-                      pos++;
-                    } else {
-                      result2 = null;
-                      if (reportFailures === 0) {
-                        matchFailed("\"=\"");
-                      }
-                    }
+                    result2 = parse_Assign_Operartor();
                     if (result2 !== null) {
                       result3 = [];
                       result4 = parse_space();
@@ -3564,13 +3603,14 @@ module.exports = (function(){
                   pos = pos1;
                 }
                 if (result0 !== null) {
-                  result0 = (function(offset, id, exp) {
+                  result0 = (function(offset, id, mode, exp) {
                     return {
                       type: 'ASSIGN',
                       identifier: id,
-                      expression: exp
+                      expression: exp,
+                      mode: mode
                     } 
-                  })(pos0, result0[0], result0[4]);
+                  })(pos0, result0[0], result0[2], result0[4]);
                 }
                 if (result0 === null) {
                   pos = pos0;

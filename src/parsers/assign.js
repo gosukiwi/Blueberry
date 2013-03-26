@@ -24,7 +24,9 @@ var outter_parser = function(obj) {
             expressionParser(obj.left) + ' ? ' + expressionParser(obj.left) + ' : ' + expressionParser(obj.right) + ';';
     }
 
-    return '$' + identifierParser(obj.identifier) + ' = ' + expressionParser(obj.expression) + ';';
+    var mode = obj.mode === 'BY_REFERENCE' ? '&=' : '=';
+
+    return '$' + identifierParser(obj.identifier) + ' ' + mode + ' ' + expressionParser(obj.expression) + ';';
 };
 
 module.exports = outter_parser;

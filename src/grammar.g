@@ -229,17 +229,23 @@ Elsif = space* "else" space+ i:If_Header b:Block "end"
   { return { type: 'ELSE', statements: es } }
 
 
+Assign_Operartor = 
+ "=" 
+ { return 'BY_VALUE' }
+ / "&="
+ { return 'BY_REFERENCE' }
+
 Assign
-  = 
-  "@" assign:Assign
+  = "@" assign:Assign
   { return { type: 'ASSIGN_INSTANCE_VARIABLE', assignment: assign } } 
   /
-  id:identifier space* "=" space* "new" space+ exp:And_Expression newline
+  id:identifier space* mode:Assign_Operartor space* "new" space+ exp:And_Expression newline
   {
     return {
         type: 'INSTANTIATE',
         identifier: id,
-        expression: exp
+        expression: exp,
+        mode: mode
     }
   }
   / id:identifier space* "=" space* condition:And_Expression space* "?" space* t:And_Expression space* ":" space* f:And_Expression
@@ -261,12 +267,13 @@ Assign
       right: r
     } 
   }
-  / id:identifier space* "=" space* exp:And_Expression
+  / id:identifier space* mode:Assign_Operartor space* exp:And_Expression
   {
     return {
       type: 'ASSIGN',
       identifier: id,
-      expression: exp
+      expression: exp,
+      mode: mode
     } 
   }
   

@@ -253,6 +253,15 @@ module.exports = {
         );
 
         test.done();
+    },
+
+    testAssignByReference: function (test) {
+        test.equals(
+            this.parseStatement('a &= b'),
+            '$a &= $b;'
+        );
+
+        test.done();
     }
 };
 
