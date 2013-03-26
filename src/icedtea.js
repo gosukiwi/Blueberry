@@ -160,6 +160,11 @@
     commands.clean = function () {
         var source = get_argument(1);
 
+        if(!fs.statSync(source).isDirectory()) {
+            console.log(source + ' is not a directory.');
+            process.exit(1);
+        }
+
         walk(source, function(err, files) {
             var i,
                 cur_file,
