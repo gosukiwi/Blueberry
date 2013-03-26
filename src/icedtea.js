@@ -69,8 +69,10 @@
         fs.writeFileSync(output, php_code);
     };
 
-    // Walk a directory in a recursive and parallel way
-    // usage: walk(dir, function(err, file_list) {});
+    /*
+    * Walk a directory in a recursive and parallel way
+    * usage: walk(dir, function(err, file_list) {});
+    */
     walk = function(dir, done) {
         var results = [];
         fs.readdir(dir, function(err, list) {
@@ -105,6 +107,7 @@
         });
     };
     
+    // commands "namespace"
     commands = {};
 
     /*
