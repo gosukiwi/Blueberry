@@ -597,45 +597,119 @@ module.exports = (function(){
           return cachedResult.result;
         }
         
-        var result0, result1, result2;
-        var pos0, pos1;
+        var result0, result1, result2, result3;
+        var pos0, pos1, pos2, pos3;
         
         pos0 = pos;
         pos1 = pos;
-        if (input.charCodeAt(pos) === 35) {
-          result0 = "#";
-          pos++;
+        if (input.substr(pos, 2) === "/*") {
+          result0 = "/*";
+          pos += 2;
         } else {
           result0 = null;
           if (reportFailures === 0) {
-            matchFailed("\"#\"");
+            matchFailed("\"/*\"");
           }
         }
         if (result0 !== null) {
           result1 = [];
-          if (/^[^\n\r]/.test(input.charAt(pos))) {
-            result2 = input.charAt(pos);
-            pos++;
+          pos2 = pos;
+          pos3 = pos;
+          reportFailures++;
+          if (input.substr(pos, 2) === "*/") {
+            result2 = "*/";
+            pos += 2;
           } else {
             result2 = null;
             if (reportFailures === 0) {
-              matchFailed("[^\\n\\r]");
+              matchFailed("\"*/\"");
             }
+          }
+          reportFailures--;
+          if (result2 === null) {
+            result2 = "";
+          } else {
+            result2 = null;
+            pos = pos3;
+          }
+          if (result2 !== null) {
+            if (input.length > pos) {
+              result3 = input.charAt(pos);
+              pos++;
+            } else {
+              result3 = null;
+              if (reportFailures === 0) {
+                matchFailed("any character");
+              }
+            }
+            if (result3 !== null) {
+              result2 = [result2, result3];
+            } else {
+              result2 = null;
+              pos = pos2;
+            }
+          } else {
+            result2 = null;
+            pos = pos2;
           }
           while (result2 !== null) {
             result1.push(result2);
-            if (/^[^\n\r]/.test(input.charAt(pos))) {
-              result2 = input.charAt(pos);
-              pos++;
+            pos2 = pos;
+            pos3 = pos;
+            reportFailures++;
+            if (input.substr(pos, 2) === "*/") {
+              result2 = "*/";
+              pos += 2;
             } else {
               result2 = null;
               if (reportFailures === 0) {
-                matchFailed("[^\\n\\r]");
+                matchFailed("\"*/\"");
               }
+            }
+            reportFailures--;
+            if (result2 === null) {
+              result2 = "";
+            } else {
+              result2 = null;
+              pos = pos3;
+            }
+            if (result2 !== null) {
+              if (input.length > pos) {
+                result3 = input.charAt(pos);
+                pos++;
+              } else {
+                result3 = null;
+                if (reportFailures === 0) {
+                  matchFailed("any character");
+                }
+              }
+              if (result3 !== null) {
+                result2 = [result2, result3];
+              } else {
+                result2 = null;
+                pos = pos2;
+              }
+            } else {
+              result2 = null;
+              pos = pos2;
             }
           }
           if (result1 !== null) {
-            result0 = [result0, result1];
+            if (input.substr(pos, 2) === "*/") {
+              result2 = "*/";
+              pos += 2;
+            } else {
+              result2 = null;
+              if (reportFailures === 0) {
+                matchFailed("\"*/\"");
+              }
+            }
+            if (result2 !== null) {
+              result0 = [result0, result1, result2];
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
           } else {
             result0 = null;
             pos = pos1;
@@ -645,10 +719,71 @@ module.exports = (function(){
           pos = pos1;
         }
         if (result0 !== null) {
-          result0 = (function(offset, comment) { return { type: 'COMMENT', value: comment.join('').trim() }; })(pos0, result0[1]);
+          result0 = (function(offset, comment) {
+              var c = [],
+                  i;
+              
+              for(i = 0; i < comment.length; i += 1) {
+                  c.push(comment[i].join(''));
+              }
+        
+              return { type: 'COMMENT', multiline: true, value: c.join('') };
+          })(pos0, result0[1]);
         }
         if (result0 === null) {
           pos = pos0;
+        }
+        if (result0 === null) {
+          pos0 = pos;
+          pos1 = pos;
+          if (input.charCodeAt(pos) === 35) {
+            result0 = "#";
+            pos++;
+          } else {
+            result0 = null;
+            if (reportFailures === 0) {
+              matchFailed("\"#\"");
+            }
+          }
+          if (result0 !== null) {
+            result1 = [];
+            if (/^[^\n\r]/.test(input.charAt(pos))) {
+              result2 = input.charAt(pos);
+              pos++;
+            } else {
+              result2 = null;
+              if (reportFailures === 0) {
+                matchFailed("[^\\n\\r]");
+              }
+            }
+            while (result2 !== null) {
+              result1.push(result2);
+              if (/^[^\n\r]/.test(input.charAt(pos))) {
+                result2 = input.charAt(pos);
+                pos++;
+              } else {
+                result2 = null;
+                if (reportFailures === 0) {
+                  matchFailed("[^\\n\\r]");
+                }
+              }
+            }
+            if (result1 !== null) {
+              result0 = [result0, result1];
+            } else {
+              result0 = null;
+              pos = pos1;
+            }
+          } else {
+            result0 = null;
+            pos = pos1;
+          }
+          if (result0 !== null) {
+            result0 = (function(offset, comment) { return { type: 'COMMENT', multiline: false, value: comment.join('').trim() }; })(pos0, result0[1]);
+          }
+          if (result0 === null) {
+            pos = pos0;
+          }
         }
         
         cache[cacheKey] = {
@@ -997,7 +1132,7 @@ module.exports = (function(){
           return cachedResult.result;
         }
         
-        var result0, result1, result2, result3, result4, result5, result6, result7;
+        var result0, result1, result2, result3, result4, result5;
         var pos0, pos1;
         
         pos0 = pos;
@@ -1085,18 +1220,7 @@ module.exports = (function(){
                   if (result4 !== null) {
                     result5 = parse_And_Expression();
                     if (result5 !== null) {
-                      result6 = [];
-                      result7 = parse_newline();
-                      while (result7 !== null) {
-                        result6.push(result7);
-                        result7 = parse_newline();
-                      }
-                      if (result6 !== null) {
-                        result0 = [result0, result1, result2, result3, result4, result5, result6];
-                      } else {
-                        result0 = null;
-                        pos = pos1;
-                      }
+                      result0 = [result0, result1, result2, result3, result4, result5];
                     } else {
                       result0 = null;
                       pos = pos1;
@@ -1142,18 +1266,7 @@ module.exports = (function(){
             if (result0 !== null) {
               result1 = parse_identifier();
               if (result1 !== null) {
-                result2 = [];
-                result3 = parse_newline();
-                while (result3 !== null) {
-                  result2.push(result3);
-                  result3 = parse_newline();
-                }
-                if (result2 !== null) {
-                  result0 = [result0, result1, result2];
-                } else {
-                  result0 = null;
-                  pos = pos1;
-                }
+                result0 = [result0, result1];
               } else {
                 result0 = null;
                 pos = pos1;
@@ -3253,13 +3366,7 @@ module.exports = (function(){
                     if (result5 !== null) {
                       result6 = parse_And_Expression();
                       if (result6 !== null) {
-                        result7 = parse_newline();
-                        if (result7 !== null) {
-                          result0 = [result0, result1, result2, result3, result4, result5, result6, result7];
-                        } else {
-                          result0 = null;
-                          pos = pos1;
-                        }
+                        result0 = [result0, result1, result2, result3, result4, result5, result6];
                       } else {
                         result0 = null;
                         pos = pos1;

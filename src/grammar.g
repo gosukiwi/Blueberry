@@ -40,8 +40,19 @@ string
     }
 
 Comment
-  = "#" comment:[^\n\r]*
-  { return { type: 'COMMENT', value: comment.join('').trim() }; }
+  = "/*" comment:(!"*/" .)* "*/"
+  {
+      var c = [],
+          i;
+      
+      for(i = 0; i < comment.length; i += 1) {
+          c.push(comment[i].join(''));
+      }
+
+      return { type: 'COMMENT', multiline: true, value: c.join('') };
+  }
+  / "#" comment:[^\n\r]*
+  { return { type: 'COMMENT', multiline: false, value: comment.join('').trim() }; }
 
 /* Identifiers are the name variables and functions can have */
 identifier
@@ -99,9 +110,9 @@ Class_Access_Modifier
 Class_Attribute
   = access:Class_Access_Modifier space+ attr:Class_Attribute
   { return { type: 'CLASS_ATTRIBUTE', access: access, name: attr.name, value: attr.value || null } }
-  / "@" id:identifier space+ "=" space+ val:And_Expression newline*
+  / "@" id:identifier space+ "=" space+ val:And_Expression
   { return { type: 'CLASS_ATTRIBUTE', access: 'public', name: id, value: val } }
-  / "@" id:identifier newline*
+  / "@" id:identifier
   { return { type: 'CLASS_ATTRIBUTE', access: 'public', name: id, value: null } }
   / Comment
   / Empty
@@ -239,7 +250,7 @@ Assign
   = "@" assign:Assign
   { return { type: 'ASSIGN_INSTANCE_VARIABLE', assignment: assign } } 
   /
-  id:identifier space* mode:Assign_Operartor space* "new" space+ exp:And_Expression newline
+  id:identifier space* mode:Assign_Operartor space* "new" space+ exp:And_Expression
   {
     return {
         type: 'INSTANTIATE',

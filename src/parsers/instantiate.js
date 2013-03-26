@@ -9,6 +9,6 @@ module.exports = function(obj) {
     var expressionParser = require('./expression.js'),
         identifierParser = require('./identifier.js');
 
-    return '$' + identifierParser(obj.identifier) + ' = new ' + expressionParser(obj.expression) + ';\n';
+    return '$' + identifierParser(obj.identifier) + ' = new ' + expressionParser(obj.expression) + ';';
 };
 

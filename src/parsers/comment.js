@@ -6,5 +6,9 @@ module.exports = function(obj) {
         throw "This is not a comment!";
     }
 
-    return "// " + obj.value + "\n";
+    if(obj.multiline) {
+        return '/*' + obj.value + '*/';
+    } else {
+        return "// " + obj.value;
+    }
 };

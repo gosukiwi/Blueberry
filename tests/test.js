@@ -262,6 +262,20 @@ module.exports = {
         );
 
         test.done();
+    },
+
+    testComments: function (test) {
+        test.equals(
+            this.parseStatement('# my comment'),
+            '// my comment'
+        );
+
+        test.equals(
+            this.parseStatement('/*\nmy comment\n*/'),
+            '/*\nmy comment\n*/'
+        );
+
+        test.done();
     }
 };
 

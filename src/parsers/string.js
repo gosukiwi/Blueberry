@@ -6,5 +6,5 @@ module.exports = function(obj) {
         throw "This is not a string!";
     }
 
-    return "'" + obj.value.replace(/"/g, '\\"') + "'";
+    return "'" + obj.value.replace(/'/g, "\\'") + "'";
 };
