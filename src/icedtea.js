@@ -158,7 +158,29 @@
      * .php files
      */
     commands.clean = function () {
-        // TODO
+        var source = get_argument(1);
+
+        walk(source, function(err, files) {
+            var i,
+                cur_file,
+                dot_idx,
+                tea_file;
+
+            for(i = 0; i < files.length; i += 1) {
+                cur_file = files[i];
+                dot_idx = cur_file.lastIndexOf('.');
+
+                // Check if the file is a .php file
+                if(cur_file.substring(dot_idx) === '.php') {
+                    // Now check if there's a .tea file with the same name
+                    tea_file = cur_file.substring(0, dot_idx) + '.tea';
+                    if(files.indexOf(tea_file) !== -1) {
+                        // If there's a file, delete the php file
+                        fs.unlink(cur_file);
+                    }
+                }
+            }
+        });
     };
 
     /*
