@@ -34,6 +34,9 @@ string
     } 
   }
 
+Symbol = ":" value:[A-Za-z_]+
+{ return { type: 'SYMBOL', value: value.join('') } }
+
 Comment
   = "/*" comment:(!"*/" .)* "*/"
   {
@@ -414,6 +417,7 @@ expression
   / Array_Identifier
   / Call
   / string
+  / Symbol
   / real_number
   / integer
   / bool

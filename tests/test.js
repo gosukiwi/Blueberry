@@ -284,6 +284,15 @@ module.exports = {
         );
 
         test.done();
+    },
+
+    testSymbol: function (test) {
+        test.equals(
+            this.parseStatement('a = :my_symbol'),
+            '$a = \'my_symbol\';'
+        );
+
+        test.done();
     }
 };
 

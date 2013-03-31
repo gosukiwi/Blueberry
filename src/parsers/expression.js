@@ -27,7 +27,8 @@ var outter_parser = function(obj) {
             array_identifier: require('./array_identifier.js'),
             array_create: require('./array_create.js'),
             json_array: require('./json_array.js'),
-            bool_not: require('./bool_not.js')
+            bool_not: require('./bool_not.js'),
+            symbol: require('./symbol.js')
         };
 
     switch(obj.type) {
@@ -42,6 +43,9 @@ var outter_parser = function(obj) {
             break;
         case 'REAL_NUMBER':
             output = parser.real_number(obj);
+            break;
+        case 'SYMBOL':
+            output = parser.symbol(obj);
             break;
         case 'STRING':
             output = parser.string(obj);
