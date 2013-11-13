@@ -27,6 +27,7 @@
      * Given tea source code, returns php source code
      */
     compile = function(code) {
+        console.log('asd');
         var statementParser = require('./parsers/statement.js'),
             pegjs_parser = require('./grammar.js'),
             i,
@@ -51,7 +52,7 @@
     compileFile = function(source, output) {
         var source_code,
             php_code;
-         
+
         // Read the Iced Tea source code
         source_code = fs.readFileSync(source, 'utf8');
     
@@ -205,7 +206,7 @@
             new_file,
             new_file_dir,
             source_path_start;
-    
+
         stats = fs.statSync(source);
     
         // If the path is a file, just compile it

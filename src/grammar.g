@@ -338,10 +338,14 @@ ArgList
 /*
   Matches a function call
 */
+
 Call
   =
   id:identifier "." c:Call
   { return { type: 'CALL_METHOD', object: id, method: c } }
+  /
+  id:identifier "." prop:identifier
+  { return { type: 'CALL_PROPERTY', object: id, property: prop } }
   /
   _* id:identifier _* "(" _* ")"
   { return {

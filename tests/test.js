@@ -10,11 +10,15 @@ module.exports = {
         var statementParser = require('../src/parsers/statement.js');
         this.parseStatement = function (source) {
             return statementParser(this.compile(source)[0]);
-        }
+        };
 
-        this.load = function(name) {
-            return fs.readFileSync(name, 'utf8');
-        }
+        this.load = function (name) {
+            return this.unixNewlines(fs.readFileSync(name, 'utf8'));
+        };
+
+        this.unixNewlines = function (str) {
+            return str.replace(/\r\n/g, "\n");
+        };
 
         this.compileFile = function(name) {
             var source = fs.readFileSync(name, 'utf8');
@@ -26,7 +30,7 @@ module.exports = {
                 output += statementParser(ast[i]);
             }           
             
-            return output;
+            return this.unixNewlines(output);
         };
 
         callback();
@@ -50,6 +54,9 @@ module.exports = {
         test.equals(this.parseStatement('a = 1 + 6'), '$a = (1 + 6);');
         test.equals(this.parseStatement('a = f(1 + 6)'), '$a = f((1 + 6));');
         test.equals(this.parseStatement('a = age > 18'), '$a = $age > 18;');
+        test.equals(this.parseStatement('a = obj.prop'), '$a = $obj->prop;');
+        test.equals(this.parseStatement('a = obj.method()'), '$a = $obj->method();');
+        //test.equals(this.parseStatement('a = obj.prop.method()'), '$a = $obj->prop->method();');
         test.done();
     },
 
@@ -67,6 +74,16 @@ module.exports = {
         test.equals(
             this.parseStatement('if can_drink\necho("Beer Beer!")\nelse if age < 6\necho("Milk")\nelse\necho("Juice")\nend'),
             'if ($can_drink) {\necho(\'Beer Beer!\');\n} else if ($age < 6) {\necho(\'Milk\');\n} else {\necho(\'Juice\');\n}'
+        );
+
+        test.equals(
+            this.parseStatement('if obj.can_drink\necho("Beer Beer!")\nelse if age < 6\necho("Milk")\nelse\necho("Juice")\nend'),
+            'if ($obj->can_drink) {\necho(\'Beer Beer!\');\n} else if ($age < 6) {\necho(\'Milk\');\n} else {\necho(\'Juice\');\n}'
+        );
+
+        test.equals(
+            this.parseStatement('if obj.can_drink()\necho("Beer Beer!")\nelse if age < 6\necho("Milk")\nelse\necho("Juice")\nend'),
+            'if ($obj->can_drink()) {\necho(\'Beer Beer!\');\n} else if ($age < 6) {\necho(\'Milk\');\n} else {\necho(\'Juice\');\n}'
         );
 
         test.done();

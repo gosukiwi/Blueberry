@@ -13,6 +13,9 @@ var outter_parser = function(obj) {
         case 'CALL_METHOD':
             output = '$' + identifierParser(obj.object) + "->" + outter_parser(obj.method);
             break;
+        case 'CALL_PROPERTY':
+            output = '$' + identifierParser(obj.object) + "->" + identifierParser(obj.property);
+            break;
         default:
             throw "Invalid type: " + obj.type;
             break;
