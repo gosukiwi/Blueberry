@@ -339,14 +339,18 @@ ArgList
   Matches a function call
 */
 
-Call
+Method_Call
   =
-  id:identifier "." c:Call
-  { return { type: 'CALL_METHOD', object: id, method: c } }
-  /
-  id:identifier "." prop:identifier
-  { return { type: 'CALL_PROPERTY', object: id, property: prop } }
-  /
+  object:identifier "." c:Function_Call
+  { return { type: 'CALL_METHOD', object: object, method: c } }
+
+Property_Call
+  =
+  object:identifier "." property:identifier
+  { return { type: 'CALL_PROPERTY', object: object, property: property } }
+
+Function_Call
+  =
   _* id:identifier _* "(" _* ")"
   { return {
       type: 'CALL',
@@ -361,6 +365,12 @@ Call
       args: args
     }
   }
+
+Call
+  =
+  Method_Call
+  / Property_Call
+  / Function_Call
 
 /* END STATEMENTS */
 
