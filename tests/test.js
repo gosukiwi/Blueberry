@@ -45,6 +45,7 @@ module.exports = {
         test.equals(this.parseStatement('a = 1'), '$a = 1;');
         test.equals(this.parseStatement('a = 1.5'), '$a = 1.5;');
         test.equals(this.parseStatement('a = "asd"'), '$a = \'asd\';');
+        test.equals(this.parseStatement('a = "this has a\nnewline"'), '$a = \'this has a\nnewline\';');
         test.equals(this.parseStatement('a = \'asd\''), '$a = \'asd\';');
         test.done();
     },
