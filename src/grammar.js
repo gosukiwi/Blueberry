@@ -1062,9 +1062,12 @@ module.exports = (function(){
                       if (result0 === null) {
                         result0 = parse_Call();
                         if (result0 === null) {
-                          result0 = parse_Comment();
+                          result0 = parse_Array_Identifier();
                           if (result0 === null) {
-                            result0 = parse_Empty();
+                            result0 = parse_Comment();
+                            if (result0 === null) {
+                              result0 = parse_Empty();
+                            }
                           }
                         }
                       }

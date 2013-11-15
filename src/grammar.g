@@ -81,6 +81,7 @@ Statement
   / Def
   / Class
   / Call
+  / Array_Identifier
   / Comment
   / Empty
 

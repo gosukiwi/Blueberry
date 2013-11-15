@@ -27,7 +27,6 @@
      * Given tea source code, returns php source code
      */
     compile = function(code) {
-        console.log('asd');
         var statementParser = require('./parsers/statement.js'),
             pegjs_parser = require('./grammar.js'),
             i,

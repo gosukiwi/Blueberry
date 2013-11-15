@@ -126,6 +126,30 @@ module.exports = {
         test.done();
     },
 
+    testArrayIdentifier: function (test) {
+        test.equals(
+            this.parseStatement('arr[1]'),
+            '$arr[1];'
+        );
+
+        test.equals(
+            this.parseStatement('arr[f(1)]'),
+            '$arr[f(1)];'
+        );
+
+        test.equals(
+            this.parseStatement('arr["an string"]'),
+            '$arr[\'an string\'];'
+        );
+
+        test.equals(
+            this.parseStatement('arr[:symbol]'),
+            '$arr[\'symbol\'];'
+        );
+
+        test.done();
+    },
+
     testClass: function (test) {
         test.equals(
             this.compileFile('./tests/icedtea/class1.tea'),

@@ -13,6 +13,7 @@ module.exports = function(obj) {
             'if': require('./if.js'),
             'if_else': require('./if_else.js'),
             'call': require('./call_statement.js'),
+            'array_identifier': require('./array_identifier_statement.js'),
             'class': require('./class.js'),
             'class_method': require('./class_method.js'),
             'instantiate': require('./instantiate.js'),
@@ -63,6 +64,9 @@ module.exports = function(obj) {
         case 'CALL_METHOD':
         case 'CALL':
             output = parser.call(obj);
+            break;
+        case 'ARRAY_IDENTIFIER':
+            output = parser.array_identifier(obj);
             break;
         case 'COMMENT':
             output = parser.comment(obj);
