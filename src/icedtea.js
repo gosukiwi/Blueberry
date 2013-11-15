@@ -189,6 +189,31 @@
     };
 
     /*
+     * Shows the CLI help text
+     * usage: help
+     */
+    commands.help = function () {
+        var command = get_argument(1),
+            message;
+
+        if(command) {
+            command = (command + '').toLowerCase();
+        }
+        
+        message = 'IcedTea compiles tea source code to PHP\n' +
+            'It has four commands: watch, compile, clean and help\n' +
+            'Use "tea help <command>" to get help on a specific topic.\n'; 
+
+        if(command === 'compile') {
+            message = 'This command compiles a file or a folder to PHP\n' +
+                'Usage: tea compile <myFile> [myOutputFile]\n' +
+                '       tea compile <myFolder/> [myOutputFolder/]';
+        }
+
+        console.log(message);
+    };
+
+    /*
      * Compiles a file or all the files in a directory
      * usage: compile input [output]
      *
@@ -205,6 +230,11 @@
             new_file,
             new_file_dir,
             source_path_start;
+
+        if(!source) {
+            console.log('No input file specified, usage:\ntea compile myFile.tea [myOutput.php]\ntea compile myDir/ myOutDir/');
+            process.exit(1);
+        }
 
         stats = fs.statSync(source);
     
