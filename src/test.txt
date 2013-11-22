@@ -1,0 +1,2 @@
+<?tea
+a = obj.prop.method().prop2

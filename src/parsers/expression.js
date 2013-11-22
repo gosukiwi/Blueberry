@@ -62,6 +62,7 @@ var outter_parser = function(obj) {
         case 'CALL':
         case 'CALL_METHOD':
         case 'CALL_PROPERTY':
+        case 'CALL_CHAIN':
             output = parser.call(obj);
             break;
         case 'BOOL_NOT':

@@ -62,6 +62,7 @@ module.exports = function(obj) {
             output = parser.if_else(obj);
             break;
         case 'CALL_METHOD':
+        case 'CALL_CHAIN':
         case 'CALL':
             output = parser.call(obj);
             break;

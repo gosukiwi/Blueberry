@@ -337,18 +337,28 @@ ArgList
   }
 
 /*
-  Matches a function call
+   Matches when calling a function, method or property
 */
+
+Call
+  =
+  l:Method_Call "." r:Call
+  { return { type: 'CALL_CHAIN', left:l, right:r } }
+  / l:Method_Call "." r:identifier
+  { return { type: 'CALL_CHAIN', left:l, right:r } }
+  / Method_Call
 
 Method_Call
   =
   object:identifier "." c:Function_Call
   { return { type: 'CALL_METHOD', object: object, method: c } }
+  / Property_Call
 
 Property_Call
   =
   object:identifier "." property:identifier
   { return { type: 'CALL_PROPERTY', object: object, property: property } }
+  / Function_Call
 
 Function_Call
   =
@@ -366,12 +376,6 @@ Function_Call
       args: args
     }
   }
-
-Call
-  =
-  Method_Call
-  / Property_Call
-  / Function_Call
 
 /* END STATEMENTS */
 

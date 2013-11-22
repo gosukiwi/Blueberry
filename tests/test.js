@@ -57,7 +57,8 @@ module.exports = {
         test.equals(this.parseStatement('a = age > 18'), '$a = $age > 18;');
         test.equals(this.parseStatement('a = obj.prop'), '$a = $obj->prop;');
         test.equals(this.parseStatement('a = obj.method()'), '$a = $obj->method();');
-        //test.equals(this.parseStatement('a = obj.prop.method()'), '$a = $obj->prop->method();');
+        test.equals(this.parseStatement('a = obj.prop.method()'), '$a = $obj->prop->method();');
+        test.equals(this.parseStatement('a = obj.prop.method().prop2'), '$a = $obj->prop->method()->prop2;');
         test.done();
     },
 
