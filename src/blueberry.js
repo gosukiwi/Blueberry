@@ -18,7 +18,7 @@
         compileFile,
         walk,
         commands,
-        VERSION = '0.2.0';
+        VERSION = '0.2.1';
 
     /*
      * Gets the command line argument with the given index
@@ -164,10 +164,14 @@
         // Start watching on change and add events
         watcher = chokidar.watch(input, { ignored: /^\./, persistent: true });
         watcher.on('change', function (path) {
-            compile_file(path, input, output);
+            if(path.indexOf('.bb', path.length - 3) !== -1) {
+                compile_file(path, input, output);
+            }
         });
         watcher.on('add', function (path) {
-            compile_file(path, input, output);
+            if(path.indexOf('.bb', path.length - 3) !== -1) {
+                compile_file(path, input, output);
+            }
         });
 
         console.log('Watching ' + input + "\nUse <CTRL>+<C> to exit");
