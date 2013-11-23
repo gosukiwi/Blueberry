@@ -24,7 +24,7 @@
     };
 
     /*
-     * Given tea source code, returns php source code
+     * Given bb source code, returns php source code
      */
     compile = function(code) {
         var statementParser = require('./parsers/statement.js'),
@@ -55,10 +55,10 @@
         // Read the Iced Tea source code
         source_code = fs.readFileSync(source, 'utf8');
     
-        // Now I need to get all the code inside <?tea ?> tags (TEA TAGS! Heh)
+        // Now I need to get all the code inside <?bb ?> tags (TEA TAGS! Heh)
         // I use some javascript regex tricks, see: 
         // http://gosukiwi-blog.tumblr.com/post/46341523752/javascript-regular-expression-gotchas
-        php_code = source_code.replace(/<\?tea([\s\S]*?)(\?>|(?![\s\S]))/g, function(match, tea_code, close_tag) {
+        php_code = source_code.replace(/<\?bb([\s\S]*?)(\?>|(?![\s\S]))/g, function(match, tea_code, close_tag) {
             // Here tea_code is the value for the matched group 1 of the regular expression
             // And close_tag is the value for the matched group 2
             return '<?php' + compile(tea_code) + ((close_tag) ? '?>' : '');
@@ -177,8 +177,8 @@
 
                 // Check if the file is a .php file
                 if(cur_file.substring(dot_idx) === '.php') {
-                    // Now check if there's a .tea file with the same name
-                    tea_file = cur_file.substring(0, dot_idx) + '.tea';
+                    // Now check if there's a .bb file with the same name
+                    tea_file = cur_file.substring(0, dot_idx) + '.bb';
                     if(files.indexOf(tea_file) !== -1) {
                         // If there's a file, delete the php file
                         fs.unlink(cur_file);
@@ -200,14 +200,14 @@
             command = (command + '').toLowerCase();
         }
         
-        message = 'Blueberry compiles tea source code to PHP\n' +
+        message = 'Blueberry compiles bb source code to PHP\n' +
             'It has four commands: watch, compile, clean and help\n' +
-            'Use "tea help <command>" to get help on a specific topic.\n'; 
+            'Use "bb help <command>" to get help on a specific topic.\n'; 
 
         if(command === 'compile') {
             message = 'This command compiles a file or a folder to PHP\n' +
-                'Usage: tea compile <myFile> [myOutputFile]\n' +
-                '       tea compile <myFolder/> [myOutputFolder/]';
+                'Usage: bb compile <myFile> [myOutputFile]\n' +
+                '       bb compile <myFolder/> [myOutputFolder/]';
         }
 
         console.log(message);
@@ -218,7 +218,7 @@
      * usage: compile input [output]
      *
      * input can be a file or directory, if directory recursively compiles
-     * all .tea files
+     * all .bb files
      * If the output is not defined it will compile in the same path and
      * only change the extension to .php
      */
@@ -232,7 +232,7 @@
             source_path_start;
 
         if(!source) {
-            console.log('No input file specified, usage:\ntea compile myFile.tea [myOutput.php]\ntea compile myDir/ myOutDir/');
+            console.log('No input file specified, usage:\ntea compile myFile.bb [myOutput.php]\ntea compile myDir/ myOutDir/');
             process.exit(1);
         }
 
@@ -259,7 +259,7 @@
 
             walk(source, function(err, files) {
                 for (i = 0; i < files.length; i += 1) {
-                    if (files[i].substring(files[i].lastIndexOf('.')) !== '.tea') {
+                    if (files[i].substring(files[i].lastIndexOf('.')) !== '.bb') {
                         continue;
                     }
 
