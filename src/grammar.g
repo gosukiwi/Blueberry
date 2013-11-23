@@ -1,7 +1,5 @@
 /*
-  ICED TEA GRAMMAR
-  Iced tea is a programming languages of the families of CoffeeScript and Python.
-  The main inspiration is CoffeeScript
+  Blueberry grammer
 */
 
 start = Statement*
