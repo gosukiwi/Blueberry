@@ -55,7 +55,7 @@
         // Read the Iced Tea source code
         source_code = fs.readFileSync(source, 'utf8');
     
-        // Now I need to get all the code inside <?bb ?> tags (TEA TAGS! Heh)
+        // Now I need to get all the code inside <?bb ?> tags (BB TAGS! Heh)
         // I use some javascript regex tricks, see: 
         // http://gosukiwi-blog.tumblr.com/post/46341523752/javascript-regular-expression-gotchas
         php_code = source_code.replace(/<\?bb([\s\S]*?)(\?>|(?![\s\S]))/g, function(match, tea_code, close_tag) {

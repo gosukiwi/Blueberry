@@ -154,7 +154,7 @@ module.exports = {
 
     testClass: function (test) {
         test.equals(
-            this.compileFile('./tests/icedtea/class1.tea'),
+            this.compileFile('./tests/blueberry/class1.bb'),
             this.load('./tests/php/class1.php')
         );
         test.done();
@@ -170,7 +170,7 @@ module.exports = {
 
     testSwitch: function (test) {
         test.equals(
-            this.compileFile('./tests/icedtea/switch1.tea'),
+            this.compileFile('./tests/blueberry/switch1.bb'),
             this.load('./tests/php/switch1.php')
         );
         test.done();
