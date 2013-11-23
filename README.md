@@ -52,3 +52,9 @@ end
 
 For more information, see the [wiki](https://github.com/gosukiwi/Blueberry/wiki).
 
+# Versioning
+Format: ```<major>.<minor>.<patch>```
+
+Breaking backwards compatibility bumps the major
+New additions without breaking backwards compatibility bumps the minor
+Bug fixes and misc changes bump the patch

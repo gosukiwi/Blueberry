@@ -9,12 +9,16 @@
     "use strict";
 
     var fs = require('fs'),
+        node_path = require('path'),
+        chokidar = require('chokidar'),
+        mkpath = require('mkpath'),
         command = process.argv[2],
         get_argument,
         compile,
         compileFile,
         walk,
-        commands;
+        commands,
+        VERSION = '0.2.0';
 
     /*
      * Gets the command line argument with the given index
@@ -118,7 +122,28 @@
         var input = get_argument(1),
             output = get_argument(2),
             is_dir,
-            new_file;
+            new_file,
+            watcher;
+
+        /*
+         * Compiles a file
+         * path: The full path of the file
+         * input: The input base directory
+         * output: The output base directory
+         */
+        function compile_file(path, input, output) {
+            // The difference between the file and the base input
+            var difference = path.substr(input.length),
+            // The new path is the output + the file to be created
+                new_path = (output + difference).replace('.bb', '.php');
+
+            // Create all required directories
+            mkpath.sync(node_path.dirname(new_path));
+            // Compile the file
+            compileFile(path, new_path);
+
+            console.log('Compiled ' + difference);
+        }
 
         if(!fs.existsSync(input)) {
             console.log('The path ' + input + ' does not exist');
@@ -136,19 +161,16 @@
             }
         }
 
-        fs.watch(input, function(evt, file) {
-            if(!file || file.indexOf('.php') !== -1) {
-                // file name not provided
-                return;
-            }
-
-            if(is_dir) {
-                new_file = file.substring(0, file.lastIndexOf('.')) + '.php';
-                compileFile(input + '/' + file, output + '/' + new_file);
-            } else {
-                compileFile(input, output);
-            }
+        // Start watching on change and add events
+        watcher = chokidar.watch(input, { ignored: /^\./, persistent: true });
+        watcher.on('change', function (path) {
+            compile_file(path, input, output);
         });
+        watcher.on('add', function (path) {
+            compile_file(path, input, output);
+        });
+
+        console.log('Watching ' + input + "\nUse <CTRL>+<C> to exit");
     };
 
     /*
@@ -212,6 +234,13 @@
 
         console.log(message);
     };
+
+    /*
+     * Outputs the current version
+     */
+    commands.version = function () {
+        console.log('Blueberry version: ' + VERSION);
+    }
 
     /*
      * Compiles a file or all the files in a directory

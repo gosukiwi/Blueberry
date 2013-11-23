@@ -1,0 +1,13 @@
+{
+  "name": "Blueberry",
+  "version": "0.2.0",
+  "description": "A ruby-ish programming language which compiles to PHP",
+  "author": "Federico Ramírez <fedra.arg@gmail.com>",
+  "dependencies": {
+    "chokidar": "0.x.x",
+    "mkpath": "0.x.x"
+  },
+  "devDependencies": {
+    "nodeunit": "0.x.x"
+  }
+}
