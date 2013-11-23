@@ -12,12 +12,12 @@ mostly for testing purposes.
 ## Command Line Usage
 
 The easiest way to compile Iced Tea code into PHP code is using the 
-```tea``` file, inside the ```bin``` directory. 
+```bb``` file, inside the ```bin``` directory. 
 
-```bin/tea compile file.tea```
+```bin/bb compile file.tea```
 
 If using unix you can just symlink the executable to your ```/bin``` folder, 
-if windows, add the path to ```tea.bat``` to your PATH env variable.
+if windows, add the path to ```bb.bat``` to your PATH env variable.
 
 See the [wiki](https://github.com/gosukiwi/Blueberry/wiki) for extensive documentation on the CLI (Command Line Interface)
 
