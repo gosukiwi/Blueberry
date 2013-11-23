@@ -1,12 +1,12 @@
-# Iced Tea
-Iced Tea is a script language with clean syntax, inspired from CoffeeScript, 
+# Blueberry
+Blueberry is a script language with clean syntax, inspired from CoffeeScript, 
 Python and Ruby.
 
-Iced Tea compiles to __PHP__ so everything you do with Iced Tea can run wherever
+Blueberry compiles to __PHP__ so everything you do with Blueberry can run wherever
 PHP can run, this is awesome for shared web servers where you can only run
 default PHP.
 
-Right now Iced Tea is still in very early development, it's usage is encouraged
+Right now Blueberry is still in very early development, it's usage is encouraged
 mostly for testing purposes.
 
 ## Command Line Usage
@@ -19,7 +19,7 @@ The easiest way to compile Iced Tea code into PHP code is using the
 If using unix you can just symlink the executable to your ```/bin``` folder, 
 if windows, add the path to ```tea.bat``` to your PATH env variable.
 
-See the [wiki](https://github.com/gosukiwi/IcedTea/wiki) for extensive documentation on the CLI (Command Line Interface)
+See the [wiki](https://github.com/gosukiwi/Blueberry/wiki) for extensive documentation on the CLI (Command Line Interface)
 
 ## Syntax At A Glance
 
@@ -50,5 +50,5 @@ class MyClass < MyParentClass
 end
 ```
 
-For more information, see the [wiki](https://github.com/gosukiwi/IcedTea/wiki).
+For more information, see the [wiki](https://github.com/gosukiwi/Blueberry/wiki).
 
