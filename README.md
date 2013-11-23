@@ -11,7 +11,7 @@ mostly for testing purposes.
 
 ## Command Line Usage
 
-The easiest way to compile Iced Tea code into PHP code is using the 
+The easiest way to compile Blueberry code into PHP code is using the 
 ```bb``` file, inside the ```bin``` directory. 
 
 ```bin/bb compile file.tea```
