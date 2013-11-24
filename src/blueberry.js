@@ -18,7 +18,7 @@
         compileFile,
         walk,
         commands,
-        VERSION = '0.3.0';
+        VERSION = '0.3.1';
 
     /*
      * Gets the command line argument with the given index
@@ -35,7 +35,17 @@
             pegjs_parser = require('./grammar.js'),
             i,
             output = '',
+            ast;
+        
+        try {
             ast = pegjs_parser.parse(code);
+        } catch (err) {
+            console.log(
+                err.name + ' on line ' + err.line + ' column ' +
+                err.column + "\nInvalid token " + err.found
+            );
+            return;
+        }
 
         for (i = 0; i < ast.length; i += 1) {
             output += statementParser(ast[i]);

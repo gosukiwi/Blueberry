@@ -376,7 +376,11 @@ Function_Call
 
 /* END STATEMENTS */
 
-/* AND and OR conditions */
+/* 
+  BEGIN OF EXPRESSIONS
+  The most global expression is And_Expression
+*/
+
 And_Expression
   = l:Bool_Comparison _+ "and" _+ r:And_Expression
   { return { type: 'AND', left: l, right: r } }
