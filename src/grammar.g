@@ -79,7 +79,6 @@ Statement
   / Def
   / Class
   / Call
-  / Array_Identifier
   / Comment
   / Empty
 
@@ -415,13 +414,21 @@ Multiplicative
   { return { type: 'ARITHMETIC', operation: '*', left: l, right: r }; }
   / l:Concat  _* "/" _* r:Multiplicative
   { return { type: 'ARITHMETIC', operation: '/', left: l, right: r }; }
+  / l:Concat  _* "%" _* r:Multiplicative
+  { return { type: 'ARITHMETIC', operation: '%', left: l, right: r }; }
   / Concat 
 
 /* Concatenation */
 
 Concat 
-  = l:expression _* "&" _* r:Concat 
+  = l:Array_Expression _* "&" _* r:Concat 
   { return { type: 'CONCATENATION', left: l, right: r }; }
+  / Array_Expression
+
+Array_Expression
+  = 
+  e:expression _* "[" _* idx:And_Expression _* "]"
+  { return { type: 'ARRAY_IDENTIFIER', name: e, index: idx } }
   / expression
 
 /* The most basic blocks besides tokens */
@@ -431,7 +438,6 @@ expression
   { return { type: 'PARENS_EXPRESSION', expression: c }; }
   / "not" _* e:And_Expression
   { return { type: 'BOOL_NOT', value: e } }
-  / Array_Identifier
   / Call
   / string
   / Symbol
@@ -448,12 +454,6 @@ expression
   { return { type: 'RANGE', from:start, to:end } }
   / JSON_Object
   / Array_Create
-
-/* Array Identifier */
-
-Array_Identifier
-  = id:identifier "[" idx:And_Expression "]"
-  { return { type: 'ARRAY_IDENTIFIER', name: id, index: idx } }
 
 /* JSON Object! */
 JSON_Item

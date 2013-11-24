@@ -53,6 +53,10 @@ module.exports = {
     testAssign: function (test) {
         test.equals(this.parseStatement('a = 1'), '$a = 1;');
         test.equals(this.parseStatement('a = 1 + 6'), '$a = (1 + 6);');
+        test.equals(this.parseStatement('a = 1 - 6'), '$a = (1 - 6);');
+        test.equals(this.parseStatement('a = 1 * 6'), '$a = (1 * 6);');
+        test.equals(this.parseStatement('a = 1 / 6'), '$a = (1 / 6);');
+        test.equals(this.parseStatement('a = 1 % 6'), '$a = (1 % 6);');
         test.equals(this.parseStatement('a = f(1 + 6)'), '$a = f((1 + 6));');
         test.equals(this.parseStatement('a = age > 18'), '$a = $age > 18;');
         test.equals(this.parseStatement('a = obj.prop'), '$a = $obj->prop;');
@@ -128,7 +132,8 @@ module.exports = {
         test.done();
     },
 
-    testArrayIdentifier: function (test) {
+    // For now arrays can only be expressions
+    /*testArrayIdentifier: function (test) {
         test.equals(
             this.parseStatement('arr[1]'),
             '$arr[1];'
@@ -150,7 +155,7 @@ module.exports = {
         );
 
         test.done();
-    },
+    },*/
 
     testClass: function (test) {
         test.equals(
@@ -245,6 +250,11 @@ module.exports = {
         test.equals(
             this.parseStatement('a = [1, "two", [f(x)]]'),
             '$a = array(1, \'two\', array(f($x)));'
+        );
+
+        test.equals(
+            this.parseStatement('a = f("somestr")[1]'),
+            '$a = f(\'somestr\')[1];'
         );
 
         test.done();
