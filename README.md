@@ -31,10 +31,10 @@ See the [wiki](https://github.com/gosukiwi/Blueberry/wiki) for extensive documen
 a = 1 # variable definition
 
 # you can use JSON syntax to define associative arrays
-arr = { 'name': 'Mike', 'age': 18, 'meta': { 'items': [1, 2, 3] } }
+arr = { 'name': "Mike", "age": 18, "meta": { "items": [1, 2, 3] } }
 
 if a == 1
-  echo('Hello, World!')
+  echo("Hello, World!")
 end
 
 for(i in (0..10))
@@ -45,7 +45,7 @@ class MyClass < MyParentClass
   @name
 
   def Greet
-    echo('Hello! My name is ' & @name)
+    echo("Hello! My name is " & @name)
   end
 end
 ```
@@ -56,5 +56,7 @@ For more information, see the [wiki](https://github.com/gosukiwi/Blueberry/wiki)
 Format: ```<major>.<minor>.<patch>```
 
 Breaking backwards compatibility bumps the major
+
 New additions without breaking backwards compatibility bumps the minor
+
 Bug fixes and misc changes bump the patch
