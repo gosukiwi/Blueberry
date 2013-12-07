@@ -31,7 +31,7 @@ See the [wiki](https://github.com/gosukiwi/Blueberry/wiki) for extensive documen
 a = 1 # variable definition
 
 # you can use JSON syntax to define associative arrays
-arr = { 'name': "Mike", "age": 18, "meta": { "items": [1, 2, 3] } }
+arr = { "name": "Mike", "age": 18, "meta": { "items": [1, 2, 3] } }
 
 if a == 1
   echo("Hello, World!")
