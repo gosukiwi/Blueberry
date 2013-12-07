@@ -19,18 +19,24 @@ real_number
   }
 
 string 
-  = "\"" s:[^"]+ "\"" 
-  { return { 
-      type: 'STRING', 
-      value: s.join('') 
-    } 
-  }
-  / "'" s:[^']+ "'" 
-  { return { 
-      type: 'STRING', 
-      value: s.join('') 
-    } 
-  }
+  = '"' '"' _             { return { type: 'STRING', value: "" };    }
+  / '"' chars:chars '"' _* { return { type: 'STRING', value: chars }; }
+
+chars
+  = chars:char+ { return chars.join(""); }
+
+char
+  // any-Unicode-character-except-"-or-\-or-control-character
+  = [^"\\\0-\x1F\x7f]
+  / '\\"'  { return '"';  }
+  / "\\\\" { return "\\"; }
+  / "\\/"  { return "/";  }
+  / "\\b"  { return "\b"; }
+  / "\\f"  { return "\f"; }
+  / "\\n"  { return "\n"; }
+  / "\n"  { return "\n"; }
+  / "\\r"  { return "\r"; }
+  / "\\t"  { return "\t"; }
 
 Symbol = ":" value:[A-Za-z_]+
 { return { type: 'SYMBOL', value: value.join('') } }
@@ -173,7 +179,7 @@ When_Group
 
 /* A for Statement */
 For =
-  "for" _+ id:identifier _+ "in" _+ collection:And_Expression newline+
+  "for" _+ id:identifier _+ "in" _+ collection:And_Expression _* newline+
     body:Block
   "end"
   { return { type: 'FOR', name: id, collection:collection, body: body } }
