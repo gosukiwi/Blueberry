@@ -245,6 +245,11 @@ module.exports = {
         );
 
         test.equals(
+            this.parseStatement('for i in (10..0)\necho(i)\nend'),
+            'for ($i = 10; $i >= 0; $i--) {\necho($i);\n}'
+        );
+
+        test.equals(
             this.parseStatement('for k, v in {"a": 1}\necho(k)\nend'),
             'foreach (array(\'a\' => 1) as $k => $v) {\necho($k);\n}'
         );

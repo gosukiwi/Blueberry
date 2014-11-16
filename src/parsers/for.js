@@ -16,8 +16,9 @@ module.exports = function(obj) {
         output = 'foreach (' + expressionParser(obj.collection) + ' as $' + identifierParser(obj.key) + ' => $' + identifierParser(obj.value) + ') {\n';
     } else {
         // foreach over range() is inefficient - where possible, we can optimise it to a plain for loop
-        if (obj.collection.type == 'RANGE') {
-            output = 'for ($' + identifierParser(obj.name) + ' = ' + expressionParser(obj.collection.from) + '; $' + identifierParser(obj.name) + ' <= ' + expressionParser(obj.collection.to) + '; $' + identifierParser(obj.name) + '++) {\n'; 
+        if (obj.collection.type === 'RANGE' && obj.collection.from.type === 'NUMBER' && obj.collection.to.type === 'NUMBER') {
+            var direction = obj.collection.to.value > obj.collection.from.value;
+            output = 'for ($' + identifierParser(obj.name) + ' = ' + expressionParser(obj.collection.from) + '; $' + identifierParser(obj.name) + ' ' + (direction ? '<=' : '>=') + ' ' + expressionParser(obj.collection.to) + '; $' + identifierParser(obj.name) + (direction ? '++' : '--') + ') {\n'; 
         } else {
             output = 'foreach (' + expressionParser(obj.collection) + ' as $' + identifierParser(obj.name) + ') {\n';
         }
