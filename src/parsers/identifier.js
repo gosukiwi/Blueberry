@@ -1,6 +1,6 @@
 /*
  * An identifier
- *  In IcedTea
+ *  In Blueberry
  *      [a-zA-Z] [a-zA-Z_0-9]*
  */
 module.exports = function(obj) {
