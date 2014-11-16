@@ -1,4 +1,4 @@
-<?tea
+<?bb
 class Animal
   @name
   @age = 18

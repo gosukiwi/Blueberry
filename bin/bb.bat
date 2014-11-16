@@ -1,3 +1,3 @@
 @echo off
-node  "%~dp0..\src\blueberry.js" %*
+node  "%~dp0..\src\cli.js" %*
 

@@ -8,6 +8,7 @@
     "mkpath": "0.x.x"
   },
   "devDependencies": {
-    "nodeunit": "0.x.x"
+    "nodeunit": "0.x.x",
+    "glob": "4.x.x"
   }
 }

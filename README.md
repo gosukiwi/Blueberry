@@ -24,6 +24,7 @@ See the [wiki](https://github.com/gosukiwi/Blueberry/wiki) for extensive documen
 ## Syntax At A Glance
 
 ```
+<?bb
 /* 
  I'm a multiline comment
 */
@@ -37,7 +38,7 @@ if a == 1
   echo("Hello, World!")
 end
 
-for(i in (0..10))
+for i in (0..10)
   echo(i)
 end
 
@@ -48,6 +49,7 @@ class MyClass < MyParentClass
     echo("Hello! My name is " & @name)
   end
 end
+?>
 ```
 
 For more information, see the [wiki](https://github.com/gosukiwi/Blueberry/wiki).
