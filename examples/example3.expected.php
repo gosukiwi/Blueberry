@@ -7,7 +7,7 @@ foreach ($myArray as $key => $val) {
     echo('Key is ' . $key . ' and value is ' . $val);
 }
 
-foreach (range(0, 10) as $i) {
+for ($i = 0; $i <= 10; $i++) {
     echo($someArray[$i]);
 }
 

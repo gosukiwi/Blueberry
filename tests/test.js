@@ -241,7 +241,7 @@ module.exports = {
     testFor: function (test) {
         test.equals(
             this.parseStatement('for i in (0..10)\necho(i)\nend'),
-            'foreach (range(0, 10) as $i) {\necho($i);\n}'
+            'for ($i = 0; $i <= 10; $i++) {\necho($i);\n}'
         );
 
         test.equals(

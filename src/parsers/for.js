@@ -15,7 +15,12 @@ module.exports = function(obj) {
     if(obj.type === 'COMPOSITE_FOR') {
         output = 'foreach (' + expressionParser(obj.collection) + ' as $' + identifierParser(obj.key) + ' => $' + identifierParser(obj.value) + ') {\n';
     } else {
-        output = 'foreach (' + expressionParser(obj.collection) + ' as $' + identifierParser(obj.name) + ') {\n';
+        // foreach over range() is inefficient - where possible, we can optimise it to a plain for loop
+        if (obj.collection.type == 'RANGE') {
+            output = 'for ($' + identifierParser(obj.name) + ' = ' + expressionParser(obj.collection.from) + '; $' + identifierParser(obj.name) + ' <= ' + expressionParser(obj.collection.to) + '; $' + identifierParser(obj.name) + '++) {\n'; 
+        } else {
+            output = 'foreach (' + expressionParser(obj.collection) + ' as $' + identifierParser(obj.name) + ') {\n';
+        }
     }
 
     for(i = 0; i < obj.body.length; i += 1) {
