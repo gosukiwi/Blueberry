@@ -183,7 +183,7 @@ For =
     body:Block
   "end"
   { return { type: 'FOR', name: id, collection:collection, body: body } }
-  / "for" _+ key:identifier "," _* val:identifier _+ "in" _+ collection:And_Expression newline+
+  / "for" _+ key:identifier ":" _* val:identifier _+ "in" _+ collection:And_Expression newline+
     body:Block
   "end"
   { return { type: 'COMPOSITE_FOR', key: key, value: val, collection:collection, body: body } }

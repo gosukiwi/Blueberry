@@ -9,6 +9,12 @@ default PHP.
 Right now Blueberry is still in very early development, it's usage is encouraged
 mostly for testing purposes.
 
+## Building
+
+All the compiler dependencies can be installed with `npm install`.
+
+Building the grammar, which you don't need to do unless you modify it, can be done with `pegjs --cache src/grammar.g src/grammar.ks`. You'll need to install pegjs first, version 0.7 or later, e.g. `npm install -g pegjs`.
+
 ## Command Line Usage
 
 The easiest way to compile Blueberry code into PHP code is using the 
