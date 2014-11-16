@@ -1,6 +1,6 @@
 /*
  * Assignment
- *  In IcedTea:
+ *  In Blueberry:
  *      a = 1
  *  In PHP:
  *      $a = 1;

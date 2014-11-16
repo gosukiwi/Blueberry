@@ -1,6 +1,6 @@
 /*
  * A def
- *  In IcedTea
+ *  In Blueberry
  *      def myIdentifier
  *          body
  *      end

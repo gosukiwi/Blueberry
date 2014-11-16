@@ -1,6 +1,6 @@
 /*
  * Expression
- *  In IcedTea:
+ *  In Blueberry:
  *      And, Or
  *      >, <, >=, <=, ==, !=
  *      -, +, *, /

@@ -1,6 +1,6 @@
 /*
  * An identifier
- *  In IcedTea
+ *  In Blueberry
  *      (identifier1, identifier 2, ... , identifier n)
  *      ()
  */
