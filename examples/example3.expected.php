@@ -12,6 +12,6 @@ for ($i = 0; $i <= 10; $i++) {
 }
 
 foreach (array('a' => 1) as $k => $v) {
-  echo($k . ' is ' . $v);
+    echo($k . ' is ' . $v);
 }
 
