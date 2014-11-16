@@ -13,14 +13,14 @@ mostly for testing purposes.
 
 All the compiler dependencies can be installed with `npm install`.
 
-Building the grammar, which you don't need to do unless you modify it, can be done with `pegjs --cache src/grammar.g src/grammar.ks`. You'll need to install pegjs first, version 0.7 or later, e.g. `npm install -g pegjs`.
+Building the grammar, which you don't need to do unless you modify it, can be done with `pegjs --cache src/grammar.g src/grammar.js`. You'll need to install pegjs first, version 0.7 or later, e.g. `npm install -g pegjs`.
 
 ## Command Line Usage
 
 The easiest way to compile Blueberry code into PHP code is using the 
 ```bb``` file, inside the ```bin``` directory. 
 
-```bin/bb compile file.tea```
+```bin/bb compile file.bb```
 
 If using unix you can just symlink the executable to your ```/bin``` folder, 
 if windows, add the path to ```bb.bat``` to your PATH env variable.
