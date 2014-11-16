@@ -1,11 +1,11 @@
-<?tea
+<?bb
 if a
-    echo('Hello "World"!')
+    echo("Hello \"World\"!")
     a = 2 + 3.14
 else if c != nil
     c = 1
 else
-    echo('WTF')
+    echo("WTF")
 end
 
 callSomething()

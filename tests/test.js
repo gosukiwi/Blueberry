@@ -1,7 +1,9 @@
 module.exports = {
     setUp: function (callback) {
         var parser = require('../src/grammar.js'),
-            fs = require('fs');
+            src = require('../src/blueberry.js'),
+            fs = require('fs'),
+            glob = require('glob');
         
         this.compile = function (source) {
             return parser.parse(source);
@@ -14,6 +16,14 @@ module.exports = {
 
         this.load = function (name) {
             return this.unixNewlines(fs.readFileSync(name, 'utf8'));
+        };
+
+        this.save = function (name, data) { 
+            return fs.writeFileSync(name, data, { encoding: 'utf8' });
+        };
+
+        this.delete = function (name) {
+            return fs.unlinkSync(name);
         };
 
         this.unixNewlines = function (str) {
@@ -32,6 +42,10 @@ module.exports = {
             
             return this.unixNewlines(output);
         };
+
+        this.compileBlueberry = src.compileFile;
+
+        this.glob = glob.sync;
 
         callback();
     },
@@ -345,6 +359,42 @@ module.exports = {
             this.parseStatement('a = :my_symbol'),
             '$a = \'my_symbol\';'
         );
+
+        test.done();
+    },
+
+    testExamples: function (test) {
+        var files = this.glob('examples/*.bb'),
+            that = this;
+
+        files.forEach(function (file) {
+            var split = file.split('.'),
+                errored = false,
+                srcFile = file,
+                outFile = split[0] + '.out.php',
+                expFile = split[0] + '.expected.php';
+            test.doesNotThrow(function () {
+                try {
+                    that.compileBlueberry(srcFile, outFile);
+                } catch (err) {
+                    console.log(
+                        err.name + ' on line ' + err.line + ' column ' +
+                        err.column + " in " + srcFile + "\nInvalid token " + err.found
+                    );
+                    errored = true;
+                    throw err;
+                }
+            });
+
+            if (!errored) {
+                var expectedSrc = that.load(expFile),
+                    outSrc = that.load(outFile);
+                test.equals(expectedSrc, outSrc);
+                if (expectedSrc === outSrc) {
+                    that.delete(outFile);
+                }
+            }
+        });
 
         test.done();
     }

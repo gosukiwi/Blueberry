@@ -1,11 +1,11 @@
-<?tea
+<?bb
 switch myVariable
     when "mike"
-      echo('Hello, mike!')
+      echo("Hello, mike!")
     when "annie", "tibbers"
-      echo('I saw nothing')
+      echo("I saw nothing")
     else
-      echo('Hello!')
+      echo("Hello!")
 end
 
 try 

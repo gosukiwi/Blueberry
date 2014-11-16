@@ -1,4 +1,4 @@
-<?tea
+<?bb
 /*
 * Tea class example :)
 */
@@ -10,6 +10,6 @@ class MyClass
 
   # protected method definition
   protected def MyMethod(&byRef, byVal)
-    echo('HI!')
+    echo("HI!")
   end
 end
