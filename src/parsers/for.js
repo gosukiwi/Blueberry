@@ -13,7 +13,7 @@ module.exports = function(obj) {
         i;
 
     if(obj.type === 'COMPOSITE_FOR') {
-        output = 'foreach (' + expressionParser(obj.collection) + ' as $' + identifierParser(obj.key) + ', $' + identifierParser(obj.value) + ') {\n';
+        output = 'foreach (' + expressionParser(obj.collection) + ' as $' + identifierParser(obj.key) + ' => $' + identifierParser(obj.value) + ') {\n';
     } else {
         output = 'foreach (' + expressionParser(obj.collection) + ' as $' + identifierParser(obj.name) + ') {\n';
     }

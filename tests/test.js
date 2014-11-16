@@ -246,7 +246,7 @@ module.exports = {
 
         test.equals(
             this.parseStatement('for k, v in {"a": 1}\necho(k)\nend'),
-            'foreach (array(\'a\' => 1) as $k, $v) {\necho($k);\n}'
+            'foreach (array(\'a\' => 1) as $k => $v) {\necho($k);\n}'
         );
 
         test.done();
