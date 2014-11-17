@@ -1,4 +1,5 @@
-/* jshint strict: false */
+'use strict';
+
 module.exports = {
     setUp: function (callback) {
         var parser = require('../src/grammar.js'),
