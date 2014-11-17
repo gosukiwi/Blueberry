@@ -6,7 +6,7 @@
  */
 
 (function () {
-    "use strict";
+    'use strict';
 
     var statementParser = require('./parsers/statement.js'),
         pegjs_parser = require('./grammar.js'),
@@ -41,7 +41,7 @@
         var source_code,
             php_code;
 
-        // Read the Iced Tea source code
+        // Read the Blueberry source code
         source_code = fs.readFileSync(source, 'utf8');
     
         // Now I need to get all the code inside <?bb ?> tags (BB TAGS! Heh)
