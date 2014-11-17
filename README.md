@@ -40,10 +40,12 @@ a = 1 # variable definition
 # you can use JSON syntax to define associative arrays
 arr = { "name": "Mike", "age": 18, "meta": { "items": [1, 2, 3] } }
 
+# strict comparison, like PHP's ===
 if a == 1
   echo("Hello, World!")
 end
 
+# inclusive range, 0 <= i <= 10
 for i in (0..10)
   echo(i)
 end

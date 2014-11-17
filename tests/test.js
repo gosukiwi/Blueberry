@@ -83,6 +83,12 @@ module.exports = {
         test.done();
     },
 
+    testCompare: function (test) {
+        test.equals(this.parseStatement('a = 1 == 2'), '$a = 1 === 2;');
+        test.equals(this.parseStatement('a = 1 != 2'), '$a = 1 !== 2;');
+        test.done();
+    },
+
     testIf: function (test) {
         test.equals(
             this.parseStatement('if can_drink\necho("Beer Beer!")\nend'),
