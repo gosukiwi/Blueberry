@@ -1,3 +1,4 @@
+/* jshint strict: false */
 module.exports = {
     setUp: function (callback) {
         var parser = require('../src/grammar.js'),
@@ -27,7 +28,7 @@ module.exports = {
         };
 
         this.unixNewlines = function (str) {
-            return str.replace(/\r\n/g, "\n");
+            return str.replace(/\r\n/g, '\n');
         };
 
         this.compileFile = function(name) {
@@ -384,7 +385,7 @@ module.exports = {
                 } catch (err) {
                     console.log(
                         err.name + ' on line ' + err.line + ' column ' +
-                        err.column + " in " + srcFile + "\nInvalid token " + err.found
+                        err.column + ' in ' + srcFile + '\nInvalid token ' + err.found
                     );
                     errored = true;
                     throw err;
