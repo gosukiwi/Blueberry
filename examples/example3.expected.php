@@ -1,5 +1,5 @@
 <?php
-while (($sometVar != null)) {
+while (($sometVar !== null)) {
     echo('Testing the while statement.');
 }
 
