@@ -2,7 +2,7 @@
  * An expression list, used for calling functions
  */
 module.exports = function(obj) {
-    if(!obj) {
+    if(!obj || !obj.values) {
         return '';
     }
 

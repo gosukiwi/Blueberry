@@ -83,6 +83,15 @@ module.exports = {
         test.done();
     },
 
+    testAssignLVal: function (test) {
+        test.equals(this.parseStatement('a[1] = 1'), '$a[1] = 1;');
+        test.equals(this.parseStatement('b.a[1] = 1'), '$b->a[1] = 1;');
+        test.equals(this.parseStatement('b.a[1].c = 1'), '$b->a[1]->c = 1;');
+        test.equals(this.parseStatement('a[1].b = 1'), '$a[1]->b = 1;');
+        test.equals(this.parseStatement('a.b[1].c = 1'), '$a->b[1]->c = 1;');
+        test.done();
+    },
+
     testIf: function (test) {
         test.equals(
             this.parseStatement('if can_drink\necho("Beer Beer!")\nend'),
@@ -274,10 +283,11 @@ module.exports = {
             '$a = array(1, \'two\', array(f($x)));'
         );
 
-        test.equals(
-            this.parseStatement('a = f("somestr")[1]'),
-            '$a = f(\'somestr\')[1];'
-        );
+        // PHP doesn't support f()[1] so, let's leave it for now?
+        //test.equals(
+        //    this.parseStatement('a = f("somestr")[1]'),
+        //    '$a = f(\'somestr\')[1];'
+        //);
 
         test.done();
     },

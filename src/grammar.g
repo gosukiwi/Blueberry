@@ -271,7 +271,7 @@ Assign
       right: r
     } 
   }
-  / id:identifier _* mode:Assign_Operartor _* exp:And_Expression
+  / id:Call_Expression _* mode:Assign_Operartor _* exp:And_Expression
   {
     return {
       type: 'ASSIGN',
@@ -359,20 +359,20 @@ Method_Call
 
 Property_Call
   =
-  object:identifier "." property:identifier
+  object:Array_Expression "." property:Array_Expression
   { return { type: 'CALL_PROPERTY', object: object, property: property } }
   / Function_Call
 
 Function_Call
   =
-  _* id:identifier _* "(" _* ")"
+  _* id:Array_Expression _* "(" _* ")"
   { return {
       type: 'CALL',
       identifier: id,
       args: null
     }
   }
-  / id:identifier _* args:ExprList
+  / id:Array_Expression _* args:ExprList
   { return {
       type: 'CALL',
       identifier: id,
@@ -433,6 +433,10 @@ Multiplicative
 Concat 
   = l:Array_Expression _* "&" _* r:Concat 
   { return { type: 'CONCATENATION', left: l, right: r }; }
+  / Call_Expression
+
+Call_Expression
+ = Call
   / Array_Expression
 
 Array_Expression
@@ -448,15 +452,12 @@ expression
   { return { type: 'PARENS_EXPRESSION', expression: c }; }
   / "not" _* e:And_Expression
   { return { type: 'BOOL_NOT', value: e } }
-  / Call
   / string
   / Symbol
   / real_number
   / integer
   / bool
   / nil
-  / l:identifier "." r:identifier
-  { return { type: 'OBJECT_ATTRIBUTE_IDENTIFIER', object: l, value: r } }
   / identifier
   / "@" id:identifier 
   { return { type: 'INSTANCE_IDENTIFIER', value: id.value } }

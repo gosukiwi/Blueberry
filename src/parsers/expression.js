@@ -10,6 +10,8 @@
  *      Identifier
  */
 var outter_parser = function(obj) {
+    'use strict';
+
     var output,
         parser = {
             number: require('./number.js'),
@@ -78,10 +80,6 @@ var outter_parser = function(obj) {
         case 'PARENS_EXPRESSION':
             output = '(' + outter_parser(obj.expression) + ')';
             break;
-        case 'OBJECT_ATTRIBUTE_IDENTIFIER':
-            // myObjectInstance.myAttribute
-            output = '$' + parser.identifier(obj.object) + '->' + parser.identifier(obj.value);
-            break;
         case 'INSTANCE_IDENTIFIER':
             // @myInstanceVariable
             output = '$this->' + parser.identifier(obj);
@@ -101,8 +99,7 @@ var outter_parser = function(obj) {
             output = '$' + parser.identifier(obj);
             break;
         default:
-            throw "Invalid expression type: " + obj.type;
-            break;
+            throw 'Invalid expression type: ' + obj.type;
     }
     
     return output;

@@ -1,34 +1,36 @@
 /*
  * A function called as an expression
  */
-var outter_parser = function(obj) {
-   var identifierParser = require('./identifier.js'),
-        argumentsParser = require('./expressionList.js'),
-        output;
-   
+
+var identifierParser = require('./identifier.js'),
+    argumentsParser  = require('./expressionList.js'),
+    expressionParser = require('./expression.js');
+
+function callExpressionParser(obj) {
+  'use strict';
+
+   var output;
+
    switch(obj.type) {
         case 'CALL':
             output = identifierParser(obj.identifier) + '(' + argumentsParser(obj.args) + ')';
             break;
         case 'CALL_CHAIN':
-            output = outter_parser(obj.left) + '->' + outter_parser(obj.right);
+            output = expressionParser(obj.left) + '->' + callExpressionParser(obj.right);
             break;
         case 'CALL_METHOD':
-            output = '$' + identifierParser(obj.object) + "->" + outter_parser(obj.method);
+            output = expressionParser(obj.object) + '->' + callExpressionParser(obj.method);
             break;
         case 'CALL_PROPERTY':
-            output = '$' + identifierParser(obj.object) + "->" + identifierParser(obj.property);
+            output = expressionParser(obj.object) + '->' + expressionParser(obj.property).substring(1);
             break;
         case 'IDENTIFIER':
             return identifierParser(obj);
-            break;
         default:
-            throw "Invalid type: " + obj.type;
-            break;
+            throw 'Invalid type: ' + obj.type;
     }
 
    return output;
-};
+}
 
-module.exports = outter_parser;
-
+module.exports = callExpressionParser;
