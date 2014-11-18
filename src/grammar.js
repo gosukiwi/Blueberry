@@ -229,8 +229,8 @@ module.exports = (function() {
               right: f
             } 
           },
-        peg$c155 = "??",
-        peg$c156 = { type: "literal", value: "??", description: "\"??\"" },
+        peg$c155 = "?:",
+        peg$c156 = { type: "literal", value: "?:", description: "\"?:\"" },
         peg$c157 = function(id, l, r) {
             return {
               type: 'ASSIGN_DEFAULT_VALUE',

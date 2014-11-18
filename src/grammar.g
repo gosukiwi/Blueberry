@@ -262,7 +262,7 @@ Assign
       right: f
     } 
   }
-  / id:identifier _* "=" _* l:And_Expression _* "??" _* r:And_Expression
+  / id:identifier _* "=" _* l:And_Expression _* "?:" _* r:And_Expression
   {
     return {
       type: 'ASSIGN_DEFAULT_VALUE',

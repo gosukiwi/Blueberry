@@ -21,6 +21,6 @@ myValue = not myVariable
 
 title = age > 18 ? "Mister" : "Boy"
 # Default value is "Mike"
-@name = getName() ?? "Mike"
+@name = getName() ?: "Mike"
 
 someOption = :im_a_symbol
