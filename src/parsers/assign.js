@@ -23,7 +23,7 @@ function assignParser(obj) {
             expressionParser(obj.condition) + ' ? ' + expressionParser(obj.left) + ' : ' + expressionParser(obj.right) + ';';
     } else if(obj.type === 'ASSIGN_DEFAULT_VALUE') {
         return '$' + identifierParser(obj.identifier) + ' = ' + 
-            expressionParser(obj.left) + ' ? ' + expressionParser(obj.left) + ' : ' + expressionParser(obj.right) + ';';
+            expressionParser(obj.left) + ' ?: ' + expressionParser(obj.right) + ';';
     }
 
     var mode = obj.mode === 'BY_REFERENCE' ? '&=' : '=';

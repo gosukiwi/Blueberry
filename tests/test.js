@@ -236,7 +236,7 @@ module.exports = {
     testDefaultValue: function (test) {
         test.equals(
             this.parseStatement('a = var ?: 2'),
-            '$a = $var ? $var : 2;'
+            '$a = $var ?: 2;'
         );
 
         test.done();

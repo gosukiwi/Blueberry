@@ -15,6 +15,6 @@ $myValue = !$myVariable;
 
 $title = $age > 18 ? 'Mister' : 'Boy';
 // Default value is "Mike"
-$this->name = getName() ? getName() : 'Mike';
+$this->name = getName() ?: 'Mike';
 
 $someOption = 'im_a_symbol';
