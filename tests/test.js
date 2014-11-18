@@ -89,6 +89,8 @@ module.exports = {
         test.equals(this.parseStatement('b.a[1].c = 1'), '$b->a[1]->c = 1;');
         test.equals(this.parseStatement('a[1].b = 1'), '$a[1]->b = 1;');
         test.equals(this.parseStatement('a.b[1].c = 1'), '$a->b[1]->c = 1;');
+        test.equals(this.parseStatement('a[:foo] = 1'), '$a[\'foo\'] = 1;');
+        test.equals(this.parseStatement('a["foo"] = 1'), '$a[\'foo\'] = 1;');
         test.done();
     },
 
