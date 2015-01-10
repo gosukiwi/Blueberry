@@ -10,5 +10,9 @@
   "devDependencies": {
     "nodeunit": "0.x.x",
     "glob": "4.x.x"
+  }, 
+  "preferGlobal": "true",
+  "bin": {
+    "bb" : "bin/bb"
   }
 }
