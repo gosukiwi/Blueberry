@@ -86,7 +86,10 @@ var outter_parser = function(obj) {
             output = '$this->' + parser.identifier(obj);
             break;
         case 'LIST_COMPREHENSION':
-            output = parser.list_comprehesion(obj);
+            // List comprehension can be either a statement or an expression.
+            // By default it's treated a statement thus the compiler adds ';'.
+            // Let's remove it because we want an expression now.
+            output = parser.list_comprehesion(obj).slice(0, -1);
             break;
         case 'JSON_ARRAY':
             output = parser.json_array(obj);

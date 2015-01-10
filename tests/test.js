@@ -395,7 +395,12 @@ module.exports = {
 
       test.equals(
           this.parseStatement('a = [2 * i for i in (1..10) where i % 2 == 0]'),
-          '$a = array_map(function($i){ return (2 * $i); }, array_filter(range(1, 10), function($i){ return ($i % 2) == 0; }));;'
+          '$a = array_map(function($i){ return (2 * $i); }, array_filter(range(1, 10), function($i){ return ($i % 2) == 0; }));'
+      );
+
+      test.equals(
+          this.parseStatement('a = {"a": [2*i for i in (1..3)]}'),
+          "$a = array('a' => array_map(function($i){ return (2 * $i); }, range(1, 3)));"
       );
 
       test.done();
