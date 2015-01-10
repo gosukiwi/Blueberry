@@ -20,7 +20,8 @@ module.exports = function(obj) {
             'while': require('./while.js'),
             'for': require('./for.js'),
             'switch': require('./switch.js'),
-            'try_catch': require('./try_catch.js')
+            'try_catch': require('./try_catch.js'),
+            'list_comprehension': require('./list_comprehension.js')
         };
 
     switch(obj.type) {
@@ -68,6 +69,9 @@ module.exports = function(obj) {
             break;
         case 'ARRAY_IDENTIFIER':
             output = parser.array_identifier(obj);
+            break;
+        case 'LIST_COMPREHENSION':
+            output = parser.list_comprehension(obj);
             break;
         case 'COMMENT':
             output = parser.comment(obj);

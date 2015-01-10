@@ -86,6 +86,7 @@ Statement
   / Def
   / Class
   / Call
+  / List_Comprehension
   / Comment
   / Empty
 
@@ -295,6 +296,15 @@ Def
     }
   }
 
+/* STATEMENTS AND EXPRESSIONS 
+ * ---------------------------------------------------------------------------*/
+
+List_Comprehension
+  = "[" _* action:Binary_Expression _* "for" _* item:Identifier _* "in" _* collection:Binary_Expression _* "where" _* filter:Binary_Expression _* "]"
+  { return { type: 'LIST_COMPREHENSION', action: action, item: item, collection: collection, filter: filter } }
+  / "[" _* action:Binary_Expression _* "for" _* item:Identifier _* "in" _* collection:Binary_Expression _* "]"
+  { return { type: 'LIST_COMPREHENSION', action: action, item: item, collection: collection, filter: null } }
+
 /* STATEMENTS HELPERS */
 
 /*
@@ -425,7 +435,7 @@ Multiplicative
   / Concat 
 
 /* Concatenation */
-Concat 
+Concat
   = l:Array_Expression _* "&" _* r:Concat 
   { return { type: 'CONCATENATION', left: l, right: r }; }
   / Call_Expression
@@ -435,8 +445,7 @@ Call_Expression
   / Array_Expression
 
 Array_Expression
-  = 
-  e:Expression _* "[" _* idx:Binary_Expression _* "]"
+  = e:Expression _* "[" _* idx:Binary_Expression _* "]"
   { return { type: 'ARRAY_IDENTIFIER', name: e, index: idx } }
   / Expression
 
@@ -460,6 +469,7 @@ Expression
   { return { type: 'RANGE', from:start, to:end } }
   / JSON_Object
   / Array_Create
+  / List_Comprehension
 
 /* JSON Object! */
 JSON_Item
@@ -497,3 +507,4 @@ Array_Create
       values: values
     }
   }
+

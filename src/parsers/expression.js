@@ -30,7 +30,8 @@ var outter_parser = function(obj) {
             array_create: require('./array_create.js'),
             json_array: require('./json_array.js'),
             bool_not: require('./bool_not.js'),
-            symbol: require('./symbol.js')
+            symbol: require('./symbol.js'),
+            list_comprehesion: require('./list_comprehension.js')
         };
 
     switch(obj.type) {
@@ -83,6 +84,9 @@ var outter_parser = function(obj) {
         case 'INSTANCE_IDENTIFIER':
             // @myInstanceVariable
             output = '$this->' + parser.identifier(obj);
+            break;
+        case 'LIST_COMPREHENSION':
+            output = parser.list_comprehesion(obj);
             break;
         case 'JSON_ARRAY':
             output = parser.json_array(obj);
