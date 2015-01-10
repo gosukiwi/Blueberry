@@ -37,7 +37,7 @@ See the [wiki](https://github.com/gosukiwi/Blueberry/wiki) for extensive documen
 
 a = 1 # variable definition
 
-# you can use JSON syntax to define associative arrays
+# You can use JSON syntax to define associative arrays
 arr = { "name": "Mike", "age": 18, "meta": { "items": [1, 2, 3] } }
 
 if a == 1
@@ -47,6 +47,9 @@ end
 for i in (0..10)
   echo(i)
 end
+
+# List comprehensions
+myList = [2 * i for i in (1..10) where i % 2 == 0]
 
 class MyClass < MyParentClass
   @name
