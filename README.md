@@ -1,31 +1,26 @@
 # Blueberry
-Blueberry is a script language with clean syntax, inspired from CoffeeScript, 
-Python and Ruby.
+Blueberry is a script language with clean syntax, inspired from Ruby,
+CoffeeScript, and Python.
 
-Blueberry compiles to __PHP__ so everything you do with Blueberry can run wherever
-PHP can run, this is awesome for shared web servers where you can only run
-default PHP.
+Blueberry compiles to __PHP__ so everything you do with Blueberry can run
+wherever PHP can run. This is particularly awesome for limited hosting services
+where you have little to no control over the server.
 
-Right now Blueberry is still in very early development, it's usage is encouraged
-mostly for testing purposes.
+Right now Blueberry is still in _very_ early development, it's usage is
+encouraged only for testing purposes.
 
-## Building
+## Usage
+Blueberry compiler runs on [Node](http://nodejs.org/). To compile Blueberry
+files simply install the compiler like any other NPM module: `npm install
+blueberry`.
 
-All the compiler dependencies can be installed with `npm install`.
+Once you have the compiler you can compile files by doing `bb compile in.bb
+out.php`.
 
-Building the grammar, which you don't need to do unless you modify it, can be done with `pegjs --cache src/grammar.g src/grammar.js`. You'll need to install pegjs first, version 0.7 or later, e.g. `npm install -g pegjs`.
+You can watch folders recursively as follows: `bb watch src/ build/`.
 
-## Command Line Usage
-
-The easiest way to compile Blueberry code into PHP code is using the 
-```bb``` file, inside the ```bin``` directory. 
-
-```bin/bb compile file.bb```
-
-If using unix you can just symlink the executable to your ```/bin``` folder, 
-if windows, add the path to ```bb.bat``` to your PATH env variable.
-
-See the [wiki](https://github.com/gosukiwi/Blueberry/wiki) for extensive documentation on the CLI (Command Line Interface)
+See the [wiki](https://github.com/gosukiwi/Blueberry/wiki) for extensive
+documentation on the CLI (Command Line Interface).
 
 ## Syntax At A Glance
 
@@ -77,11 +72,20 @@ end
 
 For more information, see the [wiki](https://github.com/gosukiwi/Blueberry/wiki).
 
-# Versioning
+## Contributing
+Clone the repo, and install dependencies with `npm install --save-dev`.
+
+Building the grammar, which you don't need to do unless you modify it, can be
+done with `pegjs --cache src/grammar.g src/grammar.js`. You'll need to install
+pegjs first, version 0.7 or later, e.g. `npm install -g pegjs`.
+
+You can test out the command line usage by running `npm link`, that will enable
+the `bb` command in your working directory.
+
+
+## Versioning
 Format: ```<major>.<minor>.<patch>```
 
-Breaking backwards compatibility bumps the major
-
-New additions without breaking backwards compatibility bumps the minor
-
-Bug fixes and misc changes bump the patch
+ * Breaking backwards compatibility bumps the major.
+ * New additions without breaking backwards compatibility bumps the minor.
+ * Bug fixes and misc changes bump the patch.
