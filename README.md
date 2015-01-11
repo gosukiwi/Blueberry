@@ -35,7 +35,9 @@ See the [wiki](https://github.com/gosukiwi/Blueberry/wiki) for extensive documen
  I'm a multiline comment
 */
 
-a = 1 # variable definition
+# variable definition
+foo = 1 
+bar = "baz"
 
 # You can use JSON syntax to define associative arrays
 arr = { "name": "Mike", "age": 18, "meta": { "items": [1, 2, 3] } }
@@ -51,11 +53,13 @@ end
 
 # List comprehensions
 myList = [2 * i for i in (1..10) where i % 2 == 0]
+# It also works in JSON constructs
+myArr  = { "first_names": [name.first_name for name in names] }
 
 class MyClass < MyParentClass
   @name
 
-  def Greet
+  def greet
     echo("Hello! My name is " & @name)
   end
 end
