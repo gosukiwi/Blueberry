@@ -428,8 +428,8 @@ module.exports = {
       );
 
       test.equals(
-          this.parseStatement('(i) use (a) -> 2*i'),
-          "function($i) use ($a) { return (2 * $i); };"
+          this.parseStatement('some_func((i) use (a) -> 2*i, "another_arg")'),
+          "some_func(function($i) use ($a) { return (2 * $i); }, 'another_arg');"
       );
 
       test.done();
