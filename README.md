@@ -40,6 +40,7 @@ a = 1 # variable definition
 # You can use JSON syntax to define associative arrays
 arr = { "name": "Mike", "age": 18, "meta": { "items": [1, 2, 3] } }
 
+# Compiles to strict comparison `$a === 1`
 if a == 1
   echo("Hello, World!")
 end
