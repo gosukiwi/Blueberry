@@ -56,6 +56,15 @@ myList = [2 * i for i in (1..10) where i % 2 == 0]
 # It also works in JSON constructs
 myArr  = { "first_names": [name.first_name for name in names] }
 
+# Closures can be used as follows
+foo = (arg1, arg2) -> arg1 + arg2
+bar = () -> do
+  name = "Tolouse"
+  return name
+end
+# Execute function
+bar()
+
 class MyClass < MyParentClass
   @name
 

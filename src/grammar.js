@@ -254,7 +254,8 @@ module.exports = (function() {
           },
         peg$c164 = "def",
         peg$c165 = { type: "literal", value: "def", description: "\"def\"" },
-        peg$c166 = function(id, args, b) { return {
+        peg$c166 = function(id, args, b) { 
+            return {
               type: 'DEF',
               name: id,
               args: args,

@@ -291,10 +291,9 @@ Assign
   
 
 Def
-  = "def" _+ id:Identifier _* args:Argument_List? _* NewLine+
-    b:Block
-  "end"
-  { return {
+  = "def" _+ id:Identifier _* args:Argument_List? _* NewLine+ b:Block "end"
+  { 
+    return {
       type: 'DEF',
       name: id,
       args: args,
