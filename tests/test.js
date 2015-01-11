@@ -406,6 +406,44 @@ module.exports = {
       test.done();
     },
 
+    testClosures: function (test) {
+      test.equals(
+          this.parseStatement('a = (i) use (a) -> do return 2*i end'),
+          "$a = function($i) use ($a) {\nreturn (2 * $i); \n};"
+      );
+
+      test.equals(
+          this.parseStatement('a = (i) -> do return 2*i end'),
+          "$a = function($i) {\nreturn (2 * $i); \n};"
+      );
+
+      test.equals(
+          this.parseStatement('a = (i) -> 2*i'),
+          "$a = function($i) { return (2 * $i); };"
+      );
+
+      test.equals(
+          this.parseStatement('a = (i) use (a) -> 2*i'),
+          "$a = function($i) use ($a) { return (2 * $i); };"
+      );
+
+      test.done();
+    },
+
+    testReturn: function (test) {
+      test.equals(
+          this.parseStatement('return 1'),
+          'return 1;'
+      );
+
+      test.equals(
+          this.parseStatement('return 2 * a'),
+          'return (2 * $a);'
+      );
+
+      test.done();
+    },
+
     testExamples: function (test) {
         var files = this.glob('examples/*.bb'),
             that = this;

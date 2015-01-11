@@ -31,7 +31,8 @@ var outter_parser = function(obj) {
             json_array: require('./json_array.js'),
             bool_not: require('./bool_not.js'),
             symbol: require('./symbol.js'),
-            list_comprehesion: require('./list_comprehension.js')
+            list_comprehesion: require('./list_comprehension.js'),
+            closure: require('./closure.js')
         };
 
     switch(obj.type) {
@@ -104,6 +105,9 @@ var outter_parser = function(obj) {
             // When an expression is parsed, it checks for a function call
             // or an identifier, the identifier will always be a variable n_n
             output = '$' + parser.identifier(obj);
+            break;
+        case 'CLOSURE':
+            output = parser.closure(obj);
             break;
         default:
             throw 'Invalid expression type: ' + obj.type;

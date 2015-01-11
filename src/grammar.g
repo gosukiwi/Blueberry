@@ -83,6 +83,7 @@ Statement
   / Switch
   / Try_Catch
   / Assign
+  / Return
   / Def
   / Class
   / Call
@@ -93,7 +94,12 @@ Statement
 Block
   = Statement*
 
-Empty = val:[ \n\r\t]+ { return { type: 'EMPTY', value: val.join('') } }
+Empty 
+  = val:[ \n\r\t]+ { return { type: 'EMPTY', value: val.join('') } }
+
+Return
+  = "return" _+ exp:Binary_Expression
+  { return { type: 'RETURN', exp: exp } }
 
 /* Class Implementation */
 
@@ -285,7 +291,7 @@ Assign
   
 
 Def
-  = "def" _+ id:Identifier _* args:ArgList? _* NewLine+
+  = "def" _+ id:Identifier _* args:Argument_List? _* NewLine+
     b:Block
   "end"
   { return {
@@ -335,7 +341,7 @@ Argument_Identifier
  { return { type: 'IDENTIFIER_BY_REFERENCE', value: id.value } }
  / Identifier  
 
-ArgList
+Argument_List
  = "(" h:Argument_Identifier t:(_* "," _* Argument_Identifier)* ")" {
     var values = [h]
       , i; 
@@ -452,7 +458,8 @@ Array_Expression
 /* The most basic blocks besides tokens */
 Expression 
   = 
-  "(" c:Binary_Expression ")"
+  Closure
+  / "(" c:Binary_Expression ")"
   { return { type: 'PARENS_EXPRESSION', expression: c }; }
   / "not" _* e:Binary_Expression
   { return { type: 'BOOL_NOT', value: e } }
@@ -508,3 +515,14 @@ Array_Create
     }
   }
 
+/* Closures */
+Closure
+  = args:Argument_List _* "use" _* use:Argument_List _* "->" _* body:Closure_Body
+  { return { type: 'CLOSURE', args: args, use: use, body: body } }
+  / args:Argument_List _* "->" _* body:Closure_Body
+  { return { type: 'CLOSURE', args: args, use: null, body: body } }
+
+Closure_Body
+  = "do" _* block: Block "end"
+  { return { type: 'CLOSURE_BLOCK', block: block } }
+  / Binary_Expression

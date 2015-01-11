@@ -21,7 +21,8 @@ module.exports = function(obj) {
             'for': require('./for.js'),
             'switch': require('./switch.js'),
             'try_catch': require('./try_catch.js'),
-            'list_comprehension': require('./list_comprehension.js')
+            'list_comprehension': require('./list_comprehension.js'),
+            'return': require('./return.js')
         };
 
     switch(obj.type) {
@@ -78,6 +79,9 @@ module.exports = function(obj) {
             break;
         case 'EMPTY':
             output = parser.empty(obj);
+            break;
+        case 'RETURN':
+            output = parser.return(obj);
             break;
         default:
             throw "Invalid statement type: " + obj.type;
