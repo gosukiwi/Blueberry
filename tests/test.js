@@ -427,6 +427,11 @@ module.exports = {
           "$a = function($i) use ($a) { return (2 * $i); };"
       );
 
+      test.equals(
+          this.parseStatement('(i) use (a) -> 2*i'),
+          "function($i) use ($a) { return (2 * $i); };"
+      );
+
       test.done();
     },
 
