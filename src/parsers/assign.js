@@ -7,7 +7,8 @@
  */
 
 var expressionParser = require('./expression.js'),
-    identifierParser = require('./identifier.js');
+    identifierParser = require('./identifier.js'),
+    scope            = require('../state.js');
 
 function assignParser(obj) {
     'use strict';
@@ -18,10 +19,16 @@ function assignParser(obj) {
 
     if(obj.type === 'ASSIGN_INSTANCE_VARIABLE') {
         return '$this->' + assignParser(obj.assignment).substring(1);
-    } else if(obj.type === 'ASSIGN_TERNARY_OPERATOR') {
+    } 
+
+    scope.add(obj.identifier.value);
+    
+    if(obj.type === 'ASSIGN_TERNARY_OPERATOR') {
         return '$' + identifierParser(obj.identifier) + ' = ' + 
             expressionParser(obj.condition) + ' ? ' + expressionParser(obj.left) + ' : ' + expressionParser(obj.right) + ';';
-    } else if(obj.type === 'ASSIGN_DEFAULT_VALUE') {
+    } 
+    
+    if(obj.type === 'ASSIGN_DEFAULT_VALUE') {
         return '$' + identifierParser(obj.identifier) + ' = ' + 
             expressionParser(obj.left) + ' ?: ' + expressionParser(obj.right) + ';';
     }

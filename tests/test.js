@@ -3,9 +3,12 @@
 module.exports = {
     setUp: function (callback) {
         var parser = require('../src/grammar.js'),
+            scope  = require('../src/state.js'),
             src = require('../src/blueberry.js'),
             fs = require('fs'),
             glob = require('glob');
+
+        this.scope = scope,
         
         this.compile = function (source) {
             return parser.parse(source);
@@ -46,7 +49,6 @@ module.exports = {
         };
 
         this.compileBlueberry = src.compileFile;
-
         this.glob = glob.sync;
 
         callback();
@@ -54,6 +56,7 @@ module.exports = {
 
     tearDown: function (callback) {
         // clean up
+        this.scope.clear();
         callback();
     },
 
@@ -451,10 +454,64 @@ module.exports = {
       test.done();
     },
 
-    //testVariableFunctions: function(test) {
-    //  // Testing syntax out
-    //  console.log(this.parseStatement('call(a, 1, 2, 3)'));
-    //},
+    testVariableFunctions: function(test) {
+      // Set up a variable
+      this.parseStatement('api = () -> 2*2');
+
+      // Because it's now defined, it should now call it
+      test.equals(
+          this.parseStatement('api(1, 2, 3)'),
+          '$api(1, 2, 3);'
+      );
+
+      // b is not defined, so it assumes function name
+      test.equals(
+          this.parseStatement('b(1, 2, 3)'),
+          'b(1, 2, 3);'
+      );
+
+      // Now inside a function
+      test.equals(
+          this.parseStatement("def f\nc = 1\nc()\nend"),
+          "function f () {\n$c = 1;\n$c();\n}"
+      );
+
+      // Inside function arguments
+      test.equals(
+          this.parseStatement("def f(c)\nc()\nend"),
+          "function f ($c) {\n$c();\n}"
+      );
+
+      // Inside closure arguments
+      test.equals(
+          this.parseStatement("a = (c) -> c()"),
+          '$a = function($c) { return $c(); };'
+      );
+
+      // Inside closure's use
+      test.equals(
+          this.parseStatement("a = (c) use (b) -> b()"),
+          '$a = function($c) use ($b) { return $b(); };'
+      );
+
+      test.equals(
+          this.parseStatement("a = (c) use (b) -> d()"),
+          '$a = function($c) use ($b) { return d(); };'
+      );
+
+      // Test nesting
+      test.equals(
+          this.parseStatement("def a\ndef b\nc=1\nc()\nend\nend"),
+          'function a () {\nfunction b () {\n$c = 1;\n$c();\n}\n}'
+      );
+
+      test.equals(
+          this.parseStatement("def a\ndef b\nc=1\nd()\nend\nend"),
+          'function a () {\nfunction b () {\n$c = 1;\nd();\n}\n}'
+      );
+
+      test.done();
+    },
 
     testReturn: function (test) {
       test.equals(
