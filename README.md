@@ -12,7 +12,7 @@ encouraged only for testing purposes.
 ## Usage
 Blueberry compiler runs on [Node](http://nodejs.org/). To compile Blueberry
 files simply install the compiler like any other NPM module: `npm install
-blueberry`.
+blueberry -g`. It's recommended to install it globally by using the `-g` option.
 
 Once you have the compiler you can compile files by doing `bb compile in.bb
 out.php`.
