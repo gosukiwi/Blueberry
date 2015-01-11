@@ -83,6 +83,12 @@ module.exports = {
         test.done();
     },
 
+    testCompare: function (test) {
+        test.equals(this.parseStatement('a = 1 == 2'), '$a = 1 === 2;');
+        test.equals(this.parseStatement('a = 1 != 2'), '$a = 1 !== 2;');
+        test.done();
+    },
+
     testAssignLVal: function (test) {
         test.equals(this.parseStatement('a[1] = 1'), '$a[1] = 1;');
         test.equals(this.parseStatement('b.a[1] = 1'), '$b->a[1] = 1;');
@@ -385,7 +391,7 @@ module.exports = {
     testListComprehension: function (test) {
       test.equals(
           this.parseStatement('[2 * i for i in (1..10) where i % 2 == 0]'),
-          'array_map(function($i){ return (2 * $i); }, array_filter(range(1, 10), function($i){ return ($i % 2) == 0; }));'
+          'array_map(function($i){ return (2 * $i); }, array_filter(range(1, 10), function($i){ return ($i % 2) === 0; }));'
       );
 
       test.equals(
@@ -395,7 +401,7 @@ module.exports = {
 
       test.equals(
           this.parseStatement('a = [2 * i for i in (1..10) where i % 2 == 0]'),
-          '$a = array_map(function($i){ return (2 * $i); }, array_filter(range(1, 10), function($i){ return ($i % 2) == 0; }));'
+          '$a = array_map(function($i){ return (2 * $i); }, array_filter(range(1, 10), function($i){ return ($i % 2) === 0; }));'
       );
 
       test.equals(
