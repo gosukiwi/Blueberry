@@ -1,6 +1,6 @@
 {
   "name": "Blueberry",
-  "version": "0.3.2",
+  "version": "0.4.0",
   "description": "A ruby-ish programming language which compiles to PHP",
   "author": "Federico Ramírez <fedra.arg@gmail.com>",
   "dependencies": {
