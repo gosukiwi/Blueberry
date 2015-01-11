@@ -356,6 +356,11 @@ Argument_List
     }
   }
 
+Optional_Argument_List
+  = Argument_List
+  / "(" _* ")"
+  { return { type: 'ARGUMENTS', values: [] } }
+
 /*
    Matches when calling a function, method or property
 */
@@ -517,9 +522,9 @@ Array_Create
 
 /* Closures */
 Closure
-  = args:Argument_List _* "use" _* use:Argument_List _* "->" _* body:Closure_Body
+  = args:Optional_Argument_List _* "use" _* use:Argument_List _* "->" _* body:Closure_Body
   { return { type: 'CLOSURE', args: args, use: use, body: body } }
-  / args:Argument_List _* "->" _* body:Closure_Body
+  / args:Optional_Argument_List _* "->" _* body:Closure_Body
   { return { type: 'CLOSURE', args: args, use: null, body: body } }
 
 Closure_Body

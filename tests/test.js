@@ -408,6 +408,16 @@ module.exports = {
 
     testClosures: function (test) {
       test.equals(
+          this.parseStatement('a = () use (a) -> do return 2*i end'),
+          "$a = function() use ($a) {\nreturn (2 * $i); \n};"
+      );
+
+      test.equals(
+          this.parseStatement('a = () -> do return 2*i end'),
+          "$a = function() {\nreturn (2 * $i); \n};"
+      );
+
+      test.equals(
           this.parseStatement('a = (i) use (a) -> do return 2*i end'),
           "$a = function($i) use ($a) {\nreturn (2 * $i); \n};"
       );
@@ -434,6 +444,11 @@ module.exports = {
 
       test.done();
     },
+
+    //testVariableFunctions: function(test) {
+    //  // Testing syntax out
+    //  console.log(this.parseStatement('call(a, 1, 2, 3)'));
+    //},
 
     testReturn: function (test) {
       test.equals(
