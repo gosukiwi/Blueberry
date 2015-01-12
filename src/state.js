@@ -1,5 +1,5 @@
 var current_scope = null; // Name of function / method
-var global_scope  = {};
+var global_scope  = { values: {} };
 
 // TODO: Also add the ones in USE
 
@@ -14,23 +14,23 @@ module.exports = {
 
   clear: function () {
     current_scope = null;
-    global_scope  = {};
+    global_scope  = { values: {} };
   },
 
   add: function (name) {
-    if(current_scope === null) {
-      global_scope[name] = true;
-      return;
-    }
-
-    current_scope.values[name] = true;
+    var scope = current_scope === null ? global_scope : current_scope;
+    scope.values[name] = true;
   },
 
   contains: function (name) {
-    if(current_scope === null) {
-      return global_scope[name] || false;
-    }
+    var scope = current_scope === null ? global_scope : current_scope;
+    return scope.values[name] || false;
+  },
 
-    return current_scope.values[name] || false;
+  each: function (cb) {
+    var scope = current_scope === null ? global_scope : current_scope;
+    Object.keys(scope.values).forEach(function (name) {
+      cb(name);
+    });
   }
 };

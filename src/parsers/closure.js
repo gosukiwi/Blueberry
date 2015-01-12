@@ -15,7 +15,7 @@ var parseStatement  = require('./statement.js'),
 
 function parseBlock(block) {
   var i, 
-      len = block.length;
+      len    = block.length;
       output = '';
 
   for(i = 0; i < len; i += 1) {
@@ -39,6 +39,18 @@ function addArgumentsToScope(args) {
 module.exports = function(obj) {
   if(obj.type !== 'CLOSURE') {
     throw "This is not a closure!";
+  }
+
+  // Dummy implicit USE
+  if(obj.use === null) {
+    var use = { type: 'ARGUMENTS', values: [] };
+    scope.each(function (name) {
+      use.values.push({ type: 'IDENTIFIER', value: name });
+    });
+
+    if(use.values.length > 0) {
+      obj.use = use;
+    }
   }
 
   // set up scope

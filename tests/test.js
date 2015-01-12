@@ -48,6 +48,11 @@ module.exports = {
             return this.unixNewlines(output);
         };
 
+        // Manually clear the scope
+        this.clearScope = function () {
+          this.scope.clear();
+        };
+
         this.compileBlueberry = src.compileFile;
         this.glob = glob.sync;
 
@@ -56,7 +61,7 @@ module.exports = {
 
     tearDown: function (callback) {
         // clean up
-        this.scope.clear();
+        this.clearScope();
         callback();
     },
 
@@ -417,25 +422,28 @@ module.exports = {
 
     testClosures: function (test) {
       test.equals(
-          this.parseStatement('a = () use (a) -> do return 2*i end'),
-          "$a = function() use ($a) {\nreturn (2 * $i); \n};"
+          this.parseStatement('a = () use (i) -> do return 2*i end'),
+          "$a = function() use ($i) {\nreturn (2 * $i); \n};"
       );
 
+      this.clearScope();
       test.equals(
           this.parseStatement('a = () -> do return 2*i end'),
           "$a = function() {\nreturn (2 * $i); \n};"
       );
 
       test.equals(
-          this.parseStatement('a = (i) use (a) -> do return 2*i end'),
-          "$a = function($i) use ($a) {\nreturn (2 * $i); \n};"
+          this.parseStatement('a = (i) use (b) -> do return 2*i end'),
+          "$a = function($i) use ($b) {\nreturn (2 * $i); \n};"
       );
 
+      this.clearScope();
       test.equals(
           this.parseStatement('a = (i) -> do return 2*i end'),
           "$a = function($i) {\nreturn (2 * $i); \n};"
       );
 
+      this.clearScope();
       test.equals(
           this.parseStatement('a = (i) -> 2*i'),
           "$a = function($i) { return (2 * $i); };"
@@ -449,6 +457,30 @@ module.exports = {
       test.equals(
           this.parseStatement('some_func((i) use (a) -> 2*i, "another_arg")'),
           "some_func(function($i) use ($a) { return (2 * $i); }, 'another_arg');"
+      );
+
+      test.done();
+    },
+
+    testImplicitScope: function (test) {
+      this.parseStatement('a = 1');
+      test.equals(
+          this.parseStatement('f = (i) -> 2*a'),
+          "$f = function($i) use ($a) { return (2 * $a); };"
+      );
+
+      // Now that a is not on the parent scope, it's not USEd automatically
+      this.clearScope();
+      test.equals(
+          this.parseStatement('f = (i) -> 2*a'),
+          "$f = function($i) { return (2 * $a); };"
+      );
+
+      this.clearScope();
+      this.parseStatement('a = 3');
+      test.equals(
+          this.parseStatement('b = (i) -> (j) -> i + j + a'),
+          '$b = function($i) use ($a) { return function($j) use ($i, $a) { return ($i + ($j + $a)); }; };'
       );
 
       test.done();
@@ -483,6 +515,7 @@ module.exports = {
       );
 
       // Inside closure arguments
+      this.clearScope();
       test.equals(
           this.parseStatement("a = (c) -> c()"),
           '$a = function($c) { return $c(); };'

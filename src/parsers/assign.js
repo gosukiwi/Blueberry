@@ -21,20 +21,23 @@ function assignParser(obj) {
         return '$this->' + assignParser(obj.assignment).substring(1);
     } 
 
-    scope.add(obj.identifier.value);
+    var output,
+        mode;
     
     if(obj.type === 'ASSIGN_TERNARY_OPERATOR') {
-        return '$' + identifierParser(obj.identifier) + ' = ' + 
+        output = '$' + identifierParser(obj.identifier) + ' = ' + 
             expressionParser(obj.condition) + ' ? ' + expressionParser(obj.left) + ' : ' + expressionParser(obj.right) + ';';
-    } 
-    
-    if(obj.type === 'ASSIGN_DEFAULT_VALUE') {
-        return '$' + identifierParser(obj.identifier) + ' = ' + 
-            expressionParser(obj.left) + ' ?: ' + expressionParser(obj.right) + ';';
+    } else if(obj.type === 'ASSIGN_DEFAULT_VALUE') {
+        output = '$' + identifierParser(obj.identifier) + ' = ' + expressionParser(obj.left) + ' ?: ' + expressionParser(obj.right) + ';';
+    } else {
+      mode   = obj.mode === 'BY_REFERENCE' ? '&=' : '=';
+      output = expressionParser(obj.identifier) + ' ' + mode + ' ' + expressionParser(obj.expression) + ';';
     }
 
-    var mode = obj.mode === 'BY_REFERENCE' ? '&=' : '=';
-    return expressionParser(obj.identifier) + ' ' + mode + ' ' + expressionParser(obj.expression) + ';';
+    // Add variable name to scope
+    scope.add(obj.identifier.value);
+
+    return output;
 }
 
 module.exports = assignParser;
