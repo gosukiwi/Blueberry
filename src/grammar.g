@@ -1,7 +1,7 @@
 /*
-  Blueberry PEG grammar
-  Compile as follows: pegjs --cached src/grammar.g src/grammar.js
-*/
+ * Blueberry PEG grammar
+ * Compile as follows: pegjs --cached src/grammar.g src/grammar.js
+ */
 
 start = Statement*
 
@@ -105,39 +105,55 @@ Return
 
 Class_Access_Modifier
   = "private"
-  / "public"
   / "protected"
 
 Class_Attribute
   = access:Class_Access_Modifier _+ attr:Class_Attribute
-  { return { type: 'CLASS_ATTRIBUTE', access: access, name: attr.name, value: attr.value || null } }
+  { return { type: 'CLASS_ATTRIBUTE', name: attr.name, value: attr.value || null } }
   / "@" id:Identifier _+ "=" _+ val:Binary_Expression
-  { return { type: 'CLASS_ATTRIBUTE', access: 'public', name: id, value: val } }
+  { return { type: 'CLASS_ATTRIBUTE', name: id, value: val } }
   / "@" id:Identifier
-  { return { type: 'CLASS_ATTRIBUTE', access: 'public', name: id, value: null } }
-  / Comment
-  / Empty
+  { return { type: 'CLASS_ATTRIBUTE', name: id, value: null } }
+  / "self" "." id:Identifier _+ "=" _+ val:Binary_Expression
+  { return { type: 'CLASS_STATIC_ATTRIBUTE', name: id, value: val } }
+
+Class_Method
+  = "def" _+ "self" "." id:Identifier _* args:Argument_List? _* NewLine+ b:Block "end"
+  { 
+    return {
+      type: 'STATIC_DEF',
+      name: id,
+      args: args,
+      statements: b
+    }
+  }
+  / def:Def NewLine*
+  { return def }
+
+Class_Block_Statement
+  = _* method:Class_Method NewLine*
+  { return method }
+  / _* attribute:Class_Attribute NewLine*
+  { return attribute }
+
+Class_Method_Block
+  = access:Class_Access_Modifier? _* NewLine* statements:Class_Block_Statement+
+  { return { type: 'CLASS_METHOD_BLOCK', access: access ? access : 'public', statements: statements } }
 
 Class_Body
-  = access:Class_Access_Modifier _+ def:Def
-  { return { type: 'CLASS_METHOD', access: access, def: def } }
-  / def:Def
-  { return { type: 'CLASS_METHOD', access: 'public', def: def } }
-  / Empty
+  = _* NewLine* _* block:Class_Method_Block*
+  { return block }
 
 Class_Head
-  = "class" _+ name:Identifier _* NewLine+
+  = "class" _+ name:Identifier _* NewLine*
   { return { name: name, extends: null } }
-  / "class" _+ name:Identifier _+ "<" _+ parent:Identifier _* NewLine+
+  / "class" _+ name:Identifier _+ "<" _+ parent:Identifier _* NewLine*
   { return { name: name, extends: parent } }
 
 Class
   = 
-  head:Class_Head
-    a:Class_Attribute*
-    b:Class_Body*
-  "end"
-  { return { type: 'CLASS', name: head.name, extends: head.extends, block:b, attributes: a } }
+  head:Class_Head body:Class_Body "end"
+  { return { type: 'CLASS', name: head.name, extends: head.extends, block:body } }
 
 
 /* A try Statement */

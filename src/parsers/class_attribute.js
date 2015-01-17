@@ -1,24 +1,26 @@
 /*
  * A class attribute
  */
-module.exports = function(obj) {
+module.exports = function(obj, access) {
     var output,
         identifierParser = require('./identifier.js'),
         expressionParser = require('./expression.js'),
-        emptyParser = require('./empty.js'),
         commentParser = require('./comment.js');
 
     switch(obj.type) {
         case 'CLASS_ATTRIBUTE':
             if(obj.value !== null) {
-                output = obj.access + ' $' + identifierParser(obj.name) + ' = ' + expressionParser(obj.value) + ';';
+                output = access + ' $' + identifierParser(obj.name) + ' = ' + expressionParser(obj.value) + ';';
             } else {
-                output = obj.access + ' $' + identifierParser(obj.name) + ';';
+                output = access + ' $' + identifierParser(obj.name) + ';';
             }
             break;
-        case 'EMPTY':
-            output = emptyParser(obj);
+        case 'CLASS_STATIC_ATTRIBUTE':
+            output = 'public static $' + identifierParser(obj.name) + ' = ' + expressionParser(obj.value) + ';';
             break;
+        //case 'EMPTY':
+        //    output = emptyParser(obj);
+        //    break;
         case 'COMMENT':
             output = commentParser(obj);
             break;

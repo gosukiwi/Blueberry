@@ -8,7 +8,7 @@ module.exports = {
     current_scope = { name: name, values: {}, parent: current_scope };
   },
 
-  leaveFunction: function (name) {
+  leaveFunction: function () {
     current_scope = current_scope.parent;
   },
 

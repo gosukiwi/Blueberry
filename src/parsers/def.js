@@ -40,7 +40,7 @@ module.exports = function(obj) {
   scope.enterFunction(functionName);
   addArgumentsToScope(obj.args);
 
-  output = 'function ' + functionName + ' (' + parseArguments(obj.args) + ') {\n';
+  output = 'function ' + functionName + '(' + parseArguments(obj.args) + ') {\n';
 
   for(i = 0; i < obj.statements.length; i += 1) {
     output += parseStatement(obj.statements[i]);
@@ -48,7 +48,7 @@ module.exports = function(obj) {
 
   output += "}";
 
-  scope.leaveFunction(functionName);
+  scope.leaveFunction();
 
   return output;
 };

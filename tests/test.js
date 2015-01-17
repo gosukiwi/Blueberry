@@ -540,7 +540,7 @@ module.exports = {
 
       test.equals(
           this.parseStatement("def a\ndef b\nc=1\nd()\nend\nend"),
-          'function a () {\nfunction b () {\n$c = 1;\nd();\n}\n}'
+          'function a() {\nfunction b() {\n$c = 1;\nd();\n}\n}'
       );
 
       test.done();
@@ -560,40 +560,69 @@ module.exports = {
       test.done();
     },
 
-    testExamples: function (test) {
-        var files = this.glob('examples/*.bb'),
-            that = this;
+    //testExamples: function (test) {
+    //    var files = this.glob('examples/*.bb'),
+    //        that = this;
 
-        files.forEach(function (file) {
-            var split = file.split('.'),
-                errored = false,
-                srcFile = file,
-                outFile = split[0] + '.out.php',
-                expFile = split[0] + '.expected.php';
-            test.doesNotThrow(function () {
-                try {
-                    that.compileBlueberry(srcFile, outFile);
-                } catch (err) {
-                    console.log(
-                        err.name + ' on line ' + err.line + ' column ' +
-                        err.column + ' in ' + srcFile + '\nInvalid token ' + err.found
-                    );
-                    errored = true;
-                    throw err;
-                }
-            });
+    //    files.forEach(function (file) {
+    //        var split = file.split('.'),
+    //            errored = false,
+    //            srcFile = file,
+    //            outFile = split[0] + '.out.php',
+    //            expFile = split[0] + '.expected.php';
+    //        test.doesNotThrow(function () {
+    //            try {
+    //                that.compileBlueberry(srcFile, outFile);
+    //            } catch (err) {
+    //                console.log(
+    //                    err.name + ' on line ' + err.line + ' column ' +
+    //                    err.column + ' in ' + srcFile + '\nInvalid token ' + err.found
+    //                );
+    //                errored = true;
+    //                throw err;
+    //            }
+    //        });
 
-            if (!errored) {
-                var expectedSrc = that.load(expFile),
-                    outSrc = that.load(outFile);
-                test.equals(expectedSrc, outSrc);
-                if (expectedSrc === outSrc) {
-                    that.delete(outFile);
-                }
-            }
-        });
+    //        if (!errored) {
+    //            var expectedSrc = that.load(expFile),
+    //                outSrc = that.load(outFile);
+    //            test.equals(expectedSrc, outSrc);
+    //            if (expectedSrc === outSrc) {
+    //                that.delete(outFile);
+    //            }
+    //        }
+    //    });
 
-        test.done();
+    //    test.done();
+    //},
+
+    testClasses: function (test) {
+      var result = this.parseStatement(
+          "class A\n"
+        + "  self.counter = 2\n"
+        + "  @name\n"
+        + "  def a\n"
+        + "    return self.static_attr.someChain\n"
+        + "  end\n"
+        + "  def self.b\n"
+        + "    foo = new Bar()\n"
+        + "    foo.test()\n"
+        + "    Baz.test()\n"
+        + "  end\n"
+        + "private\n"
+        + "  def c(foo)\n"
+        + "    foo.bar()"
+        + "  end\n"
+        + "end\n"
+      );
+
+      console.log(result);
+
+      console.log(this.parseStatement("A.b()"));
+      console.log(this.parseStatement("obj = new A()"));
+      console.log(this.parseStatement("obj.a()"));
+
+      test.done();
     }
 };
 

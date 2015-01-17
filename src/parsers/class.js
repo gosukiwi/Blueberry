@@ -1,34 +1,35 @@
 /*
  * A Class
  */
+
+var identifierParser = require('./identifier');
+var scope            = require('../state.js');
+
 module.exports = function(obj) {
     if(obj.type !== 'CLASS') {
         throw "This is not a class!";
     }
 
-    var identifierParser = require('./identifier.js'),
-        statementParser = require('./statement.js'),
-        classAttributeParser = require('./class_attribute.js'),
-        output,
-        i;
+    var classBlockParser = require('./class_block.js');
+    var output;
+    var name = identifierParser(obj.name);
+
+    scope.enterFunction(name);
 
     if(obj.extends === null) {
-        output = 'class ' + identifierParser(obj.name) + ' {\n'; 
+        output = 'class ' + name + ' {\n'; 
     } else {
-        output = 'class ' + identifierParser(obj.name) + ' extends ' + identifierParser(obj.extends) + ' {\n'; 
+        output = 'class ' + name + ' extends ' + identifierParser(obj.extends) + ' {\n'; 
     }
 
-    // Parse attributes
-    for(i = 0; i < obj.attributes.length; i += 1) {
-        output += classAttributeParser(obj.attributes[i]);
-    }
-
-    // Parse defs
-    for(i = 0; i < obj.block.length; i += 1) {
-        output += statementParser(obj.block[i]);
+    var len = obj.block.length;
+    for(var i = 0; i < len; i += 1) {
+      output += classBlockParser(obj.block[i]);
     }
 
     output += '}';
+
+    scope.leaveFunction();
 
     return output;
 };

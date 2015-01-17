@@ -6,7 +6,6 @@
 module.exports = function(obj) {
     var output = '',
         parser = {
-            'empty': require('./empty.js'),
             'comment': require('./comment.js'),
             'assign': require('./assign.js'),
             'def': require('./def.js'),
@@ -78,7 +77,7 @@ module.exports = function(obj) {
             output = parser.comment(obj);
             break;
         case 'EMPTY':
-            output = parser.empty(obj);
+            output = '';
             break;
         case 'RETURN':
             output = parser.return(obj);
