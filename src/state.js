@@ -1,7 +1,11 @@
-var current_scope = null; // Name of function / method
+var current_scope = null; 
 var global_scope  = { values: {} };
 var indent_level  = 0;
-var indent        = '    '; // 4 spaces
+// Default options
+// TODO: Be able to change options via compiler parameters and .bbrc file
+var options       = {
+  indent: '    '
+};
 
 // TODO: Also add the ones in USE
 
@@ -47,7 +51,7 @@ module.exports = {
   indentate: function () {
     var output = '';
     for(var i = 0; i < indent_level; i++) {
-      output += indent;
+      output += options.indent;
     }
     return output;
   }

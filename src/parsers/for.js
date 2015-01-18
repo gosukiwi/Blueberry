@@ -36,5 +36,7 @@ module.exports = function(obj) {
   output += '}';
 
   scope.dedent();
+
+  // Separate this statement from the others with extra new lines
   return output;
 };
