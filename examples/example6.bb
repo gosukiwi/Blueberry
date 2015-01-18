@@ -1,15 +1,14 @@
 <?bb
-/*
-* Tea class example :)
-*/
-
 class MyClass
-  private @var1
-  protected @var2 = 2
-  public @var3
+  @var1
 
-  # protected method definition
-  protected def MyMethod(&byRef, byVal)
-    echo("HI!")
+  def a_public_method
+    return 1
+  end
+
+protected
+
+  def a_protected_method(&byRef, byVal)
+    print("HI!")
   end
 end

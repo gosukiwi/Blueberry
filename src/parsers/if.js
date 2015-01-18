@@ -1,23 +1,25 @@
 /*
  * An if
  */
+
+var expressionParser = require('./expression.js');
+var statementParser  = require('./statement.js');
+var scope            = require('../state.js');
+
 module.exports = function(obj) {
-    if(obj.type !== 'IF') {
-        throw "This is not an if!";
-    }
+  if(obj.type !== 'IF') {
+      throw "This is not an if!";
+  }
 
-    var expressionParser = require('./expression.js'),
-        statementParser = require('./statement.js'),
-        output,
-        i;
+  var output = 'if (' + expressionParser(obj.condition) + ') {\n';
+  scope.indent();
 
-    output = 'if (' + expressionParser(obj.condition) + ') {\n';
+  for(var i = 0; i < obj.statements.length; i += 1) {
+      output += statementParser(obj.statements[i]);
+  }
 
-    for(i = 0; i < obj.statements.length; i += 1) {
-        output += statementParser(obj.statements[i]);
-    }
+  scope.dedent();
+  output += scope.indentate() + '}';
 
-    output += '}';
-
-    return output;
+  return output;
 };

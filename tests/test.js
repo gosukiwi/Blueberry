@@ -15,12 +15,26 @@ module.exports = {
         };
         
         var statementParser = require('../src/parsers/statement.js');
-        this.parseStatement = function (source) {
-            return statementParser(this.compile(source)[0]);
+        this.parseStatement = function (source, plain) {
+            if(plain === undefined) {
+              plain = true;
+            }
+
+            var result = statementParser(this.compile(source)[0]);
+
+            if(plain === true) {
+              result = this.plainCode(result);
+            }
+
+            return result;
         };
 
-        this.load = function (name) {
-            return this.unixNewlines(fs.readFileSync(name, 'utf8'));
+        this.load = function (name, plain) {
+            var result = this.unixNewlines(fs.readFileSync(name, 'utf8'));
+            if(plain === true) {
+              result = this.plainCode(result);
+            }
+            return result;
         };
 
         this.save = function (name, data) { 
@@ -35,23 +49,37 @@ module.exports = {
             return str.replace(/\r\n/g, '\n');
         };
 
-        this.compileFile = function(name) {
+        this.compileFile = function(name, plain) {
             var source = fs.readFileSync(name, 'utf8');
             var ast = this.compile(source);
-            var i;
             var output = '';
 
-            for(i = 0; i < ast.length; i++) {
+            for(var i = 0; i < ast.length; i++) {
                 output += statementParser(ast[i]);
             }           
             
-            return this.unixNewlines(output);
+            var result = this.unixNewlines(output);
+
+            if(plain === true) {
+              result = this.plainCode(result);
+            }
+
+            return result;
         };
 
         // Manually clear the scope
         this.clearScope = function () {
           this.scope.clear();
         };
+
+        // When blueberry code gets compiled and we want to compare it, we don't
+        // care much about the indentation, so let's get rid of it. This outputs
+        // code in a simple format, no new lines and always 1 space separation.
+        this.plainCode = function (code) {
+          code = code.replace(/\s+/g, ' ');
+          code = code.replace(/\n+/g, '');
+          return code.trim();
+        }
 
         this.compileBlueberry = src.compileFile;
         this.glob = glob.sync;
@@ -69,7 +97,7 @@ module.exports = {
         test.equals(this.parseStatement('a = 1'), '$a = 1;');
         test.equals(this.parseStatement('a = 1.5'), '$a = 1.5;');
         test.equals(this.parseStatement('a = "asd"'), '$a = \'asd\';');
-        test.equals(this.parseStatement('a = "this has a\nnewline"'), '$a = \'this has a\nnewline\';');
+        test.equals(this.parseStatement('a = "this has a\nnewline"', false), '$a = \'this has a\nnewline\';\n');
         // only double quotes for now
         //test.equals(this.parseStatement('a = \'asd\''), '$a = \'asd\';');
         test.done();
@@ -84,6 +112,7 @@ module.exports = {
         test.equals(this.parseStatement('a = 1 % 6'), '$a = (1 % 6);');
         test.equals(this.parseStatement('a = f(1 + 6)'), '$a = f((1 + 6));');
         test.equals(this.parseStatement('a = age > 18'), '$a = $age > 18;');
+        test.equals(this.parseStatement('obj = new Foo()'), '$obj = new Foo();');
         test.equals(this.parseStatement('a = obj.prop'), '$a = $obj->prop;');
         test.equals(this.parseStatement('a = obj.method()'), '$a = $obj->method();');
         test.equals(this.parseStatement('a = obj.prop.method()'), '$a = $obj->prop->method();');
@@ -109,29 +138,30 @@ module.exports = {
     },
 
     testIf: function (test) {
+        this.parseStatement('obj = new Foo()');
         test.equals(
             this.parseStatement('if can_drink\necho("Beer Beer!")\nend'),
-            'if ($can_drink) {\necho(\'Beer Beer!\');\n}'
+            'if ($can_drink) { echo(\'Beer Beer!\'); }'
         );
 
         test.equals(
             this.parseStatement('if can_drink\necho("Beer Beer!")\nelse\necho("Juice")\nend'),
-            'if ($can_drink) {\necho(\'Beer Beer!\');\n} else {\necho(\'Juice\');\n}'
+            'if ($can_drink) { echo(\'Beer Beer!\'); } else { echo(\'Juice\'); }'
         );
 
         test.equals(
             this.parseStatement('if can_drink\necho("Beer Beer!")\nelse if age < 6\necho("Milk")\nelse\necho("Juice")\nend'),
-            'if ($can_drink) {\necho(\'Beer Beer!\');\n} else if ($age < 6) {\necho(\'Milk\');\n} else {\necho(\'Juice\');\n}'
+            'if ($can_drink) { echo(\'Beer Beer!\'); } else if ($age < 6) { echo(\'Milk\'); } else { echo(\'Juice\'); }'
         );
 
         test.equals(
             this.parseStatement('if obj.can_drink\necho("Beer Beer!")\nelse if age < 6\necho("Milk")\nelse\necho("Juice")\nend'),
-            'if ($obj->can_drink) {\necho(\'Beer Beer!\');\n} else if ($age < 6) {\necho(\'Milk\');\n} else {\necho(\'Juice\');\n}'
+            'if ($obj->can_drink) { echo(\'Beer Beer!\'); } else if ($age < 6) { echo(\'Milk\'); } else { echo(\'Juice\'); }'
         );
 
         test.equals(
             this.parseStatement('if obj.can_drink()\necho("Beer Beer!")\nelse if age < 6\necho("Milk")\nelse\necho("Juice")\nend'),
-            'if ($obj->can_drink()) {\necho(\'Beer Beer!\');\n} else if ($age < 6) {\necho(\'Milk\');\n} else {\necho(\'Juice\');\n}'
+            'if ($obj->can_drink()) { echo(\'Beer Beer!\'); } else if ($age < 6) { echo(\'Milk\'); } else { echo(\'Juice\'); }'
         );
 
         test.done();
@@ -163,12 +193,12 @@ module.exports = {
     testWhile: function (test) {
         test.equals(
             this.parseStatement('while a\nb = 1\nend'),
-            'while ($a) {\n$b = 1;\n}'
+            'while ($a) { $b = 1; }'
         );
 
         test.equals(
             this.parseStatement('while age > 18\nb = 1\nend'),
-            'while ($age > 18) {\n$b = 1;\n}'
+            'while ($age > 18) { $b = 1; }'
         );
 
         test.done();
@@ -217,8 +247,8 @@ module.exports = {
 
     testSwitch: function (test) {
         test.equals(
-            this.compileFile('./tests/blueberry/switch1.bb'),
-            this.load('./tests/php/switch1.php')
+            this.compileFile('./tests/blueberry/switch1.bb', true),
+            this.load('./tests/php/switch1.php', true)
         );
         test.done();
     },
@@ -231,7 +261,7 @@ module.exports = {
 
         test.equals(
             this.parseStatement('if not age > 18\ncannotDrink()\nend'),
-            'if (!$age > 18) {\ncannotDrink();\n}'
+            'if (!$age > 18) { cannotDrink(); }'
         );
 
         test.done();
@@ -268,17 +298,17 @@ module.exports = {
     testFor: function (test) {
         test.equals(
             this.parseStatement('for i in (0..10)\necho(i)\nend'),
-            'for ($i = 0; $i <= 10; $i++) {\necho($i);\n}'
+            'for ($i = 0; $i <= 10; $i++) { echo($i); }'
         );
 
         test.equals(
             this.parseStatement('for i in (10..0)\necho(i)\nend'),
-            'for ($i = 10; $i >= 0; $i--) {\necho($i);\n}'
+            'for ($i = 10; $i >= 0; $i--) { echo($i); }'
         );
 
         test.equals(
             this.parseStatement('for k: v in {"a": 1}\necho(k)\nend'),
-            'foreach (array(\'a\' => 1) as $k => $v) {\necho($k);\n}'
+            'foreach (array(\'a\' => 1) as $k => $v) { echo($k); }'
         );
 
         test.done();
@@ -311,17 +341,17 @@ module.exports = {
     testTry: function (test) {
         test.equals(
             this.parseStatement('try\na=1\ncatch error\nb=2\nfinally\nc=3\nend'),
-            'try {\n$a = 1;\n} catch (Exception $error) {\n$b = 2;\n} finally {\n$c = 3;\n}'
+            'try { $a = 1; } catch (Exception $error) { $b = 2; } finally { $c = 3; }'
         );
 
         test.equals(
             this.parseStatement('try\na=1\ncatch\nb=2\nfinally\nc=3\nend'),
-            'try {\n$a = 1;\n} catch (Exception $ex) {\n$b = 2;\n} finally {\n$c = 3;\n}'
+            'try { $a = 1; } catch (Exception $ex) { $b = 2; } finally { $c = 3; }'
         );
 
         test.equals(
             this.parseStatement('try\na=1\ncatch\nb=2\nend'),
-            'try {\n$a = 1;\n} catch (Exception $ex) {\n$b = 2;\n}'
+            'try { $a = 1; } catch (Exception $ex) { $b = 2; }'
         );
 
         test.done();
@@ -329,19 +359,48 @@ module.exports = {
 
     testClassAcessModifier: function (test) {
         test.equals(
-            this.parseStatement('class MyClass\nprivate @var1\nprivate @var2 = 1\nend'),
-            'class MyClass {\nprivate $var1;\nprivate $var2 = 1;\n}'
+            this.parseStatement('class MyClass\nprivate\n@var1\n@var2 = 1\nend'),
+            'class MyClass { private $var1; private $var2 = 1; }'
         );
 
         test.equals(
-            this.parseStatement('class MyClass\nprivate @var1\nprivate def PrivateMethod\na = 1\nend\nend'),
-            'class MyClass {\nprivate $var1;\nprivate function PrivateMethod () {\n$a = 1;\n}\n}'
+            this.parseStatement('class MyClass\nprivate\n@var1\ndef foo\na = 1\nend\nend'),
+            'class MyClass { private $var1; private function foo() { $a = 1; } }'
         );
 
-        test.equals(
-            this.parseStatement('class MyClass\nprivate @var1\ndef PublicMethod\na = 1\nend\nend'),
-            'class MyClass {\nprivate $var1;\npublic function PublicMethod () {\n$a = 1;\n}\n}'
+        test.done();
+    },
+
+    testStaticClasses: function (test) {
+        var result = this.parseStatement(
+            "class A\n"
+          + "  self.counter = 2\n"
+          + "  @name\n"
+          + "  def a\n"
+          + "    return self.static_attr.someChain\n"
+          + "  end\n"
+          + "  def self.b\n"
+          + "    foo = new Bar()\n"
+          + "    foo.test()\n"
+          + "    Baz.test()\n"
+          + "  end\n"
+          + "private\n"
+          + "  def c(foo)\n"
+          + "    foo.bar()"
+          + "  end\n"
+          + "end\n"
         );
+
+        test.equals(result, 'class A { '
+          + 'public static $counter = 2; public $name; '
+          + 'public function a() { return self::static_attr->someChain; } '
+          + 'public static function b() { $foo = new Bar(); $foo->test(); Baz::test(); } '
+          + 'private function c($foo) { $foo->bar(); } }');
+
+        test.equals(this.parseStatement("A.b()"), 'A::b();');
+
+        this.parseStatement("obj = new A()");
+        test.equals(this.parseStatement("obj.a()"), '$obj->a();');
 
         test.done();
     },
@@ -349,7 +408,7 @@ module.exports = {
     testClassInheritance: function (test) {
         test.equals(
             this.parseStatement('class A < B\nend'),
-            'class A extends B {\n}'
+            'class A extends B { }'
         );
 
         test.done();
@@ -358,7 +417,7 @@ module.exports = {
     testIdentifierByReference: function (test) {
         test.equals(
             this.parseStatement('def myFunc (&var, var2)\nend'),
-            'function myFunc (&$var, $var2) {\n}'
+            'function myFunc(&$var, $var2) { }'
         );
 
         test.done();
@@ -380,8 +439,8 @@ module.exports = {
         );
 
         test.equals(
-            this.parseStatement('/*\nmy comment\n*/'),
-            '/*\nmy comment\n*/'
+            this.parseStatement('/*\nmy comment\n*/', false),
+            '/*\nmy comment\n*/\n'
         );
 
         test.done();
@@ -423,24 +482,24 @@ module.exports = {
     testClosures: function (test) {
       test.equals(
           this.parseStatement('a = () use (i) -> do return 2*i end'),
-          "$a = function() use ($i) {\nreturn (2 * $i); \n};"
+          "$a = function() use ($i) { return (2 * $i); };"
       );
 
       this.clearScope();
       test.equals(
           this.parseStatement('a = () -> do return 2*i end'),
-          "$a = function() {\nreturn (2 * $i); \n};"
+          "$a = function() { return (2 * $i); };"
       );
 
       test.equals(
           this.parseStatement('a = (i) use (b) -> do return 2*i end'),
-          "$a = function($i) use ($b) {\nreturn (2 * $i); \n};"
+          "$a = function($i) use ($b) { return (2 * $i); };"
       );
 
       this.clearScope();
       test.equals(
           this.parseStatement('a = (i) -> do return 2*i end'),
-          "$a = function($i) {\nreturn (2 * $i); \n};"
+          "$a = function($i) { return (2 * $i); };"
       );
 
       this.clearScope();
@@ -505,13 +564,13 @@ module.exports = {
       // Now inside a function
       test.equals(
           this.parseStatement("def f\nc = 1\nc()\nend"),
-          "function f () {\n$c = 1;\n$c();\n}"
+          "function f() { $c = 1; $c(); }"
       );
 
       // Inside function arguments
       test.equals(
           this.parseStatement("def f(c)\nc()\nend"),
-          "function f ($c) {\n$c();\n}"
+          "function f($c) { $c(); }"
       );
 
       // Inside closure arguments
@@ -535,12 +594,12 @@ module.exports = {
       // Test nesting
       test.equals(
           this.parseStatement("def a\ndef b\nc=1\nc()\nend\nend"),
-          'function a () {\nfunction b () {\n$c = 1;\n$c();\n}\n}'
+          'function a() { function b() { $c = 1; $c(); } }'
       );
 
       test.equals(
           this.parseStatement("def a\ndef b\nc=1\nd()\nend\nend"),
-          'function a() {\nfunction b() {\n$c = 1;\nd();\n}\n}'
+          'function a() { function b() { $c = 1; d(); } }'
       );
 
       test.done();
@@ -560,69 +619,40 @@ module.exports = {
       test.done();
     },
 
-    //testExamples: function (test) {
-    //    var files = this.glob('examples/*.bb'),
-    //        that = this;
+    testExamples: function (test) {
+        var files = this.glob('examples/*.bb'),
+            that = this;
 
-    //    files.forEach(function (file) {
-    //        var split = file.split('.'),
-    //            errored = false,
-    //            srcFile = file,
-    //            outFile = split[0] + '.out.php',
-    //            expFile = split[0] + '.expected.php';
-    //        test.doesNotThrow(function () {
-    //            try {
-    //                that.compileBlueberry(srcFile, outFile);
-    //            } catch (err) {
-    //                console.log(
-    //                    err.name + ' on line ' + err.line + ' column ' +
-    //                    err.column + ' in ' + srcFile + '\nInvalid token ' + err.found
-    //                );
-    //                errored = true;
-    //                throw err;
-    //            }
-    //        });
+        files.forEach(function (file) {
+            var split = file.split('.'),
+                errored = false,
+                srcFile = file,
+                outFile = split[0] + '.out.php',
+                expFile = split[0] + '.expected.php';
+            test.doesNotThrow(function () {
+                try {
+                    that.compileBlueberry(srcFile, outFile);
+                } catch (err) {
+                    console.log(
+                        err.name + ' on line ' + err.line + ' column ' +
+                        err.column + ' in ' + srcFile + '\nInvalid token ' + err.found
+                    );
+                    errored = true;
+                    throw err;
+                }
+            });
 
-    //        if (!errored) {
-    //            var expectedSrc = that.load(expFile),
-    //                outSrc = that.load(outFile);
-    //            test.equals(expectedSrc, outSrc);
-    //            if (expectedSrc === outSrc) {
-    //                that.delete(outFile);
-    //            }
-    //        }
-    //    });
+            if (!errored) {
+                var expectedSrc = that.load(expFile),
+                    outSrc = that.load(outFile);
+                test.equals(expectedSrc, outSrc);
+                if (expectedSrc === outSrc) {
+                    that.delete(outFile);
+                }
+            }
+        });
 
-    //    test.done();
-    //},
-
-    testClasses: function (test) {
-      var result = this.parseStatement(
-          "class A\n"
-        + "  self.counter = 2\n"
-        + "  @name\n"
-        + "  def a\n"
-        + "    return self.static_attr.someChain\n"
-        + "  end\n"
-        + "  def self.b\n"
-        + "    foo = new Bar()\n"
-        + "    foo.test()\n"
-        + "    Baz.test()\n"
-        + "  end\n"
-        + "private\n"
-        + "  def c(foo)\n"
-        + "    foo.bar()"
-        + "  end\n"
-        + "end\n"
-      );
-
-      console.log(result);
-
-      console.log(this.parseStatement("A.b()"));
-      console.log(this.parseStatement("obj = new A()"));
-      console.log(this.parseStatement("obj.a()"));
-
-      test.done();
-    }
+        test.done();
+    },
 };
 

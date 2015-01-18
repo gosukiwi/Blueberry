@@ -1,15 +1,12 @@
 <?php
-/*
-* Tea class example :)
-*/
-
 class MyClass {
-  private $var1;
-  protected $var2 = 2;
-  public $var3;
+    public $var1;
 
-  // protected method definition
-  protected function MyMethod (&$byRef, $byVal) {
-    echo('HI!');
-  }
+    public function a_public_method() {
+        return 1;
+    }
+
+    protected function a_protected_method(&$byRef, $byVal) {
+        print('HI!');
+    }
 }

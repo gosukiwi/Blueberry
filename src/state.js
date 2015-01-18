@@ -1,5 +1,7 @@
 var current_scope = null; // Name of function / method
 var global_scope  = { values: {} };
+var indent_level  = 0;
+var indent        = '    '; // 4 spaces
 
 // TODO: Also add the ones in USE
 
@@ -32,5 +34,21 @@ module.exports = {
     Object.keys(scope.values).forEach(function (name) {
       cb(name);
     });
+  },
+
+  indent: function () {
+    indent_level += 1;
+  },
+
+  dedent: function () {
+    indent_level -= 1;
+  },
+
+  indentate: function () {
+    var output = '';
+    for(var i = 0; i < indent_level; i++) {
+      output += indent;
+    }
+    return output;
   }
 };

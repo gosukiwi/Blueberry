@@ -54,7 +54,7 @@ var compileFile = function(source, output) {
   php_code = source_code.replace(/<\?bb([\s\S]*?)(\?>|(?![\s\S]))/g, function(match, bb_code, close_tag) {
     // Here bb_code is the value for the matched group 1 of the regular expression
     // And close_tag is the value for the matched group 2
-    return '<?php' + compile(bb_code) + ((close_tag) ? '?>' : '');
+    return '<?php\n' + compile(bb_code) + ((close_tag) ? '?>' : '');
   });
 
   // Finally write the php code to the output file

@@ -145,10 +145,10 @@ Class_Body
   { return block }
 
 Class_Head
-  = "class" _+ name:Identifier _* NewLine*
-  { return { name: name, extends: null } }
-  / "class" _+ name:Identifier _+ "<" _+ parent:Identifier _* NewLine*
+  = "class" _+ name:Identifier _+ "<" _+ parent:Identifier _* NewLine*
   { return { name: name, extends: parent } }
+  / "class" _+ name:Identifier _* NewLine*
+  { return { name: name, extends: null } }
 
 Class
   = 

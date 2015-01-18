@@ -2,17 +2,23 @@
  * A try-catch block
  * Node Format: { type: 'TRY_CATCH', try: [statement]*, catch_argument: [identifier] | null, catch: [statement]*, finally: [statement]* | null }
  */
+
+var expressionParser = require('./expression.js');
+var statementParser  = require('./statement.js');
+var scope            = require('../state.js');
+
 module.exports = function(obj) {
     if(obj.type !== 'TRY_CATCH') {
         throw "This is not a try-catch!";
     }
 
-    var expressionParser = require('./expression.js'),
-        statementParser = require('./statement.js'),
-        output,
-        i;
+    var output;
+    var i;
+
+    scope.indent();
 
     output = 'try {\n';
+
     for(i = 0; i < obj.try.length; i += 1) {
         output += statementParser(obj.try[i]);
     }
@@ -36,5 +42,6 @@ module.exports = function(obj) {
 
     output += '}';
 
+    scope.dedent();
     return output;
 };

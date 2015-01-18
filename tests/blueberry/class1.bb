@@ -2,8 +2,9 @@ class Person
   @name
   @age = 18
 
-  def SayHi
-    echo(@name)
+  def say_hi
+    message = "Hello " & @name
+    return message
   end
 end
 

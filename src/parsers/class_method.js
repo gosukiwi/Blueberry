@@ -27,22 +27,26 @@ module.exports = function(obj, access) {
 
     switch(obj.type) {
       case 'DEF':
-        output = access + ' function ' + name + '(' + parseArguments(obj.args) + ') {\n';
+        output = scope.indentate() + access + ' function ' + name + '(' + parseArguments(obj.args) + ') {\n';
         break;
       case 'STATIC_DEF':
-        output = 'public static function ' + name + '(' + parseArguments(obj.args) + ') {\n';
+        output = scope.indentate() + 'public static function ' + name + '(' + parseArguments(obj.args) + ') {\n';
         break;
       default:
         throw 'Invalid method, can only be DEF or STATIC_DEF';
     }
+
+    scope.indent();
     
     for(var i = 0; i < obj.statements.length; i += 1) {
-        output += parseStatement(obj.statements[i]);
+      output += parseStatement(obj.statements[i]);
     }
 
-    output += "\n}";
-
+    scope.dedent();
     scope.leaveFunction();
 
-    return output;
+    output += scope.indentate() + "}";
+
+    // Methods get one extra new line at the very top for more readability
+    return "\n" + output;
 };

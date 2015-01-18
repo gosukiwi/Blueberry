@@ -38,6 +38,7 @@ module.exports = function(obj) {
 
   // Scope lookup
   scope.enterFunction(functionName);
+  scope.indent();
   addArgumentsToScope(obj.args);
 
   output = 'function ' + functionName + '(' + parseArguments(obj.args) + ') {\n';
@@ -46,9 +47,10 @@ module.exports = function(obj) {
     output += parseStatement(obj.statements[i]);
   }
 
-  output += "}";
-
   scope.leaveFunction();
+  scope.dedent();
+
+  output += scope.indentate() + "}";
 
   return output;
 };

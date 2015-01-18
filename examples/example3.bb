@@ -15,3 +15,6 @@ for k: v in {"a": 1}
     echo(k & " is " & v)
 end
 
+if a
+  echo(1)
+end

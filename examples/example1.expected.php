@@ -7,6 +7,5 @@ if ($a) {
 } else {
     echo('WTF');
 }
-
 callSomething();
 $can_drink = ((($age > 18 && $name !== 'McLovin')) || $b);
