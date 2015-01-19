@@ -3,6 +3,7 @@
  */
 
 var identifierParser = require('./identifier');
+var classBlockParser = require('./class_block.js');
 var scope            = require('../state.js');
 
 module.exports = function(obj) {
@@ -10,7 +11,6 @@ module.exports = function(obj) {
       throw "This is not a class!";
   }
 
-  var classBlockParser = require('./class_block.js');
   var output;
   var name = identifierParser(obj.name);
 
