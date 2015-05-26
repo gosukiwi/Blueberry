@@ -9,7 +9,6 @@ var state = require('../state.js');
 module.exports = function(obj) {
   var output;
   var parser = {
-    'comment': require('./comment.js'),
     'assign': require('./assign.js'),
     'def': require('./def.js'),
     'if': require('./if.js'),
@@ -77,7 +76,7 @@ module.exports = function(obj) {
       output = parser.list_comprehension(obj);
       break;
     case 'COMMENT':
-      output = parser.comment(obj);
+      return '';
       break;
     case 'RETURN':
       output = parser.return(obj);

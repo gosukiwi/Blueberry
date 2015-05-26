@@ -4,7 +4,6 @@
 
 var identifierParser = require('./identifier.js');
 var expressionParser = require('./expression.js');
-var commentParser    = require('./comment.js');
 var state            = require('../state.js');
 
 module.exports = function(obj, access) {
@@ -22,7 +21,7 @@ module.exports = function(obj, access) {
       output = 'public static $' + identifierParser(obj.name) + ' = ' + expressionParser(obj.value) + ';';
       break;
     case 'COMMENT':
-      output = commentParser(obj);
+      return '';
       break;
     default:
       throw "Invalid type: " + obj.type;

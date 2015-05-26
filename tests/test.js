@@ -9,11 +9,11 @@ module.exports = {
             glob = require('glob');
 
         this.scope = scope,
-        
+
         this.compile = function (source) {
             return parser.parse(source);
         };
-        
+
         var statementParser = require('../src/parsers/statement.js');
         this.parseStatement = function (source, plain) {
             if(plain === undefined) {
@@ -37,7 +37,7 @@ module.exports = {
             return result;
         };
 
-        this.save = function (name, data) { 
+        this.save = function (name, data) {
             return fs.writeFileSync(name, data, { encoding: 'utf8' });
         };
 
@@ -56,8 +56,8 @@ module.exports = {
 
             for(var i = 0; i < ast.length; i++) {
                 output += statementParser(ast[i]);
-            }           
-            
+            }
+
             var result = this.unixNewlines(output);
 
             if(plain === true) {
@@ -410,15 +410,24 @@ module.exports = {
     testComments: function (test) {
         test.equals(
             this.parseStatement('# my comment'),
-            '// my comment'
+            ''
         );
 
         test.equals(
             this.parseStatement('/*\nmy comment\n*/', false),
-            '/*\nmy comment\n*/\n'
+            ''
         );
 
         test.done();
+    },
+
+    testCommentsEverywhere: function (test) {
+      test.equals(
+        this.parseStatement("if a#hi\nb = 2 /*another comment*/\nend #comment here too"),
+        'if ($a) { $b = 2; }'
+      );
+
+      test.done();
     },
 
     testSymbol: function (test) {
@@ -630,4 +639,3 @@ module.exports = {
         test.done();
     },
 };
-

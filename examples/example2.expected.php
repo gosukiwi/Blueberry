@@ -13,5 +13,4 @@ class Animal {
 }
 $human = new Animal();
 $human->greet();
-// This is a comment
 echo($human->name);

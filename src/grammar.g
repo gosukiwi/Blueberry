@@ -9,18 +9,27 @@ start = Statement*
  *--------------------------------------------------------------------------*/
 
 NewLine = s:[\n\r]+ { return s.join(''); }
-Integer = n:[0-9]+ { return { type: 'NUMBER', value: parseInt(n.join(''), 10) } }
-_ = [ \t] // whistespace
 
-Real_Number 
-  = h:[0-9]+ "." t:[0-9]+ { 
+Integer = n:[0-9]+ { return { type: 'NUMBER', value: parseInt(n.join(''), 10) } }
+
+Comment
+  = "/*" (!"*/" .)* "*/"
+  { return { type: 'COMMENT' }; }
+  / "#" comment:[^\n\r]*
+  { return { type: 'COMMENT' }; }
+  
+_ = [ \t] // whistespace
+  / Comment
+
+Real_Number
+  = h:[0-9]+ "." t:[0-9]+ {
     return {
       type: 'REAL_NUMBER',
       value: parseFloat(h.join('') + '.' + t.join(''))
-    } 
+    }
   }
 
-String 
+String
   = '""' _*                     { return { type: 'STRING', value: "" };    }
   / '"' chars:Characters '"' _* { return { type: 'STRING', value: chars }; }
 
@@ -42,23 +51,8 @@ Single_Character
 
 Symbol = ":" value:[A-Za-z_]+ { return { type: 'SYMBOL', value: value.join('') } }
 
-Comment
-  = "/*" comment:(!"*/" .)* "*/"
-  {
-      var c = [],
-          i;
-      
-      for(i = 0; i < comment.length; i += 1) {
-          c.push(comment[i].join(''));
-      }
-
-      return { type: 'COMMENT', multiline: true, value: c.join('') };
-  }
-  / "#" comment:[^\n\r]*
-  { return { type: 'COMMENT', multiline: false, value: comment.join('').trim() }; }
-
 /* Identifiers are the name variables and functions can have */
-Identifier 
+Identifier
   = h:[a-zA-Z_] t:[a-zA-Z_0-9]* { return { type: 'IDENTIFIER', value: h + t.join('') } }
 
 /* Terminals */
@@ -76,7 +70,7 @@ Nil
  *--------------------------------------------------------------------------*/
 
 Statement
-  = 
+  =
   If
   / While
   / For
@@ -88,13 +82,13 @@ Statement
   / Class
   / Call
   / List_Comprehension
-  / Comment
   / Empty
+  / Comment
 
 Block
   = Statement*
 
-Empty 
+Empty
   = val:[ \n\r\t]+ { return { type: 'EMPTY', value: val.join('') } }
 
 Return
@@ -119,7 +113,7 @@ Class_Attribute
 
 Class_Method
   = "def" _+ "self" "." id:Identifier _* args:Argument_List? _* NewLine+ b:Block "end"
-  { 
+  {
     return {
       type: 'STATIC_DEF',
       name: id,
@@ -151,7 +145,7 @@ Class_Head
   { return { name: name, extends: null } }
 
 Class
-  = 
+  =
   head:Class_Head body:Class_Body "end"
   { return { type: 'CLASS', name: head.name, extends: head.extends, block:body } }
 
@@ -166,13 +160,13 @@ Try_Catch =
   "finally" _* NewLine+
     finallyBody:Block
   "end"
-  { return { type: 'TRY_CATCH', try: tryBody, catch: catchBody, catch_argument: arg || null, finally: finallyBody } }  
+  { return { type: 'TRY_CATCH', try: tryBody, catch: catchBody, catch_argument: arg || null, finally: finallyBody } }
   / "try" _* NewLine+
     tryBody:Block
   "catch" _* arg:Identifier? NewLine+
     catchBody:Block
   "end"
-  { return { type: 'TRY_CATCH', try: tryBody, catch: catchBody, catch_argument: arg || null, finally: null } }  
+  { return { type: 'TRY_CATCH', try: tryBody, catch: catchBody, catch_argument: arg || null, finally: null } }
 
 /* A switch Statement */
 
@@ -187,9 +181,9 @@ When_Condition_Group =
   { return [e1].concat(e2); }
   / expr: Binary_Expression
   { return expr; }
-  
 
-When_Group 
+
+When_Group
   = _* "when" _+ c:When_Condition_Group NewLine+
    body:Block
    o:When_Group
@@ -232,7 +226,7 @@ If
       statements: b
     }
   }
-  / 
+  /
   h:If_Header
     b:Block
   e:Elsif
@@ -257,15 +251,15 @@ Elsif = _* "else" _+ i:If_Header b:Block "end"
   { return { type: 'ELSE', statements: es } }
 
 
-Assign_Operartor = 
- "=" 
+Assign_Operartor =
+ "="
  { return 'BY_VALUE' }
  / "&="
  { return 'BY_REFERENCE' }
 
 Assign
   = "@" assign:Assign
-  { return { type: 'ASSIGN_INSTANCE_VARIABLE', assignment: assign } } 
+  { return { type: 'ASSIGN_INSTANCE_VARIABLE', assignment: assign } }
   /
   id:Identifier _* mode:Assign_Operartor _* "new" _+ exp:Binary_Expression
   {
@@ -284,7 +278,7 @@ Assign
       condition: condition,
       left: t,
       right: f
-    } 
+    }
   }
   / id:Identifier _* "=" _* l:Binary_Expression _* "?:" _* r:Binary_Expression
   {
@@ -293,7 +287,7 @@ Assign
       identifier: id,
       left: l,
       right: r
-    } 
+    }
   }
   / id:Call_Expression _* mode:Assign_Operartor _* exp:Binary_Expression
   {
@@ -302,13 +296,13 @@ Assign
       identifier: id,
       expression: exp,
       mode: mode
-    } 
+    }
   }
-  
+
 
 Def
   = "def" _+ id:Identifier _* args:Argument_List? _* NewLine+ b:Block "end"
-  { 
+  {
     return {
       type: 'DEF',
       name: id,
@@ -317,7 +311,7 @@ Def
     }
   }
 
-/* STATEMENTS AND EXPRESSIONS 
+/* STATEMENTS AND EXPRESSIONS
  * ---------------------------------------------------------------------------*/
 
 List_Comprehension
@@ -335,36 +329,36 @@ List_Comprehension
 Expression_List
   = "(" h:Binary_Expression t:(_* "," _* Binary_Expression)* ")" {
     var values = [h]
-      , i; 
+      , i;
 
     for(i = 0; i < t.length; i += 1) {
       values.push(t[i].pop());
-    } 
-    
+    }
+
     return {
       type: 'ARGUMENTS',
       values: values
     }
   }
 
-/* 
+/*
   Sometimes (for function definitions)
   argument lists can only contain identifiers
 */
 Argument_Identifier
  = "&" id:Identifier
  { return { type: 'IDENTIFIER_BY_REFERENCE', value: id.value } }
- / Identifier  
+ / Identifier
 
 Argument_List
  = "(" h:Argument_Identifier t:(_* "," _* Argument_Identifier)* ")" {
     var values = [h]
-      , i; 
+      , i;
 
     for(i = 0; i < t.length; i += 1) {
       values.push(t[i].pop());
-    } 
-    
+    }
+
     return {
       type: 'ARGUMENTS',
       values: values
@@ -458,11 +452,11 @@ Multiplicative
   { return { type: 'ARITHMETIC', operation: '/', left: l, right: r }; }
   / l:Concat  _* "%" _* r:Multiplicative
   { return { type: 'ARITHMETIC', operation: '%', left: l, right: r }; }
-  / Concat 
+  / Concat
 
 /* Concatenation */
 Concat
-  = l:Array_Expression _* "&" _* r:Concat 
+  = l:Array_Expression _* "&" _* r:Concat
   { return { type: 'CONCATENATION', left: l, right: r }; }
   / Call_Expression
 
@@ -476,8 +470,8 @@ Array_Expression
   / Expression
 
 /* The most basic blocks besides tokens */
-Expression 
-  = 
+Expression
+  =
   Closure
   / "(" c:Binary_Expression ")"
   { return { type: 'PARENS_EXPRESSION', expression: c }; }
@@ -490,7 +484,7 @@ Expression
   / Bool
   / Nil
   / Identifier
-  / "@" id:Identifier 
+  / "@" id:Identifier
   { return { type: 'INSTANCE_IDENTIFIER', value: id.value } }
   / "(" start:Binary_Expression ".." end:Binary_Expression ")"
   { return { type: 'RANGE', from:start, to:end } }
@@ -506,12 +500,12 @@ JSON_Object
   = "{" h:JSON_Item t:(_* "," _* JSON_Item)* "}"
   {
     var values = [h]
-      , i; 
+      , i;
 
     for(i = 0; i < t.length; i += 1) {
       values.push(t[i].pop());
-    } 
-    
+    }
+
     return {
       type: 'JSON_ARRAY',
       values: values
@@ -520,15 +514,15 @@ JSON_Object
 
 /* Array creation shortcut */
 Array_Create
-  = "[" h:Binary_Expression? t:(_* "," _* Binary_Expression)* "]" 
+  = "[" h:Binary_Expression? t:(_* "," _* Binary_Expression)* "]"
   {
     var values = [h]
-      , i; 
+      , i;
 
     for(i = 0; i < t.length; i += 1) {
       values.push(t[i].pop());
-    } 
-    
+    }
+
     return {
       type: 'ARRAY_CREATE',
       values: values
