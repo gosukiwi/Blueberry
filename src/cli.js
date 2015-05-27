@@ -21,7 +21,7 @@
         compileFile,
         walk,
         commands,
-        VERSION = '0.5.0';
+        VERSION = '0.5.1';
 
     /*
      * Gets the command line argument with the given index
@@ -67,7 +67,7 @@
             });
         });
     };
-    
+
     // commands "namespace"
     commands = {};
 
@@ -182,10 +182,10 @@
         if(command) {
             command = (command + '').toLowerCase();
         }
-        
+
         message = 'Blueberry compiles bb source code to PHP\n' +
             'It has four commands: watch, compile, clean and help\n' +
-            'Use "bb help <command>" to get help on a specific topic.\n'; 
+            'Use "bb help <command>" to get help on a specific topic.\n';
 
         if(command === 'compile') {
             message = 'This command compiles a file or a folder to PHP\n' +
@@ -227,7 +227,7 @@
         }
 
         stats = fs.statSync(source);
-    
+
         // If the path is a file, just compile it
         if (stats.isFile()) {
             compileFile(source, output);
@@ -241,9 +241,9 @@
             // The output folder, if no output defined or invalid, use source
             if(!output || !fs.statSync(output).isDirectory()) {
                 output = source;
-            } 
+            }
 
-            // Here we store the length in characters of the path, so later on 
+            // Here we store the length in characters of the path, so later on
             // we know the base of our path
             source_path_start = source.length;
 
@@ -268,7 +268,7 @@
 
                     // And compile it!
                     try {
-                        compileFile(files[i], new_file);    
+                        compileFile(files[i], new_file);
                     } catch (err) {
                         console.log(
                             err.name + ' on line ' + err.line + ' column ' +
@@ -283,13 +283,13 @@
             process.exit(1);
         }
     };
-    
+
     // Check if the passed command exists
     if (!command || !commands[command]) {
         console.log('Invalid command: ' + command);
         process.exit(1);
     }
-    
+
     // Finally, execute the desired command
     commands[command]();
 }());

@@ -1,6 +1,6 @@
 {
   "name": "blueberry",
-  "version": "0.5.0",
+  "version": "0.5.1",
   "description": "A ruby-ish programming language which compiles to PHP",
   "author": "Federico Ramírez <fedra.arg@gmail.com>",
   "dependencies": {
@@ -10,7 +10,7 @@
   "devDependencies": {
     "nodeunit": "0.x.x",
     "glob": "4.x.x"
-  }, 
+  },
   "preferGlobal": "true",
   "bin": {
     "bb" : "bin/bb"
