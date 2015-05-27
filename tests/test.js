@@ -488,17 +488,17 @@ module.exports = {
 
       this.clearScope();
       test.equals(
-          this.parseStatement('a = (i) -> 2*i'),
+          this.parseStatement('a = (i) -> return 2*i'),
           "$a = function($i) { return (2 * $i); };"
       );
 
       test.equals(
-          this.parseStatement('a = (i) use (a) -> 2*i'),
+          this.parseStatement('a = (i) use (a) -> return 2*i'),
           "$a = function($i) use ($a) { return (2 * $i); };"
       );
 
       test.equals(
-          this.parseStatement('some_func((i) use (a) -> 2*i, "another_arg")'),
+          this.parseStatement('some_func((i) use (a) -> return 2*i, "another_arg")'),
           "some_func(function($i) use ($a) { return (2 * $i); }, 'another_arg');"
       );
 
@@ -513,14 +513,14 @@ module.exports = {
 
       this.clearScope();
       test.equals(
-          this.parseStatement('z = -> "Hello, World!"'),
+          this.parseStatement('z = -> return "Hello, World!"'),
           "$z = function() { return 'Hello, World!'; };"
       );
 
       this.clearScope();
       test.equals(
           this.parseStatement('z = -> a = "Hello, World!"'),
-          "$z = function() { return $a = 'Hello, World!'; };"
+          "$z = function() { $a = 'Hello, World!'; };"
       );
 
       test.done();
@@ -529,21 +529,21 @@ module.exports = {
     testImplicitScope: function (test) {
       this.parseStatement('a = 1');
       test.equals(
-          this.parseStatement('f = (i) -> 2*a'),
+          this.parseStatement('f = (i) -> return 2*a'),
           "$f = function($i) use ($a) { return (2 * $a); };"
       );
 
       // Now that a is not on the parent scope, it's not USEd automatically
       this.clearScope();
       test.equals(
-          this.parseStatement('f = (i) -> 2*a'),
+          this.parseStatement('f = (i) -> return 2*a'),
           "$f = function($i) { return (2 * $a); };"
       );
 
       this.clearScope();
       this.parseStatement('a = 3');
       test.equals(
-          this.parseStatement('b = (i) -> (j) -> i + j + a'),
+          this.parseStatement('b = (i) -> return (j) -> return i + j + a'),
           '$b = function($i) use ($a) { return function($j) use ($i, $a) { return ($i + ($j + $a)); }; };'
       );
 
@@ -582,17 +582,17 @@ module.exports = {
       this.clearScope();
       test.equals(
           this.parseStatement("a = (c) -> c()"),
-          '$a = function($c) { return $c(); };'
+          '$a = function($c) { $c(); };'
       );
 
       // Inside closure's use
       test.equals(
-          this.parseStatement("a = (c) use (b) -> b()"),
+          this.parseStatement("a = (c) use (b) -> return b()"),
           '$a = function($c) use ($b) { return $b(); };'
       );
 
       test.equals(
-          this.parseStatement("a = (c) use (b) -> d()"),
+          this.parseStatement("a = (c) use (b) -> return d()"),
           '$a = function($c) use ($b) { return d(); };'
       );
 
