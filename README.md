@@ -26,12 +26,12 @@ documentation on the CLI (Command Line Interface).
 
 ```
 <?bb
-/* 
+/*
  I'm a multiline comment
 */
 
 # variable definition
-foo = 1 
+foo = 1
 bar = "baz"
 
 # You can use JSON syntax to define associative arrays
@@ -52,8 +52,8 @@ myList = [2 * i for i in (1..10) where i % 2 == 0]
 myArr  = { "first_names": [name.first_name for name in names] }
 
 # Closures can be used as follows
-foo = (arg1, arg2) -> arg1 + arg2
-bar = () -> do
+foo = (arg1, arg2) -> return arg1 + arg2
+bar = ->
   name = "Tolouse"
   return name
 end
