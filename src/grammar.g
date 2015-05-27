@@ -327,12 +327,14 @@ List_Comprehension
   pretty much anything
 */
 Expression_List
-  = "(" h:Binary_Expression t:(_* "," _* Binary_Expression)* ")" {
-    var values = [h]
-      , i;
+  = "(" head:Binary_Expression tail:(_* "," _* Binary_Expression)* ")"
+  {
+    var values = [head],
+        i,
+        len;
 
-    for(i = 0; i < t.length; i += 1) {
-      values.push(t[i].pop());
+    for(i = 0, len = tail.length; i < len; i += 1) {
+      values.push(tail[i].pop());
     }
 
     return {
