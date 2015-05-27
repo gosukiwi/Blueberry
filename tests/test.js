@@ -465,24 +465,24 @@ module.exports = {
 
     testClosures: function (test) {
       test.equals(
-          this.parseStatement('a = () use (i) -> do return 2*i end'),
+          this.parseStatement('a = () use (i) -> return 2*i end'),
           "$a = function() use ($i) { return (2 * $i); };"
       );
 
       this.clearScope();
       test.equals(
-          this.parseStatement('a = () -> do return 2*i end'),
+          this.parseStatement('a = () -> return 2*i end'),
           "$a = function() { return (2 * $i); };"
       );
 
       test.equals(
-          this.parseStatement('a = (i) use (b) -> do return 2*i end'),
+          this.parseStatement('a = (i) use (b) -> return 2*i end'),
           "$a = function($i) use ($b) { return (2 * $i); };"
       );
 
       this.clearScope();
       test.equals(
-          this.parseStatement('a = (i) -> do return 2*i end'),
+          this.parseStatement('a = (i) -> return 2*i end'),
           "$a = function($i) { return (2 * $i); };"
       );
 
@@ -500,6 +500,21 @@ module.exports = {
       test.equals(
           this.parseStatement('some_func((i) use (a) -> 2*i, "another_arg")'),
           "some_func(function($i) use ($a) { return (2 * $i); }, 'another_arg');"
+      );
+
+      test.done();
+    },
+
+    testClosuresShort: function (test) {
+      test.equals(
+          this.parseStatement('z = -> return "Hello, World!" end'),
+          "$z = function() { return 'Hello, World!'; };"
+      );
+
+      this.clearScope();
+      test.equals(
+          this.parseStatement('z = -> "Hello, World!"'),
+          "$z = function() { return 'Hello, World!'; };"
       );
 
       test.done();

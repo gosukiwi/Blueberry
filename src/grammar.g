@@ -17,7 +17,7 @@ Comment
   { return { type: 'COMMENT' }; }
   / "#" comment:[^\n\r]*
   { return { type: 'COMMENT' }; }
-  
+
 _ = [ \t] // whistespace
   / Comment
 
@@ -535,8 +535,9 @@ Closure
   { return { type: 'CLOSURE', args: args, use: use, body: body } }
   / args:Optional_Argument_List _* "->" _* body:Closure_Body
   { return { type: 'CLOSURE', args: args, use: null, body: body } }
+  / "->" _* body:Closure_Body
 
 Closure_Body
-  = "do" _* block: Block "end"
+  = block: Block "end"
   { return { type: 'CLOSURE_BLOCK', block: block } }
   / Binary_Expression
