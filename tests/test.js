@@ -120,6 +120,25 @@ module.exports = {
         test.done();
     },
 
+    testStringInterpolation: function (test) {
+      test.equals(
+        this.parseStatement('a = "hi #{name} #{@age}"'),
+        "$a = 'hi ' . $name . ' ' . $this->age . '';"
+      );
+
+      test.equals(
+        this.parseStatement('a = "hi #{name()}!"'),
+        "$a = 'hi ' . name() . '!';"
+      );
+
+      // Syntax error here, so ignore.
+      test.equals(
+        this.parseStatement('a = "hi #{name(}!"'),
+        "$a = 'hi #{name(}!';"
+      );
+      test.done();
+    },
+
     testCompare: function (test) {
         test.equals(this.parseStatement('a = 1 == 2'), '$a = 1 === 2;');
         test.equals(this.parseStatement('a = 1 != 2'), '$a = 1 !== 2;');
