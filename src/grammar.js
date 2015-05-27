@@ -395,6 +395,8 @@ module.exports = (function() {
         peg$c253 = function(args, body) { return { type: 'CLOSURE', args: args, use: null, body: body } },
         peg$c254 = function(body) { return { type: 'CLOSURE', args: { type: 'ARGUMENTS', values: [] }, use: null, body: body } },
         peg$c255 = function(block) { return { type: 'CLOSURE_BLOCK', block: block } },
+        peg$c256 = function(stmt) { return { type: 'CLOSURE_STMT', body: stmt } },
+        peg$c257 = function(expr) { return { type: 'CLOSURE_EXPR', body: expr } },
 
         peg$currPos          = 0,
         peg$reportedPos      = 0,
@@ -7219,7 +7221,22 @@ module.exports = (function() {
         s0 = peg$c1;
       }
       if (s0 === peg$FAILED) {
-        s0 = peg$parseBinary_Expression();
+        s0 = peg$currPos;
+        s1 = peg$parseStatement();
+        if (s1 !== peg$FAILED) {
+          peg$reportedPos = s0;
+          s1 = peg$c256(s1);
+        }
+        s0 = s1;
+        if (s0 === peg$FAILED) {
+          s0 = peg$currPos;
+          s1 = peg$parseBinary_Expression();
+          if (s1 !== peg$FAILED) {
+            peg$reportedPos = s0;
+            s1 = peg$c257(s1);
+          }
+          s0 = s1;
+        }
       }
 
       peg$cache[key] = { nextPos: peg$currPos, result: s0 };

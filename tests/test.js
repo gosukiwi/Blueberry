@@ -517,6 +517,12 @@ module.exports = {
           "$z = function() { return 'Hello, World!'; };"
       );
 
+      this.clearScope();
+      test.equals(
+          this.parseStatement('z = -> a = "Hello, World!"'),
+          "$z = function() { return $a = 'Hello, World!'; };"
+      );
+
       test.done();
     },
 

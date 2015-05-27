@@ -14,7 +14,7 @@ var parseStatement  = require('./statement.js'),
     scope           = require('../state.js');
 
 function parseBlock(block) {
-  var i, 
+  var i,
       len    = block.length;
       output = '';
 
@@ -66,8 +66,10 @@ module.exports = function(obj) {
 
   if(obj.body.type === 'CLOSURE_BLOCK') {
     output += "{\n" + parseBlock(obj.body.block) + "\n}";
+  } else if(obj.body.type === 'CLOSURE_STMT') {
+    output += '{ ' + parseStatement(obj.body.body) + ' }';
   } else {
-    output += '{ return ' + parseExpression(obj.body) + '; }';
+    output += '{ ' + parseExpression(obj.body.body) + '; }';
   }
 
   scope.leaveFunction('closure');
