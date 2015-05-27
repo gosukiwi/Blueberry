@@ -26,13 +26,15 @@ module.exports = function(obj) {
         r;
     while(match !== null) {
       code = "tmp = " + match[1];
-      try { value = pegjs_parser.parse(code)[0].expression; }
-      catch(err) { return output; }
-      value = "' . " + expressionParser(value) + " . '";
-
-      r = new RegExp(escapeRegExp(match[0]), 'g');
-      output = output.replace(r, value);
-      match = regex.exec(obj.value);
+      try {
+        value = pegjs_parser.parse(code)[0].expression;
+        value = "' . " + expressionParser(value) + " . '";
+        r = new RegExp(escapeRegExp(match[0]), 'g');
+        output = output.replace(r, value);
+      } catch(err) {
+      } finally {
+        match = regex.exec(obj.value);
+      }
     }
 
     return output;

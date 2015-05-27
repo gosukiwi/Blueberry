@@ -131,10 +131,10 @@ module.exports = {
         "$a = 'hi ' . name() . '!';"
       );
 
-      // Syntax error here, so ignore.
+      // Syntax error here, so ignore the first one
       test.equals(
-        this.parseStatement('a = "hi #{name(}!"'),
-        "$a = 'hi #{name(}!';"
+        this.parseStatement('a = "hi #{name(} #{surname}!"'),
+        "$a = 'hi #{name(} ' . $surname . '!';"
       );
       test.done();
     },
