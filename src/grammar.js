@@ -396,7 +396,7 @@ module.exports = (function() {
         peg$c254 = function(body) { return { type: 'CLOSURE', args: { type: 'ARGUMENTS', values: [] }, use: null, body: body } },
         peg$c255 = function(block) { return { type: 'CLOSURE_BLOCK', block: block } },
         peg$c256 = function(stmt) { return { type: 'CLOSURE_STMT', body: stmt } },
-        peg$c257 = function(expr) { return { type: 'CLOSURE_EXPR', body: expr } },
+        peg$c257 = function(binop) { return { type: 'CLOSURE_BINOP', body: binop } },
 
         peg$currPos          = 0,
         peg$reportedPos      = 0,

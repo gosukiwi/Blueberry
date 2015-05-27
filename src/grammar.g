@@ -536,8 +536,12 @@ Closure
   / args:Optional_Argument_List _* "->" _* body:Closure_Body
   { return { type: 'CLOSURE', args: args, use: null, body: body } }
   / "->" _* body:Closure_Body
+  { return { type: 'CLOSURE', args: { type: 'ARGUMENTS', values: [] }, use: null, body: body } }
 
 Closure_Body
   = block: Block "end"
   { return { type: 'CLOSURE_BLOCK', block: block } }
-  / Binary_Expression
+  / stmt:Statement
+  { return { type: 'CLOSURE_STMT', body: stmt } }
+  / binop:Binary_Expression
+  { return { type: 'CLOSURE_BINOP', body: binop } }
