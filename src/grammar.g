@@ -397,15 +397,14 @@ Property_Call
   / Function_Call
 
 Function_Call
-  =
-  _* id:Array_Expression _* "(" _* ")"
+  = _* id:Array_Expression _* "(" _* ")"
   { return {
       type: 'CALL',
       identifier: id,
       args: null
     }
   }
-  / id:Array_Expression _* args:Expression_List
+  / _* id:Array_Expression _* args:Expression_List
   { return {
       type: 'CALL',
       identifier: id,
