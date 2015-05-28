@@ -281,7 +281,7 @@ module.exports = {
         );
 
         test.equals(
-            this.parseStatement('while age > 18\nb = 1\nend'),
+            this.parseStatement('b = 1 while age > 18'),
             'while ($age > 18) { $b = 1; }'
         );
 
