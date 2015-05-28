@@ -273,6 +273,16 @@ module.exports = {
         );
 
         test.equals(
+            this.parseStatement('a = !true or false'),
+            '$a = (!true || false);'
+        );
+
+        test.equals(
+            this.parseStatement('a = !(true or false)'),
+            '$a = !((true || false));'
+        );
+
+        test.equals(
             this.parseStatement('if not age > 18\ncannotDrink()\nend'),
             'if (!$age > 18) { cannotDrink(); }'
         );
