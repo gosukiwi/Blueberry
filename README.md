@@ -41,7 +41,10 @@ arr = { "name": "Mike", "age": 18, "meta": { "items": [1, 2, 3] } }
 if a == 1
   echo("Hello, World!")
 end
+# You can also use the inline syntax if it's only one statement
+echo("Hello, World!") if a == 1
 
+# Example for loop
 for i in (0..10)
   echo(i)
 end
