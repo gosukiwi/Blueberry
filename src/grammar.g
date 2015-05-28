@@ -222,23 +222,27 @@ Inline_Statement
   / Call
 
 /* A while Statement */
+While_Header
+  = "while" _+ cndt:Binary_Expression NewLine+
+  { return { condition: cndt } }
+  / "until" _+ cndt:Binary_Expression NewLine+
+  { return { condition: { type: "BOOL_NOT", value: cndt } } }
+
 While
- = "while" _+ condition:Binary_Expression NewLine+
-   body:Block
- "end"
- { return { type: 'WHILE', condition: condition, body: body } }
- / Inline_While
+  = header:While_Header body:Block "end"
+  { return { type: 'WHILE', condition: header.condition, body: body } }
+  / Inline_While
 
 /* Inline while */
 Inline_While
   = stmt:Inline_Statement _* "while" _* cndt:Binary_Expression _*
   { return { type: 'WHILE', condition: cndt, body: [stmt] } }
+  / stmt:Inline_Statement _* "until" _* cndt:Binary_Expression _*
+  { return { type: 'WHILE', condition: { type: "BOOL_NOT", value: cndt }, body: [stmt] } }
 
 /* An if Statement */
 If
-  = h:If_Header
-       b:Block
-  "end"
+  = h:If_Header b:Block "end"
   {
     return {
       type: 'IF',
@@ -246,10 +250,7 @@ If
       statements: b
     }
   }
-  /
-  h:If_Header
-    b:Block
-  e:Elsif
+  / h:If_Header b:Block e:Elsif
   {
     return {
       type: 'IF_ELSE',

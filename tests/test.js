@@ -274,6 +274,25 @@ module.exports = {
         test.done();
     },
 
+    testUntil: function (test) {
+        test.equals(
+            this.parseStatement('until a\nb = 1\nend'),
+            'while (!$a) { $b = 1; }'
+        );
+
+        test.equals(
+            this.parseStatement('until age > 18\nb = 1\nend'),
+            'while (!$age > 18) { $b = 1; }'
+        );
+
+        test.equals(
+            this.parseStatement('until age > 18 and age < 25\nb = 1\nend'),
+            'while (!($age > 18 && $age < 25)) { $b = 1; }'
+        );
+
+        test.done();
+    },
+
     testInlineWhile: function (test) {
         test.equals(
             this.parseStatement('b = 1 while a'),
@@ -283,6 +302,20 @@ module.exports = {
         test.equals(
             this.parseStatement('b = 1 while age > 18'),
             'while ($age > 18) { $b = 1; }'
+        );
+
+        test.done();
+    },
+
+    testInlineUntil: function (test) {
+        test.equals(
+            this.parseStatement('b = 1 until a'),
+            'while (!$a) { $b = 1; }'
+        );
+
+        test.equals(
+            this.parseStatement('b = 1 until a or b'),
+            'while (!($a || $b)) { $b = 1; }'
         );
 
         test.done();
