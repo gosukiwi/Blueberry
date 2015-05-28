@@ -43,6 +43,8 @@ if a == 1
 end
 # You can also use the inline syntax if it's only one statement
 echo("Hello, World!") if a == 1
+# Same for while and until 
+doSomething() until someConditionIsMet()
 
 # Example for loop
 for i in (0..10)
@@ -88,6 +90,9 @@ the `bb` command in your working directory.
 
 ## Versioning
 Format: ```<major>.<minor>.<patch>```
+
+Until beta, version numbers will stay low whenever possible. Once beta is
+reached, semantic versioning will be usedm, meaning:
 
  * Breaking backwards compatibility bumps the major.
  * New additions without breaking backwards compatibility bumps the minor.
