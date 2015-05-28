@@ -260,10 +260,23 @@ module.exports = {
         test.done();
     },
 
-
     testWhile: function (test) {
         test.equals(
             this.parseStatement('while a\nb = 1\nend'),
+            'while ($a) { $b = 1; }'
+        );
+
+        test.equals(
+            this.parseStatement('while age > 18\nb = 1\nend'),
+            'while ($age > 18) { $b = 1; }'
+        );
+
+        test.done();
+    },
+
+    testInlineWhile: function (test) {
+        test.equals(
+            this.parseStatement('b = 1 while a'),
             'while ($a) { $b = 1; }'
         );
 

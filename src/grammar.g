@@ -81,7 +81,6 @@ Nil
 Statement
   =
   If
-  / Inline_If
   / While
   / For
   / Switch
@@ -216,13 +215,24 @@ For =
   "end"
   { return { type: 'COMPOSITE_FOR', key: key, value: val, collection:collection, body: body } }
 
-/* A while Statement */
+/* Inline while and if have a limited set of statements that operate into */
+Inline_Statement
+  = Assign
+  / Return
+  / Call
 
+/* A while Statement */
 While
  = "while" _+ condition:Binary_Expression NewLine+
    body:Block
  "end"
  { return { type: 'WHILE', condition: condition, body: body } }
+ / Inline_While
+
+/* Inline while */
+Inline_While
+  = stmt:Inline_Statement _* "while" _* cndt:Binary_Expression _*
+  { return { type: 'WHILE', condition: cndt, body: [stmt] } }
 
 /* An if Statement */
 If
@@ -248,6 +258,7 @@ If
       else: e
     }
   }
+  / Inline_If
 
 If_Header
   = "if" _* exp:Binary_Expression _* NewLine+
@@ -264,15 +275,10 @@ Elsif
   { return { type: 'ELSE', statements: es } }
 
 /* An INLINE If statement */
-Inline_If_Statement
-  = Assign
-  / Return
-  / Call
-
 Inline_If
-  = stmt:Inline_If_Statement _* "if" _* cndt:Binary_Expression _*
+  = stmt:Inline_Statement _* "if" _* cndt:Binary_Expression _*
   { return { type: 'IF', condition: cndt, statements: [stmt] } }
-  / stmt:Inline_If_Statement _* "unless" _* cndt:Binary_Expression _*
+  / stmt:Inline_Statement _* "unless" _* cndt:Binary_Expression _*
   { return { type: 'IF', condition: { type: "BOOL_NOT", value: cndt }, statements: [stmt] } }
 
 Assign_Operartor =
