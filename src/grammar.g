@@ -51,6 +51,15 @@ Single_Character
 
 Symbol = ":" value:[A-Za-z_]+ { return { type: 'SYMBOL', value: value.join('') } }
 
+/* Some keywords can have synonyms */
+Negation
+  = "not"
+  / "!"
+
+Instance_Of
+  = "instanceof"
+  / "is_a"
+
 /* Identifiers are the name variables and functions can have */
 Identifier
   = h:[a-zA-Z_] t:[a-zA-Z_0-9]* { return { type: 'IDENTIFIER', value: h + t.join('') } }
@@ -240,10 +249,14 @@ If
     }
   }
 
-If_Header = "if" _* exp:Binary_Expression _* NewLine+
+If_Header
+  = "if" _* exp:Binary_Expression _* NewLine+
   { return { type: 'IF', condition: exp } }
+  / "unless" _* exp:Binary_Expression _* NewLine+
+  { return { type: 'IF', condition: { type: "BOOL_NOT", value: exp } } }
 
-Elsif = _* "else" _+ i:If_Header b:Block "end"
+Elsif
+  = _* "else" _+ i:If_Header b:Block "end"
   { return { type: 'IF', condition: i.condition, statements:b } }
   / _* "else" _+ i:If_Header es:Statement+ e:Elsif
   { return { type: 'IF_ELSE', condition: i.condition, if_true: es, else: e } }
@@ -259,6 +272,8 @@ Inline_If_Statement
 Inline_If
   = stmt:Inline_If_Statement _* "if" _* cndt:Binary_Expression _*
   { return { type: 'IF', condition: cndt, statements: [stmt] } }
+  / stmt:Inline_If_Statement _* "unless" _* cndt:Binary_Expression _*
+  { return { type: 'IF', condition: { type: "BOOL_NOT", value: cndt }, statements: [stmt] } }
 
 Assign_Operartor =
  "="
@@ -433,18 +448,23 @@ Binary_Expression
   / Bool_Comparison
 
 Bool_Comparison
-  = l:Adition _* ">" _* r:Bool_Comparison
+  = l:Instance_Comparison _* ">" _* r:Bool_Comparison
   { return { type: 'COMPARISON', operator: '>', left: l, right: r } }
-  / l:Adition _* "<" _* r:Bool_Comparison
+  / l:Instance_Comparison _* "<" _* r:Bool_Comparison
   { return { type: 'COMPARISON', operator: '<', left: l, right: r } }
-  / l:Adition _* ">=" _* r:Bool_Comparison
+  / l:Instance_Comparison _* ">=" _* r:Bool_Comparison
   { return { type: 'COMPARISON', operator: '>=', left: l, right: r } }
-  / l:Adition _* "<=" _* r:Bool_Comparison
+  / l:Instance_Comparison _* "<=" _* r:Bool_Comparison
   { return { type: 'COMPARISON', operator: '<=', left: l, right: r } }
-  / l:Adition _* "==" _* r:Bool_Comparison
+  / l:Instance_Comparison _* "==" _* r:Bool_Comparison
   { return { type: 'COMPARISON', operator: '==', left: l, right: r } }
-  / l:Adition _* "!=" _* r:Bool_Comparison
+  / l:Instance_Comparison _* "!=" _* r:Bool_Comparison
   { return { type: 'COMPARISON', operator: '!=', left: l, right: r } }
+  / Instance_Comparison
+
+Instance_Comparison
+  = l:Adition _* Instance_Of _* r:Identifier
+  { return { type: 'INSTANCEOF', left: l, right: r } }
   / Adition
 
 /* Arithmetic operators */
@@ -468,10 +488,15 @@ Multiplicative
 Concat
   = l:Array_Expression _* "&" _* r:Concat
   { return { type: 'CONCATENATION', left: l, right: r }; }
+  / Unary_Expression
+
+Unary_Expression
+  = Negation _* expr:Unary_Expression
+  { return { type: 'BOOL_NOT', value: expr } }
   / Call_Expression
 
 Call_Expression
- = Call
+  = Call
   / Array_Expression
 
 Array_Expression
@@ -485,8 +510,6 @@ Expression
   Closure
   / "(" c:Binary_Expression ")"
   { return { type: 'PARENS_EXPRESSION', expression: c }; }
-  / "not" _* e:Binary_Expression
-  { return { type: 'BOOL_NOT', value: e } }
   / String
   / Symbol
   / Real_Number

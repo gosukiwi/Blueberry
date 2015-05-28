@@ -186,6 +186,20 @@ module.exports = {
         test.done();
     },
 
+    testUnless: function (test) {
+      test.equals(
+          this.parseStatement('unless can_drink\necho("Beer Beer!")\nend'),
+          'if (!$can_drink) { echo(\'Beer Beer!\'); }'
+      );
+
+      test.equals(
+          this.parseStatement('unless a or b\necho("Beer Beer!")\nend'),
+          'if (!($a || $b)) { echo(\'Beer Beer!\'); }'
+      );
+
+      test.done();
+    },
+
     testInlineIf: function (test) {
       test.equals(
           this.parseStatement('echo ("Beer Beer!") if can_drink'),
@@ -200,6 +214,25 @@ module.exports = {
       test.equals(
           this.parseStatement('return false if can_drink'),
           'if ($can_drink) { return false; }'
+      );
+
+      test.done();
+    },
+
+    testInlineUnless: function (test) {
+      test.equals(
+          this.parseStatement('echo ("Beer Beer!") unless can_drink'),
+          'if (!$can_drink) { echo(\'Beer Beer!\'); }'
+      );
+
+      test.equals(
+          this.parseStatement('a = 1 unless can_drink'),
+          'if (!$can_drink) { $a = 1; }'
+      );
+
+      test.equals(
+          this.parseStatement('a = 1 unless a or b'),
+          'if (!($a || $b)) { $a = 1; }'
       );
 
       test.done();
