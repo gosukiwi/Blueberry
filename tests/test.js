@@ -186,6 +186,25 @@ module.exports = {
         test.done();
     },
 
+    testInlineIf: function (test) {
+      test.equals(
+          this.parseStatement('echo ("Beer Beer!") if can_drink'),
+          'if ($can_drink) { echo(\'Beer Beer!\'); }'
+      );
+
+      test.equals(
+          this.parseStatement('a = 1 if can_drink'),
+          'if ($can_drink) { $a = 1; }'
+      );
+
+      test.equals(
+          this.parseStatement('return false if can_drink'),
+          'if ($can_drink) { return false; }'
+      );
+
+      test.done();
+    },
+
     testBool: function (test) {
         test.equals(
             this.parseStatement('a = true'),

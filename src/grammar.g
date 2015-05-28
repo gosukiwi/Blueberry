@@ -72,6 +72,7 @@ Nil
 Statement
   =
   If
+  / Inline_If
   / While
   / For
   / Switch
@@ -230,7 +231,6 @@ If
   h:If_Header
     b:Block
   e:Elsif
-
   {
     return {
       type: 'IF_ELSE',
@@ -250,6 +250,15 @@ Elsif = _* "else" _+ i:If_Header b:Block "end"
   / _* "else" _* NewLine+ es:Statement+ "end"
   { return { type: 'ELSE', statements: es } }
 
+/* An INLINE If statement */
+Inline_If_Statement
+  = Assign
+  / Return
+  / Call
+
+Inline_If
+  = stmt:Inline_If_Statement _* "if" _* cndt:Binary_Expression _*
+  { return { type: 'IF', condition: cndt, statements: [stmt] } }
 
 Assign_Operartor =
  "="
