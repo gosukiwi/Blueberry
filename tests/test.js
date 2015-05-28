@@ -290,7 +290,6 @@ module.exports = {
         test.done();
     },
 
-
     testTernaryOperator: function (test) {
         test.equals(
             this.parseStatement('a = var ? 1 : 2'),
@@ -667,6 +666,20 @@ module.exports = {
       test.equals(
           this.parseStatement('return 2 * a'),
           'return (2 * $a);'
+      );
+
+      test.done();
+    },
+
+    testInstanceOf: function (test) {
+      test.equals(
+          this.parseStatement('a = b instanceof Car'),
+          '$a = ($b instanceof Car);'
+      );
+
+      test.equals(
+          this.parseStatement('a = b is_a Car'),
+          '$a = ($b instanceof Car);'
       );
 
       test.done();

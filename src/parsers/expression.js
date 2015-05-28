@@ -32,7 +32,8 @@ var outter_parser = function(obj) {
     bool_not: require('./bool_not.js'),
     symbol: require('./symbol.js'),
     list_comprehesion: require('./list_comprehension.js'),
-    closure: require('./closure.js')
+    closure: require('./closure.js'),
+    instanceof: require('./instanceof.js'),
   };
 
   switch(obj.type) {
@@ -108,6 +109,9 @@ var outter_parser = function(obj) {
       break;
     case 'CLOSURE':
       output = parser.closure(obj);
+      break;
+    case 'INSTANCEOF':
+      output = parser.instanceof(obj);
       break;
     default:
       throw 'Invalid expression type: ' + obj.type;
