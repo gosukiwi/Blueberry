@@ -62,7 +62,17 @@ Instance_Of
 
 /* Identifiers are the name variables and functions can have */
 Identifier
-  = h:[a-zA-Z_] t:[a-zA-Z_0-9]* { return { type: 'IDENTIFIER', value: h + t.join('') } }
+  = h:[a-zA-Z_] t:[a-zA-Z_0-9]*
+  {
+    var value = h + t.join('');
+    if(/^[A-Z][A-Z0-9_]+$/.test(value)) {
+      return { type: 'CONSTANT', value: value }
+    }
+    return { type: 'IDENTIFIER', value: value }
+  }
+
+Constant
+  = h:[A-Z] t:[A-Z_0-9]* { return { type: 'CONSTANT', value: h + t.join('') } }
 
 /* Terminals */
 Bool
@@ -113,11 +123,13 @@ Class_Access_Modifier
 Class_Attribute
   = access:Class_Access_Modifier _+ attr:Class_Attribute
   { return { type: 'CLASS_ATTRIBUTE', name: attr.name, value: attr.value || null } }
-  / "@" id:Identifier _+ "=" _+ val:Binary_Expression
+  / id:Constant _* "=" _* val:Binary_Expression
+  { return { type: 'CLASS_CONSTANT_ATTRIBUTE', name: id, value: val } }
+  / "@" id:Identifier _* "=" _* val:Binary_Expression
   { return { type: 'CLASS_ATTRIBUTE', name: id, value: val } }
   / "@" id:Identifier
   { return { type: 'CLASS_ATTRIBUTE', name: id, value: null } }
-  / "self" "." id:Identifier _+ "=" _+ val:Binary_Expression
+  / "self" "." id:Identifier _* "=" _* val:Binary_Expression
   { return { type: 'CLASS_STATIC_ATTRIBUTE', name: id, value: val } }
 
 Class_Method
@@ -282,25 +294,20 @@ Inline_If
   / stmt:Inline_Statement _* "unless" _* cndt:Binary_Expression _*
   { return { type: 'IF', condition: { type: "BOOL_NOT", value: cndt }, statements: [stmt] } }
 
-Assign_Operartor =
- "="
- { return 'BY_VALUE' }
- / "&="
- { return 'BY_REFERENCE' }
+Assign_Operartor
+  = "="
+  { return 'BY_VALUE' }
+  / "&="
+  { return 'BY_REFERENCE' }
+
+Assign_Constant
+  = id:Constant _* '=' _* exp:Binary_Expression
+  { return { type: 'ASSIGN_CONSTANT', identifier: id, expression: exp } }
 
 Assign
-  = "@" assign:Assign
+  = Assign_Constant
+  / "@" assign:Assign
   { return { type: 'ASSIGN_INSTANCE_VARIABLE', assignment: assign } }
-  /
-  id:Identifier _* mode:Assign_Operartor _* "new" _+ exp:Binary_Expression
-  {
-    return {
-        type: 'INSTANTIATE',
-        identifier: id,
-        expression: exp,
-        mode: mode
-    }
-  }
   / id:Identifier _* "=" _* condition:Binary_Expression _* "?" _* t:Binary_Expression _* ":" _* f:Binary_Expression
   {
     return {
@@ -357,6 +364,11 @@ List_Comprehension
   Matches a set of arguments, the arguments are expressions so it can be
   pretty much anything
 */
+Optional_Expression_List
+  = "(" _* ")"
+  { return null }
+  / Expression_List
+
 Expression_List
   = "(" head:Binary_Expression tail:(_* "," _* Binary_Expression)* ")"
   {
@@ -408,22 +420,19 @@ Optional_Argument_List
 */
 
 Call
-  =
-  l:Method_Call "." r:Call
+  = l:Method_Call "." r:Call
   { return { type: 'CALL_CHAIN', left:l, right:r } }
   / l:Method_Call "." r:Identifier
   { return { type: 'CALL_CHAIN', left:l, right:r } }
   / Method_Call
 
 Method_Call
-  =
-  object:Identifier "." c:Function_Call
+  = object:Identifier "." c:Function_Call
   { return { type: 'CALL_METHOD', object: object, method: c } }
   / Property_Call
 
 Property_Call
-  =
-  object:Array_Expression "." property:Array_Expression
+  = object:Array_Expression "." property:Array_Expression
   { return { type: 'CALL_PROPERTY', object: object, property: property } }
   / Function_Call
 
@@ -500,6 +509,11 @@ Concat
 Unary_Expression
   = Negation _* expr:Unary_Expression
   { return { type: 'BOOL_NOT', value: expr } }
+  / Instantiation
+
+Instantiation
+  = "new" _+ exp:Identifier args:Optional_Expression_List
+  { return { type: 'INSTANTIATE', expression: exp, arguments: args } }
   / Call_Expression
 
 Call_Expression

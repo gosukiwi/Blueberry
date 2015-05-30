@@ -9,6 +9,7 @@ function parseBlockStatement(stmt, access) {
     switch(stmt.type) {
       case 'CLASS_ATTRIBUTE':
       case 'CLASS_STATIC_ATTRIBUTE':
+      case 'CLASS_CONSTANT_ATTRIBUTE':
         return attributeParser(stmt, access);
       case 'DEF':
       case 'STATIC_DEF':

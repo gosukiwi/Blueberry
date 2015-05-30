@@ -34,6 +34,8 @@ var outter_parser = function(obj) {
     list_comprehesion: require('./list_comprehension.js'),
     closure: require('./closure.js'),
     instanceof: require('./instanceof.js'),
+    constant: require('./constant.js'),
+    instantiate: require('./instantiate'),
   };
 
   switch(obj.type) {
@@ -107,11 +109,17 @@ var outter_parser = function(obj) {
       // or an identifier, the identifier will always be a variable n_n
       output = '$' + parser.identifier(obj);
       break;
+    case 'CONSTANT':
+      output = parser.constant(obj);
+      break;
     case 'CLOSURE':
       output = parser.closure(obj);
       break;
     case 'INSTANCEOF':
       output = parser.instanceof(obj);
+      break;
+    case 'INSTANTIATE':
+      output = parser.instantiate(obj);
       break;
     default:
       throw 'Invalid expression type: ' + obj.type;

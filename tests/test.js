@@ -120,6 +120,16 @@ module.exports = {
         test.done();
     },
 
+    testAssignConstant: function (test) {
+        test.equals(this.parseStatement('A = 1'), "define('A', 1);");
+        test.equals(this.parseStatement('EXAMPLE = "HELLO"'), "define('EXAMPLE', 'HELLO');");
+
+        test.equals(this.parseStatement('f(FOO)'), "f(FOO);");
+        test.equals(this.parseStatement('a = FOO + 2'), "$a = (FOO + 2);");
+
+        test.done();
+    },
+
     testStringInterpolation: function (test) {
       test.equals(
         this.parseStatement('a = "hi #{name} #{@age}"'),
@@ -326,6 +336,21 @@ module.exports = {
             this.compileFile('./tests/blueberry/class1.bb'),
             this.load('./tests/php/class1.php')
         );
+
+        test.done();
+    },
+
+    testClassConstant: function (test) {
+        test.equals(
+          this.parseStatement("class A\nAGE = 18\nend"),
+          'class A { const AGE = 18; }'
+        );
+
+        test.equals(
+          this.parseStatement("class A\nAGE = 18\ndef a\necho(self.AGE)\nend\nend"),
+          'class A { const AGE = 18; public function a() { echo(self::AGE); } }'
+        );
+
         test.done();
     },
 

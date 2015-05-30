@@ -24,7 +24,7 @@ function outer_parser(obj) {
       output = expressionParser(obj.left) + '->' + outer_parser(obj.right);
       break;
     case 'CALL_METHOD':
-      if( obj.object.type === 'IDENTIFIER' 
+      if( obj.object.type === 'IDENTIFIER'
           && !scope.contains(identifierParser(obj.object))
       ) {
         output = identifierParser(obj.object) + '::' + outer_parser(obj.method);
@@ -36,7 +36,12 @@ function outer_parser(obj) {
       // When calling a property, `self` has a special meaning. It's used to
       // reference static properties
       if(obj.object.type === 'IDENTIFIER' && obj.object.value === 'self') {
-        output = 'self::' + expressionParser(obj.property).substring(1);
+        var prop = expressionParser(obj.property);
+        // Non-constants get an extra $, so remove it if needed
+        if(obj.property.type !== 'CONSTANT') {
+          prop = prop.substring(1);
+        }
+        output = 'self::' + prop;
       } else {
         output = expressionParser(obj.object) + '->' + expressionParser(obj.property).substring(1);
       }

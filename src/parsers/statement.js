@@ -31,6 +31,7 @@ module.exports = function(obj) {
     case 'ASSIGN_INSTANCE_VARIABLE':
     case 'ASSIGN_TERNARY_OPERATOR':
     case 'ASSIGN_DEFAULT_VALUE':
+    case 'ASSIGN_CONSTANT':
       output = parser.assign(obj);
       break;
     case 'INSTANTIATE':
