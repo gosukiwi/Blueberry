@@ -33,6 +33,8 @@ documentation on the CLI (Command Line Interface).
 # variable definition
 foo = 1
 bar = "baz"
+# constant definition uses all uppercase letters
+PI  = 3.14
 
 # You can use JSON syntax to define associative arrays
 arr = { "name": "Mike", "age": 18, "meta": { "items": [1, 2, 3] } }
@@ -43,7 +45,7 @@ if a == 1
 end
 # You can also use the inline syntax if it's only one statement
 echo("Hello, World!") if a == 1
-# Same for while and until 
+# Same for while and until
 doSomething() until someConditionIsMet()
 
 # Example for loop
@@ -67,6 +69,7 @@ bar()
 
 class MyClass < MyParentClass
   @name
+  MY_CONST = "Hello" # access using self.MY_CONST
 
   def greet
     echo("Hello! My name is " & @name)
