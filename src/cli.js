@@ -21,7 +21,7 @@
         compileFile,
         walk,
         commands,
-        VERSION = '0.6.1';
+        VERSION = '0.6.2';
 
     /*
      * Gets the command line argument with the given index
