@@ -60,16 +60,20 @@ Instance_Of
   = "instanceof"
   / "is_a"
 
-/* Identifiers are the name variables and functions can have */
-Identifier
+Identifier_Or_Constant
   = h:[a-zA-Z_] t:[a-zA-Z_0-9]*
   {
     var value = h + t.join('');
-    if(/^[A-Z][A-Z0-9_]+$/.test(value)) {
+    if(/^[A-Z][A-Z0-9_]*$/.test(value)) {
       return { type: 'CONSTANT', value: value }
     }
     return { type: 'IDENTIFIER', value: value }
   }
+ 
+/* Identifiers are the name variables and functions can have */
+Identifier
+  = h:[a-zA-Z_] t:[a-zA-Z_0-9]*
+  { return { type: 'IDENTIFIER', value: h + t.join('') } }
 
 Constant
   = h:[A-Z] t:[A-Z_0-9]* { return { type: 'CONSTANT', value: h + t.join('') } }
@@ -538,7 +542,7 @@ Expression
   / Integer
   / Bool
   / Nil
-  / Identifier
+  / Identifier_Or_Constant
   / "@" id:Identifier
   { return { type: 'INSTANCE_IDENTIFIER', value: id.value } }
   / "(" start:Binary_Expression ".." end:Binary_Expression ")"

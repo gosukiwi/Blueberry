@@ -127,8 +127,8 @@ module.exports = {
         test.equals(this.parseStatement('f(FOO)'), "f(FOO);");
         test.equals(this.parseStatement('a = FOO + 2'), "$a = (FOO + 2);");
         
-        // In a non-global scope, constant definitions are skipped
-        test.equals(this.parseStatement("if true\nA = 1\nend"), "if (true) { $A = 1; }");
+        // In a non-global scope, constant definitions are skipped, this will error in PHP.
+        test.equals(this.parseStatement("if true\nA = 1\nend"), "if (true) { A = 1; }");
 
         test.done();
     },
