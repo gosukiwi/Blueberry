@@ -127,15 +127,15 @@ Class_Access_Modifier
   / "protected"
 
 Class_Attribute
-  = access:Class_Access_Modifier _+ attr:Class_Attribute
+  = access:Class_Access_Modifier _+ attr:Class_Attribute _*
   { return { type: 'CLASS_ATTRIBUTE', name: attr.name, value: attr.value || null } }
-  / id:Constant _* "=" _* val:Binary_Expression
+  / id:Constant _* "=" _* val:Binary_Expression _*
   { return { type: 'CLASS_CONSTANT_ATTRIBUTE', name: id, value: val } }
-  / "@" id:Identifier _* "=" _* val:Binary_Expression
+  / "@" id:Identifier _* "=" _* val:Binary_Expression _*
   { return { type: 'CLASS_ATTRIBUTE', name: id, value: val } }
-  / "@" id:Identifier
+  / "@" id:Identifier _*
   { return { type: 'CLASS_ATTRIBUTE', name: id, value: null } }
-  / "self" "." id:Identifier _* "=" _* val:Binary_Expression
+  / "self" "." id:Identifier _* "=" _* val:Binary_Expression _*
   { return { type: 'CLASS_STATIC_ATTRIBUTE', name: id, value: val } }
 
 Class_Method
@@ -172,8 +172,7 @@ Class_Head
   { return { name: name, extends: null } }
 
 Class
-  =
-  head:Class_Head body:Class_Body "end"
+  = head:Class_Head body:Class_Body "end"
   { return { type: 'CLASS', name: head.name, extends: head.extends, block:body } }
 
 
