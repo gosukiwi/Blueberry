@@ -121,11 +121,14 @@ module.exports = {
     },
 
     testAssignConstant: function (test) {
-        test.equals(this.parseStatement('A = 1'), "define('A', 1);");
-        test.equals(this.parseStatement('EXAMPLE = "HELLO"'), "define('EXAMPLE', 'HELLO');");
+        test.equals(this.parseStatement('A = 1'), "const A = 1;");
+        test.equals(this.parseStatement('EXAMPLE = "HELLO"'), "const EXAMPLE = 'HELLO';");
 
         test.equals(this.parseStatement('f(FOO)'), "f(FOO);");
         test.equals(this.parseStatement('a = FOO + 2'), "$a = (FOO + 2);");
+        
+        // In a non-global scope, constant definitions are skipped
+        test.equals(this.parseStatement("if true\nA = 1\nend"), "if (true) { $A = 1; }");
 
         test.done();
     },

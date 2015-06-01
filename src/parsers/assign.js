@@ -28,7 +28,7 @@ function assignParser(obj) {
     var output;
 
     if(obj.type === 'ASSIGN_CONSTANT') {
-      output = "define('" + constantParser(obj.identifier) + "', " + expressionParser(obj.expression) + ");";
+      output = "const " + constantParser(obj.identifier) + " = " + expressionParser(obj.expression) + ";";
     } else if(obj.type === 'ASSIGN_TERNARY_OPERATOR') {
       output = '$' + identifierParser(obj.identifier) + ' = ' +
       expressionParser(obj.condition) + ' ? ' + expressionParser(obj.left) + ' : ' + expressionParser(obj.right) + ';';

@@ -3,7 +3,7 @@
  * Compile as follows: pegjs --cached src/grammar.g src/grammar.js
  */
 
-start = Statement*
+start = Top_Level_Statement*
 
 /* TOKENS
  *--------------------------------------------------------------------------*/
@@ -87,10 +87,12 @@ Nil
 
 /* STATEMENTS
  *--------------------------------------------------------------------------*/
+Top_Level_Statement
+  = Assign_Constant
+  / Statement
 
 Statement
-  =
-  If
+  = If
   / While
   / For
   / Switch
@@ -305,8 +307,7 @@ Assign_Constant
   { return { type: 'ASSIGN_CONSTANT', identifier: id, expression: exp } }
 
 Assign
-  = Assign_Constant
-  / "@" assign:Assign
+  = "@" assign:Assign
   { return { type: 'ASSIGN_INSTANCE_VARIABLE', assignment: assign } }
   / id:Identifier _* "=" _* condition:Binary_Expression _* "?" _* t:Binary_Expression _* ":" _* f:Binary_Expression
   {
